@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:UMLLabProfile="http:///schemas/UMLLabProfile/NS/0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/UMLLabProfile/NS/0 pathmap://UMLLAB_PROFILES/UMLLab.profile.uml#UMLLabProfile-Annotation_2-UMLLabProfile">
+  <uml:Model xmi:id="_9H_LYMNhEeifmtdC2qfHXg" name="Karpool">
+    <eAnnotations xmi:id="_-tTjYMNhEeifmtdC2qfHXg" source="http://ns.yatta.de/umllab">
+      <contents xmi:type="ecore:EAnnotation" xmi:id="_-tYb4MNhEeifmtdC2qfHXg" source="codegen">
+        <details xmi:id="_-tYb4cNhEeifmtdC2qfHXg" key="codegenDirectory" value="/Karpool/src"/>
+        <details xmi:id="_-t2V8MNhEeifmtdC2qfHXg" key="observedFolders" value="/Karpool/src"/>
+        <details xmi:id="_SxMgwMNoEeifmtdC2qfHXg" key="AssociatedSourceCode" value="/Karpool/src/karpool/model/User.java;431501821/1;/Karpool/src/karpool/model/UserRole.java;205795311/1;/Karpool/src/karpool/model/Car.java;4179350534/1;/Karpool/src/karpool/model/Passenger.java;147918534/1;/Karpool/src/karpool/model/Driver.java;2269675883/1;"/>
+      </contents>
+    </eAnnotations>
+    <elementImport xmi:id="_-aueQMNkEeifmtdC2qfHXg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#boolean"/>
+    </elementImport>
+    <elementImport xmi:id="_-avFUMNkEeifmtdC2qfHXg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#byte"/>
+    </elementImport>
+    <elementImport xmi:id="_-avsYMNkEeifmtdC2qfHXg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#char"/>
+    </elementImport>
+    <elementImport xmi:id="_-avsYcNkEeifmtdC2qfHXg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#double"/>
+    </elementImport>
+    <elementImport xmi:id="_-avsYsNkEeifmtdC2qfHXg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#float"/>
+    </elementImport>
+    <elementImport xmi:id="_-awTcMNkEeifmtdC2qfHXg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+    </elementImport>
+    <elementImport xmi:id="_-awTccNkEeifmtdC2qfHXg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#long"/>
+    </elementImport>
+    <elementImport xmi:id="_-awTcsNkEeifmtdC2qfHXg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#short"/>
+    </elementImport>
+    <elementImport xmi:id="_-djIwMNkEeifmtdC2qfHXg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </elementImport>
+    <packagedElement xmi:type="uml:Package" xmi:id="_Zb4z8MNkEeifmtdC2qfHXg" name="karpool">
+      <packagedElement xmi:type="uml:Package" xmi:id="_ct-PwMNkEeifmtdC2qfHXg" name="model">
+        <packagedElement xmi:type="uml:Class" xmi:id="_pfurAMNkEeifmtdC2qfHXg" name="User">
+          <eAnnotations xmi:id="_0_zb8MNkEeifmtdC2qfHXg" source="http://www.eclipse.org/uml2/2.0.0/UML"/>
+          <ownedAttribute xmi:id="_8BL0AMNkEeifmtdC2qfHXg" name="id" visibility="public" type="__nhBgMNkEeifmtdC2qfHXg"/>
+          <ownedAttribute xmi:id="_Nfv8oMNlEeifmtdC2qfHXg" name="password" visibility="public" type="_QkqfIMNlEeifmtdC2qfHXg"/>
+          <ownedAttribute xmi:id="_aVOaQMNlEeifmtdC2qfHXg" name="rating" visibility="public" type="_e0KDsMNlEeifmtdC2qfHXg"/>
+          <ownedAttribute xmi:id="_d0-pMMNmEeifmtdC2qfHXg" name="name" visibility="public" type="_QkqfIMNlEeifmtdC2qfHXg"/>
+          <ownedAttribute xmi:id="_hzS44MNmEeifmtdC2qfHXg" name="email" visibility="public" type="_QkqfIMNlEeifmtdC2qfHXg"/>
+          <ownedAttribute xmi:id="_kARt0MNmEeifmtdC2qfHXg" name="phone" visibility="public" type="_QkqfIMNlEeifmtdC2qfHXg"/>
+          <ownedAttribute xmi:id="_xZZrEMNmEeifmtdC2qfHXg" name="userRole" type="_sdHpMMNkEeifmtdC2qfHXg" association="_xZYc8MNmEeifmtdC2qfHXg">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_xZZrEcNmEeifmtdC2qfHXg"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_xZZrEsNmEeifmtdC2qfHXg" value="2"/>
+          </ownedAttribute>
+          <ownedAttribute xmi:id="_pJyd8MNpEeifmtdC2qfHXg" name="location" visibility="public" type="_QkqfIMNlEeifmtdC2qfHXg"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Association" xmi:id="_xZYc8MNmEeifmtdC2qfHXg" name="" memberEnd="_xZZEAMNmEeifmtdC2qfHXg _xZZrEMNmEeifmtdC2qfHXg"/>
+        <packagedElement xmi:type="uml:Class" xmi:id="_sdHpMMNkEeifmtdC2qfHXg" name="UserRole" isAbstract="true">
+          <ownedAttribute xmi:id="_xZZEAMNmEeifmtdC2qfHXg" name="user" type="_pfurAMNkEeifmtdC2qfHXg" association="_xZYc8MNmEeifmtdC2qfHXg">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_xZZEAcNmEeifmtdC2qfHXg" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_xZZEAsNmEeifmtdC2qfHXg" value="1"/>
+          </ownedAttribute>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_3ovswMNnEeifmtdC2qfHXg" name="Car">
+          <ownedAttribute xmi:id="_-gQXIMNnEeifmtdC2qfHXg" name="make" visibility="public" type="_QkqfIMNlEeifmtdC2qfHXg"/>
+          <ownedAttribute xmi:id="_BLYgoMNoEeifmtdC2qfHXg" name="seat" visibility="public">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+          </ownedAttribute>
+          <ownedAttribute xmi:id="_EZrooMNoEeifmtdC2qfHXg" name="liscensePlate" visibility="public" type="_QkqfIMNlEeifmtdC2qfHXg"/>
+          <ownedAttribute xmi:id="_IKTakMNoEeifmtdC2qfHXg" name="driver" type="_OtwV8MNnEeifmtdC2qfHXg" association="_IKSMcMNoEeifmtdC2qfHXg">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_IKTakcNoEeifmtdC2qfHXg" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_IKTaksNoEeifmtdC2qfHXg" value="1"/>
+          </ownedAttribute>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_QuISQMNnEeifmtdC2qfHXg" name="Passenger">
+          <generalization xmi:id="_VnNhEMNnEeifmtdC2qfHXg" general="_sdHpMMNkEeifmtdC2qfHXg"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_OtwV8MNnEeifmtdC2qfHXg" name="Driver">
+          <generalization xmi:id="_T04n0MNnEeifmtdC2qfHXg" general="_sdHpMMNkEeifmtdC2qfHXg"/>
+          <ownedAttribute xmi:id="_X6w4EMNnEeifmtdC2qfHXg" name="citiesWillingToStop" visibility="public" type="_hJU5YMNnEeifmtdC2qfHXg"/>
+          <ownedAttribute xmi:id="_IKSzgMNoEeifmtdC2qfHXg" name="car" type="_3ovswMNnEeifmtdC2qfHXg" association="_IKSMcMNoEeifmtdC2qfHXg">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_IKSzgcNoEeifmtdC2qfHXg" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_IKSzgsNoEeifmtdC2qfHXg" value="1"/>
+          </ownedAttribute>
+        </packagedElement>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:DataType" xmi:id="__nhBgMNkEeifmtdC2qfHXg" name="integer"/>
+    <packagedElement xmi:type="uml:DataType" xmi:id="_QkqfIMNlEeifmtdC2qfHXg" name="string"/>
+    <packagedElement xmi:type="uml:DataType" xmi:id="_e0KDsMNlEeifmtdC2qfHXg" name="enumeration"/>
+    <packagedElement xmi:type="uml:DataType" xmi:id="_hJU5YMNnEeifmtdC2qfHXg" name="arrayList"/>
+    <packagedElement xmi:type="uml:Association" xmi:id="_IKSMcMNoEeifmtdC2qfHXg" name="" memberEnd="_IKSzgMNoEeifmtdC2qfHXg _IKTakMNoEeifmtdC2qfHXg"/>
+    <profileApplication xmi:id="_-tctUMNhEeifmtdC2qfHXg">
+      <eAnnotations xmi:id="_-tjbAMNhEeifmtdC2qfHXg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="pathmap://UMLLAB_PROFILES/UMLLab.profile.uml#UMLLabProfile-Annotation_2-UMLLabProfile"/>
+      </eAnnotations>
+      <appliedProfile href="pathmap://UMLLAB_PROFILES/UMLLab.profile.uml#UMLLabProfile"/>
+    </profileApplication>
+  </uml:Model>
+  <UMLLabProfile:TargetLanguage xmi:id="_-ttzEMNhEeifmtdC2qfHXg" base_Package="_9H_LYMNhEeifmtdC2qfHXg">
+    <languageName>java</languageName>
+  </UMLLabProfile:TargetLanguage>
+  <UMLLabProfile:UnresolvedElement xmi:id="__nlS8MNkEeifmtdC2qfHXg" base_Element="__nhBgMNkEeifmtdC2qfHXg"/>
+  <UMLLabProfile:UnresolvedElement xmi:id="_Qks7YMNlEeifmtdC2qfHXg" base_Element="_QkqfIMNlEeifmtdC2qfHXg"/>
+  <UMLLabProfile:UnresolvedElement xmi:id="_e0NuEMNlEeifmtdC2qfHXg" base_Element="_e0KDsMNlEeifmtdC2qfHXg"/>
+  <UMLLabProfile:UnresolvedElement xmi:id="_hJX8sMNnEeifmtdC2qfHXg" base_Element="_hJU5YMNnEeifmtdC2qfHXg"/>
+</xmi:XMI>

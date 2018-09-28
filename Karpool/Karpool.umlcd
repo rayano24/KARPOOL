@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<com.yattasolutions.uml.diagrams.classifier:ClassDiagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:com.yattasolutions.diagrams="http://ns.yatta-solutions.com/umllab/diagrams/1.1.0" xmlns:com.yattasolutions.uml.diagrams.classifier="http://ns.yatta-solutions.com/umllab/diagrams/classifier/1.1.0" xmi:id="_9L2XsMNhEeifmtdC2qfHXg">
+  <modelElement href="Karpool.uml#_9H_LYMNhEeifmtdC2qfHXg"/>
+  <edges xsi:type="com.yattasolutions.diagrams:ContainmentVisual" xmi:id="_gpWgMMNkEeifmtdC2qfHXg" sourceAnchor="99.0,16.0" targetAnchor="93.0,59.0" enclosingItem="_Zb5bAMNkEeifmtdC2qfHXg" containedItem="_ct-PwcNkEeifmtdC2qfHXg"/>
+  <edges xsi:type="com.yattasolutions.diagrams:ContainmentVisual" xmi:id="_rP5BEMNkEeifmtdC2qfHXg" sourceAnchor="51.0,0.0" targetAnchor="101.0,67.0" enclosingItem="_ct-PwcNkEeifmtdC2qfHXg" containedItem="_pfv5IMNkEeifmtdC2qfHXg"/>
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_xZd8gMNmEeifmtdC2qfHXg" sourceAnchor="103.0,29.0" targetAnchor="0.0,20.0" target="_sdIQQMNkEeifmtdC2qfHXg" source="_pfv5IMNkEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_xZYc8MNmEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_xZd8gcNmEeifmtdC2qfHXg"/>
+    <nameVisual xmi:id="_xZd8gsNmEeifmtdC2qfHXg" text="">
+      <visualProperties xmi:id="_xeMrgMNmEeifmtdC2qfHXg" position="17.0,2.0"/>
+    </nameVisual>
+    <sourceRole xmi:id="_xZd8g8NmEeifmtdC2qfHXg" aggregationKind="NONE" name="user" navigable="true">
+      <modelElement href="Karpool.uml#_xZZEAMNmEeifmtdC2qfHXg"/>
+      <visualProperties xmi:id="_xeLdYMNmEeifmtdC2qfHXg" position="23.0,2.0"/>
+      <visibility xmi:id="_xZd8hMNmEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_xZd8hcNmEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+    </sourceRole>
+    <targetRole xmi:id="_xZd8hsNmEeifmtdC2qfHXg" aggregationKind="NONE" name="userRole" navigable="true">
+      <modelElement href="Karpool.uml#_xZZrEMNmEeifmtdC2qfHXg"/>
+      <visualProperties xmi:id="_xeMrgcNmEeifmtdC2qfHXg" position="-87.0,-59.0"/>
+      <visibility xmi:id="_xZd8h8NmEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_xZd8iMNmEeifmtdC2qfHXg" label="0..2" max="2"/>
+    </targetRole>
+  </edges>
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:GeneralizationVisual" xmi:id="_T1GDMMNnEeifmtdC2qfHXg" sourceAnchor="71.0,0.0" targetAnchor="76.0,41.0" superClass="_sdIQQMNkEeifmtdC2qfHXg" subClass="_OtyLIMNnEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_T04n0MNnEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_T1GDMcNnEeifmtdC2qfHXg"/>
+  </edges>
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:GeneralizationVisual" xmi:id="_VnRLcMNnEeifmtdC2qfHXg" sourceAnchor="55.0,0.0" targetAnchor="76.0,41.0" superClass="_sdIQQMNkEeifmtdC2qfHXg" subClass="_QuKHcMNnEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_VnNhEMNnEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_VnRLccNnEeifmtdC2qfHXg"/>
+    <bendpoints xmi:id="_IYm8UMNoEeifmtdC2qfHXg" sourceY="-34" targetX="187" targetY="43"/>
+    <bendpoints xmi:id="_IYm8UcNoEeifmtdC2qfHXg" sourceX="-187" sourceY="-34" targetY="43"/>
+  </edges>
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_IKdyoMNoEeifmtdC2qfHXg" sourceAnchor="69.0,0.0" targetAnchor="61.0,65.0" target="_OtyLIMNnEeifmtdC2qfHXg" source="_3owT0MNnEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_IKSMcMNoEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_IKdyocNoEeifmtdC2qfHXg"/>
+    <nameVisual xmi:id="_IKdyosNoEeifmtdC2qfHXg" text="">
+      <visualProperties xmi:id="_IYnjYcNoEeifmtdC2qfHXg" position="41.5,4.0"/>
+    </nameVisual>
+    <sourceRole xmi:id="_IKdyo8NoEeifmtdC2qfHXg" aggregationKind="NONE" name="car" navigable="true">
+      <modelElement href="Karpool.uml#_IKSzgMNoEeifmtdC2qfHXg"/>
+      <visualProperties xmi:id="_IYnjYMNoEeifmtdC2qfHXg" position="-76.5,-56.5"/>
+      <visibility xmi:id="_IKdypMNoEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_IKdypcNoEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+    </sourceRole>
+    <targetRole xmi:id="_IKdypsNoEeifmtdC2qfHXg" aggregationKind="NONE" name="driver" navigable="true">
+      <modelElement href="Karpool.uml#_IKTakMNoEeifmtdC2qfHXg"/>
+      <visualProperties xmi:id="_IYnjYsNoEeifmtdC2qfHXg" position="6.5,1.5"/>
+      <visibility xmi:id="_IKdyp8NoEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_IKdyqMNoEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+    </targetRole>
+  </edges>
+  <edges xsi:type="com.yattasolutions.diagrams:ContainmentVisual" xmi:id="_gdyMkMNoEeifmtdC2qfHXg" enclosingItem="_ct-PwcNkEeifmtdC2qfHXg" containedItem="_sdIQQMNkEeifmtdC2qfHXg"/>
+  <edges xsi:type="com.yattasolutions.diagrams:ContainmentVisual" xmi:id="_heVDkMNoEeifmtdC2qfHXg" enclosingItem="_ct-PwcNkEeifmtdC2qfHXg" containedItem="_3owT0MNnEeifmtdC2qfHXg"/>
+  <edges xsi:type="com.yattasolutions.diagrams:ContainmentVisual" xmi:id="_l4Q4QMNoEeifmtdC2qfHXg" enclosingItem="_ct-PwcNkEeifmtdC2qfHXg" containedItem="_QuKHcMNnEeifmtdC2qfHXg"/>
+  <edges xsi:type="com.yattasolutions.diagrams:ContainmentVisual" xmi:id="_m2Kq8MNoEeifmtdC2qfHXg" enclosingItem="_ct-PwcNkEeifmtdC2qfHXg" containedItem="_OtyLIMNnEeifmtdC2qfHXg"/>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:PackageVisual" xmi:id="_Zb5bAMNkEeifmtdC2qfHXg" containments="_gpWgMMNkEeifmtdC2qfHXg" name="karpool" nestedPackages="_ct-PwcNkEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_Zb4z8MNkEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_Zb5bAcNkEeifmtdC2qfHXg" position="237.0,59.0" size="180.0,61.0"/>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:PackageVisual" xmi:id="_ct-PwcNkEeifmtdC2qfHXg" containment="_gpWgMMNkEeifmtdC2qfHXg" containments="_rP5BEMNkEeifmtdC2qfHXg _gdyMkMNoEeifmtdC2qfHXg _heVDkMNoEeifmtdC2qfHXg _l4Q4QMNoEeifmtdC2qfHXg _m2Kq8MNoEeifmtdC2qfHXg" classes="_pfv5IMNkEeifmtdC2qfHXg _sdIQQMNkEeifmtdC2qfHXg _3owT0MNnEeifmtdC2qfHXg _QuKHcMNnEeifmtdC2qfHXg _OtyLIMNnEeifmtdC2qfHXg" name="model" nestingPackage="_Zb5bAMNkEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_ct-PwMNkEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_ct-PwsNkEeifmtdC2qfHXg" position="238.0,164.0" size="203.0,69.0"/>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_sdIQQMNkEeifmtdC2qfHXg" containment="_gdyMkMNoEeifmtdC2qfHXg" name="UserRole" package="_ct-PwcNkEeifmtdC2qfHXg" abstractClass="true" associationsIn="_xZd8gMNmEeifmtdC2qfHXg" subclassedBy="_T1GDMMNnEeifmtdC2qfHXg _VnRLcMNnEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_sdHpMMNkEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_sdIQQcNkEeifmtdC2qfHXg" position="504.0,285.0" size="153.0,41.0"/>
+    <visibility xmi:id="_sdIQQsNkEeifmtdC2qfHXg" label="+"/>
+    <attributes xmi:id="_xZejkMNmEeifmtdC2qfHXg" name="user">
+      <modelElement href="Karpool.uml#_xZZEAMNmEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_xZejkcNmEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_xZejksNmEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_xZejk8NmEeifmtdC2qfHXg" name="User">
+        <modelElement href="Karpool.uml#_pfurAMNkEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_OtyLIMNnEeifmtdC2qfHXg" containment="_m2Kq8MNoEeifmtdC2qfHXg" name="Driver" package="_ct-PwcNkEeifmtdC2qfHXg" associationsIn="_IKdyoMNoEeifmtdC2qfHXg" generalizations="_T1GDMMNnEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_OtwV8MNnEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_OtyLIcNnEeifmtdC2qfHXg" position="509.0,399.0" size="123.0,-1.0"/>
+    <visibility xmi:id="_OtyLIsNnEeifmtdC2qfHXg" label="+"/>
+    <attributes xmi:id="_X6yGMMNnEeifmtdC2qfHXg" name="citiesWillingToStop">
+      <modelElement href="Karpool.uml#_X6w4EMNnEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_X6yGMcNnEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_X6yGMsNnEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_hJaY8MNnEeifmtdC2qfHXg" name="arrayList">
+        <modelElement href="Karpool.uml#_hJU5YMNnEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_IKfAwMNoEeifmtdC2qfHXg" name="car">
+      <modelElement href="Karpool.uml#_IKSzgMNoEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_IKfAwcNoEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_IKfAwsNoEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_IKfAw8NoEeifmtdC2qfHXg" name="Car">
+        <modelElement href="Karpool.uml#_3ovswMNnEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_QuKHcMNnEeifmtdC2qfHXg" containment="_l4Q4QMNoEeifmtdC2qfHXg" name="Passenger" package="_ct-PwcNkEeifmtdC2qfHXg" generalizations="_VnRLcMNnEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_QuISQMNnEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_QuKHccNnEeifmtdC2qfHXg" position="712.0,403.0" size="111.0,41.0"/>
+    <visibility xmi:id="_QuKHcsNnEeifmtdC2qfHXg" label="+"/>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_3owT0MNnEeifmtdC2qfHXg" containment="_heVDkMNoEeifmtdC2qfHXg" name="Car" package="_ct-PwcNkEeifmtdC2qfHXg" associationsOut="_IKdyoMNoEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_3ovswMNnEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_3owT0cNnEeifmtdC2qfHXg" position="501.0,520.0" size="137.0,-1.0"/>
+    <visibility xmi:id="_3owT0sNnEeifmtdC2qfHXg" label="+"/>
+    <attributes xmi:id="_-gQ-MMNnEeifmtdC2qfHXg" name="make">
+      <modelElement href="Karpool.uml#_-gQXIMNnEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_-gQ-McNnEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_-gQ-MsNnEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_ApmpQMNoEeifmtdC2qfHXg" name="string">
+        <modelElement href="Karpool.uml#_QkqfIMNlEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_BLZuwMNoEeifmtdC2qfHXg" name="seat">
+      <modelElement href="Karpool.uml#_BLYgoMNoEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_BLZuwcNoEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_BLZuwsNoEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_EDG7sMNoEeifmtdC2qfHXg" name="int">
+        <modelElement href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_EZsPsMNoEeifmtdC2qfHXg" name="liscensePlate">
+      <modelElement href="Karpool.uml#_EZrooMNoEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_EZsPscNoEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_EZsPssNoEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_HBFvwMNoEeifmtdC2qfHXg" name="string">
+        <modelElement href="Karpool.uml#_QkqfIMNlEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_IKiEEMNoEeifmtdC2qfHXg" name="driver">
+      <modelElement href="Karpool.uml#_IKTakMNoEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_IKiEEcNoEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_IKiEEsNoEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_IKiEE8NoEeifmtdC2qfHXg" name="Driver">
+        <modelElement href="Karpool.uml#_OtwV8MNnEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_pfv5IMNkEeifmtdC2qfHXg" containment="_rP5BEMNkEeifmtdC2qfHXg" name="User" package="_ct-PwcNkEeifmtdC2qfHXg" associationsOut="_xZd8gMNmEeifmtdC2qfHXg">
+    <modelElement href="Karpool.uml#_pfurAMNkEeifmtdC2qfHXg"/>
+    <visualProperties xmi:id="_pfv5IcNkEeifmtdC2qfHXg" position="288.0,276.0" size="103.0,-1.0"/>
+    <visibility xmi:id="_pfv5IsNkEeifmtdC2qfHXg" label="+"/>
+    <attributes xmi:id="_8BNpMMNkEeifmtdC2qfHXg" name="id">
+      <modelElement href="Karpool.uml#_8BL0AMNkEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_8BNpMcNkEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_8BNpMsNkEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="__nrZkMNkEeifmtdC2qfHXg" name="integer">
+        <modelElement href="Karpool.uml#__nhBgMNkEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_NfwjsMNlEeifmtdC2qfHXg" name="password">
+      <modelElement href="Karpool.uml#_Nfv8oMNlEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_NfwjscNlEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_NfwjssNlEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_QkuwkMNlEeifmtdC2qfHXg" name="string">
+        <modelElement href="Karpool.uml#_QkqfIMNlEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_aVPoYMNlEeifmtdC2qfHXg" name="rating">
+      <modelElement href="Karpool.uml#_aVOaQMNlEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_aVPoYcNlEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_aVPoYsNlEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_e0OVIMNlEeifmtdC2qfHXg" name="enumeration">
+        <modelElement href="Karpool.uml#_e0KDsMNlEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_d0_QQMNmEeifmtdC2qfHXg" name="name">
+      <modelElement href="Karpool.uml#_d0-pMMNmEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_d0_QQcNmEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_d0_QQsNmEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_hbL64MNmEeifmtdC2qfHXg" name="string">
+        <modelElement href="Karpool.uml#_QkqfIMNlEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_hzS44cNmEeifmtdC2qfHXg" name="email">
+      <modelElement href="Karpool.uml#_hzS44MNmEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_hzS44sNmEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_hzS448NmEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_jqK68MNmEeifmtdC2qfHXg" name="string">
+        <modelElement href="Karpool.uml#_QkqfIMNlEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_kATjAMNmEeifmtdC2qfHXg" name="phone">
+      <modelElement href="Karpool.uml#_kARt0MNmEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_kATjAcNmEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_kATjAsNmEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="_rPNZsMNmEeifmtdC2qfHXg" name="string">
+        <modelElement href="Karpool.uml#_QkqfIMNlEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_xZfKoMNmEeifmtdC2qfHXg" name="userRole">
+      <modelElement href="Karpool.uml#_xZZrEMNmEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_xZfKocNmEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_xZfKosNmEeifmtdC2qfHXg" label="0..2" max="2"/>
+      <type xmi:id="_xZfKo8NmEeifmtdC2qfHXg" name="UserRole">
+        <modelElement href="Karpool.uml#_sdHpMMNkEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_pJ0TIMNpEeifmtdC2qfHXg" name="location">
+      <modelElement href="Karpool.uml#_pJyd8MNpEeifmtdC2qfHXg"/>
+      <visibility xmi:id="_pJ0TIcNpEeifmtdC2qfHXg" label="+"/>
+      <cardinality xmi:id="_pJ0TIsNpEeifmtdC2qfHXg" label="1" max="1" min="1"/>
+      <type xmi:id="__MRdsMNpEeifmtdC2qfHXg" name="string">
+        <modelElement href="Karpool.uml#_QkqfIMNlEeifmtdC2qfHXg"/>
+      </type>
+    </attributes>
+  </nodes>
+</com.yattasolutions.uml.diagrams.classifier:ClassDiagram>
