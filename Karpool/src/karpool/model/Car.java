@@ -1,13 +1,9 @@
 package karpool.model;
 
-import string;
+
 
 public class Car {
-   private string make;
-   
-   public void setMake(string value) {
-      this.make = value;
-   }
+   private String make;
    
    public string getMake() {
       return this.make;
