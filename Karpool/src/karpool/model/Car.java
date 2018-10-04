@@ -1,4 +1,5 @@
 package karpool.model;
+import null.string;
 
 import string;
 

@@ -1,4 +1,7 @@
 package karpool.model;
+import null.enumeration;
+import null.string;
+import null.integer;
 
 import integer;
 import string;
