@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:UMLLabProfile="http:///schemas/UMLLabProfile/NS/0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/UMLLabProfile/NS/0 pathmap://UMLLAB_PROFILES/UMLLab.profile.uml#UMLLabProfile-Annotation_2-UMLLabProfile">
+  <uml:Model xmi:id="_hALf4MgGEei7gNaP8vPLbw" name="Karpool">
+    <eAnnotations xmi:id="_hGIW4MgGEei7gNaP8vPLbw" source="http://ns.yatta.de/umllab">
+      <contents xmi:type="ecore:EAnnotation" xmi:id="_hGIW4cgGEei7gNaP8vPLbw" source="codegen">
+        <details xmi:id="_hGI98MgGEei7gNaP8vPLbw" key="codegenDirectory" value="/Karpool"/>
+        <details xmi:id="_3GtM8MgYEeiZW_jIGp-zhg" key="AssociatedSourceCode" value="/Karpool/src/main/java/t14/karpool/KarpoolApplication.java;402930673/1;/Karpool/src/test/java/t14/karpool/KarpoolApplicationTests.java;878960293/1;"/>
+      </contents>
+    </eAnnotations>
+    <elementImport xmi:id="_hL2kYMgGEei7gNaP8vPLbw">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#boolean"/>
+    </elementImport>
+    <elementImport xmi:id="_hL3LcMgGEei7gNaP8vPLbw">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#byte"/>
+    </elementImport>
+    <elementImport xmi:id="_hL3LccgGEei7gNaP8vPLbw">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#char"/>
+    </elementImport>
+    <elementImport xmi:id="_hL3LcsgGEei7gNaP8vPLbw">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#double"/>
+    </elementImport>
+    <elementImport xmi:id="_hL3Lc8gGEei7gNaP8vPLbw">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#float"/>
+    </elementImport>
+    <elementImport xmi:id="_hL3LdMgGEei7gNaP8vPLbw">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+    </elementImport>
+    <elementImport xmi:id="_hL3LdcgGEei7gNaP8vPLbw">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#long"/>
+    </elementImport>
+    <elementImport xmi:id="_hL3LdsgGEei7gNaP8vPLbw">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#short"/>
+    </elementImport>
+    <elementImport xmi:id="_hL3ygMgGEei7gNaP8vPLbw">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </elementImport>
+    <packagedElement xmi:type="uml:Package" xmi:id="_hLfYAMgGEei7gNaP8vPLbw" name="t14">
+      <packagedElement xmi:type="uml:Package" xmi:id="_hLnT0MgGEei7gNaP8vPLbw" name="karpool">
+        <packagedElement xmi:type="uml:Class" xmi:id="_hLy6AMgGEei7gNaP8vPLbw" name="KarpoolApplication">
+          <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_hMRbIMgGEei7gNaP8vPLbw" name="main" specification="_hL4ZkMgGEei7gNaP8vPLbw">
+            <ownedParameter xmi:id="_hMRbIcgGEei7gNaP8vPLbw" name="args">
+              <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_hMRbIsgGEei7gNaP8vPLbw" value="*"/>
+            </ownedParameter>
+            <language>java</language>
+            <body>SpringApplication.run(KarpoolApplication.class, args);&#xD;
+	</body>
+          </ownedBehavior>
+          <ownedOperation xmi:id="_hL4ZkMgGEei7gNaP8vPLbw" name="main" isStatic="true" method="_hMRbIMgGEei7gNaP8vPLbw">
+            <ownedParameter xmi:id="_hL4ZkcgGEei7gNaP8vPLbw" name="args">
+              <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+              <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_hL5AocgGEei7gNaP8vPLbw" value="*"/>
+            </ownedParameter>
+          </ownedOperation>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_hL7c4MgGEei7gNaP8vPLbw" name="KarpoolApplicationTests">
+          <ownedOperation xmi:id="_hL8rAcgGEei7gNaP8vPLbw" name="contextLoads"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_jI9KQMgGEei7gNaP8vPLbw" name="User">
+          <ownedAttribute xmi:id="_1ZW_gMgGEei7gNaP8vPLbw" name="id" visibility="public">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+          </ownedAttribute>
+          <ownedAttribute xmi:id="_5-5nQMgGEei7gNaP8vPLbw" name="password" visibility="public">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedAttribute>
+          <ownedAttribute xmi:id="_8ae44MgGEei7gNaP8vPLbw" name="rating" visibility="public" type="__pZr8MgGEei7gNaP8vPLbw"/>
+          <ownedAttribute xmi:id="_AXSssMgHEei7gNaP8vPLbw" name="email" visibility="public">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedAttribute>
+          <ownedAttribute xmi:id="_D3dn0MgHEei7gNaP8vPLbw" name="phoneNumber" visibility="public">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedAttribute>
+          <ownedAttribute xmi:id="_PjqJMsgHEei7gNaP8vPLbw" name="userRole" type="_rxLkUMgGEei7gNaP8vPLbw" association="_Pjns8MgHEei7gNaP8vPLbw">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_PjqJM8gHEei7gNaP8vPLbw" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_PjqJNMgHEei7gNaP8vPLbw" value="2"/>
+          </ownedAttribute>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_rxLkUMgGEei7gNaP8vPLbw" name="UserRole" isAbstract="true">
+          <ownedAttribute xmi:id="_PjoUAMgHEei7gNaP8vPLbw" name="user" type="_jI9KQMgGEei7gNaP8vPLbw" association="_Pjns8MgHEei7gNaP8vPLbw">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_PjqJMMgHEei7gNaP8vPLbw" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_PjqJMcgHEei7gNaP8vPLbw" value="1"/>
+          </ownedAttribute>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_vbGRUMgGEei7gNaP8vPLbw" name="Driver">
+          <generalization xmi:id="_YMwF8MgHEei7gNaP8vPLbw" general="_rxLkUMgGEei7gNaP8vPLbw"/>
+          <ownedAttribute xmi:id="_bAf_8MgHEei7gNaP8vPLbw" name="citiesWillingToStop" visibility="public" type="_g8CKQMgHEei7gNaP8vPLbw"/>
+          <ownedAttribute xmi:id="_i5_rwMgHEei7gNaP8vPLbw" name="car" type="_zl9vQMgGEei7gNaP8vPLbw" association="_i5-doMgHEei7gNaP8vPLbw">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_i5_rwcgHEei7gNaP8vPLbw" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_i5_rwsgHEei7gNaP8vPLbw" value="1"/>
+          </ownedAttribute>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_wrs9kMgGEei7gNaP8vPLbw" name="Passenger">
+          <generalization xmi:id="_ZLPugMgHEei7gNaP8vPLbw" general="_rxLkUMgGEei7gNaP8vPLbw"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_zl9vQMgGEei7gNaP8vPLbw" name="Car">
+          <ownedAttribute xmi:id="_i5_rw8gHEei7gNaP8vPLbw" name="driver" type="_vbGRUMgGEei7gNaP8vPLbw" association="_i5-doMgHEei7gNaP8vPLbw">
+            <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_i6AS0MgHEei7gNaP8vPLbw" value="1"/>
+            <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_i6A54MgHEei7gNaP8vPLbw" value="*"/>
+          </ownedAttribute>
+          <ownedAttribute xmi:id="_w1vN4MgHEei7gNaP8vPLbw" name="make" visibility="public">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedAttribute>
+          <ownedAttribute xmi:id="_yshwYMgHEei7gNaP8vPLbw" name="seat" visibility="public">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+          </ownedAttribute>
+          <ownedAttribute xmi:id="_y94mIMgHEei7gNaP8vPLbw" name="licensePlate" visibility="public">
+            <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+          </ownedAttribute>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Association" xmi:id="_Pjns8MgHEei7gNaP8vPLbw" name="" memberEnd="_PjoUAMgHEei7gNaP8vPLbw _PjqJMsgHEei7gNaP8vPLbw"/>
+        <packagedElement xmi:type="uml:Association" xmi:id="_i5-doMgHEei7gNaP8vPLbw" name="" memberEnd="_i5_rwMgHEei7gNaP8vPLbw _i5_rw8gHEei7gNaP8vPLbw"/>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_hLkQgMgGEei7gNaP8vPLbw" name="org">
+      <packagedElement xmi:type="uml:Package" xmi:id="_hLkQgcgGEei7gNaP8vPLbw" name="springframework">
+        <packagedElement xmi:type="uml:Package" xmi:id="_hLkQgsgGEei7gNaP8vPLbw" name="boot">
+          <packagedElement xmi:type="uml:Package" xmi:id="_hLk3kMgGEei7gNaP8vPLbw" name="autoconfigure">
+            <packagedElement xmi:type="uml:Class" xmi:id="_hMKGYMgGEei7gNaP8vPLbw" name="SpringBootApplication"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Package" xmi:id="_hLpJAMgGEei7gNaP8vPLbw" name="test">
+            <packagedElement xmi:type="uml:Package" xmi:id="_hLpJAcgGEei7gNaP8vPLbw" name="context">
+              <packagedElement xmi:type="uml:Class" xmi:id="_hMNJscgGEei7gNaP8vPLbw" name="SpringBootTest"/>
+            </packagedElement>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_hMIRMMgGEei7gNaP8vPLbw" name="SpringApplication"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_hLpJAsgGEei7gNaP8vPLbw" name="test">
+          <packagedElement xmi:type="uml:Package" xmi:id="_hLpJA8gGEei7gNaP8vPLbw" name="context">
+            <packagedElement xmi:type="uml:Package" xmi:id="_hLpwEMgGEei7gNaP8vPLbw" name="junit4">
+              <packagedElement xmi:type="uml:Class" xmi:id="_hMOX0MgGEei7gNaP8vPLbw" name="SpringRunner"/>
+            </packagedElement>
+          </packagedElement>
+        </packagedElement>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Package" xmi:id="_hLoh8MgGEei7gNaP8vPLbw" name="junit">
+        <packagedElement xmi:type="uml:Package" xmi:id="_hLoh8cgGEei7gNaP8vPLbw" name="runner">
+          <packagedElement xmi:type="uml:Class" xmi:id="_hMMiocgGEei7gNaP8vPLbw" name="RunWith"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Class" xmi:id="_hML7kMgGEei7gNaP8vPLbw" name="Test"/>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:DataType" xmi:id="__pZr8MgGEei7gNaP8vPLbw" name="enum"/>
+    <packagedElement xmi:type="uml:DataType" xmi:id="_g8CKQMgHEei7gNaP8vPLbw" name="List"/>
+    <profileApplication xmi:id="_hGMBQMgGEei7gNaP8vPLbw">
+      <eAnnotations xmi:id="_hGSH4MgGEei7gNaP8vPLbw" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="pathmap://UMLLAB_PROFILES/UMLLab.profile.uml#UMLLabProfile-Annotation_2-UMLLabProfile"/>
+      </eAnnotations>
+      <appliedProfile href="pathmap://UMLLAB_PROFILES/UMLLab.profile.uml#UMLLabProfile"/>
+    </profileApplication>
+  </uml:Model>
+  <UMLLabProfile:TargetLanguage xmi:id="_hGT9EMgGEei7gNaP8vPLbw" base_Package="_hALf4MgGEei7gNaP8vPLbw">
+    <languageName>java</languageName>
+  </UMLLabProfile:TargetLanguage>
+  <UMLLabProfile:LegacyStyledElement xmi:id="_hL1WQMgGEei7gNaP8vPLbw" base_Element="_hLy6AMgGEei7gNaP8vPLbw"/>
+  <UMLLabProfile:StyledElement xmi:id="_hL5AoMgGEei7gNaP8vPLbw" base_Element="_hL4ZkMgGEei7gNaP8vPLbw"/>
+  <UMLLabProfile:Annotations xmi:id="_hL610MgGEei7gNaP8vPLbw" base_Element="_hLy6AMgGEei7gNaP8vPLbw">
+    <annotations xmi:id="_hL610cgGEei7gNaP8vPLbw" name="SpringBootApplication"/>
+  </UMLLabProfile:Annotations>
+  <UMLLabProfile:LegacyStyledElement xmi:id="_hL8rAMgGEei7gNaP8vPLbw" base_Element="_hL7c4MgGEei7gNaP8vPLbw"/>
+  <UMLLabProfile:Annotations xmi:id="_hL9SEMgGEei7gNaP8vPLbw" base_Element="_hL8rAcgGEei7gNaP8vPLbw">
+    <annotations xmi:id="_hL95IMgGEei7gNaP8vPLbw" name="Test"/>
+  </UMLLabProfile:Annotations>
+  <UMLLabProfile:Annotations xmi:id="_hL95IcgGEei7gNaP8vPLbw" base_Element="_hL7c4MgGEei7gNaP8vPLbw">
+    <annotations xmi:id="_hL-gMMgGEei7gNaP8vPLbw" name="RunWith">
+      <annotationParameters xmi:id="_hL-gMcgGEei7gNaP8vPLbw" skipName="true" skipArray="true">
+        <valueSpecifications xmi:type="uml:LiteralString" xmi:id="_hMTQUMgGEei7gNaP8vPLbw" value="SpringRunner.class"/>
+      </annotationParameters>
+    </annotations>
+    <annotations xmi:id="_hL_HQMgGEei7gNaP8vPLbw" name="SpringBootTest"/>
+  </UMLLabProfile:Annotations>
+  <UMLLabProfile:Reference xmi:id="_hMI4QMgGEei7gNaP8vPLbw" base_Element="_hMIRMMgGEei7gNaP8vPLbw"/>
+  <UMLLabProfile:Reference xmi:id="_hMKtcMgGEei7gNaP8vPLbw" base_Element="_hMKGYMgGEei7gNaP8vPLbw"/>
+  <UMLLabProfile:Reference xmi:id="_hMMioMgGEei7gNaP8vPLbw" base_Element="_hML7kMgGEei7gNaP8vPLbw"/>
+  <UMLLabProfile:Reference xmi:id="_hMNJsMgGEei7gNaP8vPLbw" base_Element="_hMMiocgGEei7gNaP8vPLbw"/>
+  <UMLLabProfile:Reference xmi:id="_hMNwwMgGEei7gNaP8vPLbw" base_Element="_hMNJscgGEei7gNaP8vPLbw"/>
+  <UMLLabProfile:Reference xmi:id="_hMO-4MgGEei7gNaP8vPLbw" base_Element="_hMOX0MgGEei7gNaP8vPLbw"/>
+  <UMLLabProfile:UnresolvedElement xmi:id="__paTAMgGEei7gNaP8vPLbw" base_Element="__pZr8MgGEei7gNaP8vPLbw"/>
+  <UMLLabProfile:UnresolvedElement xmi:id="_g8EmgMgHEei7gNaP8vPLbw" base_Element="_g8CKQMgHEei7gNaP8vPLbw"/>
+</xmi:XMI>
