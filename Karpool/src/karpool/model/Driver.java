@@ -1,34 +1,29 @@
 package karpool.model;
 import null.arrayList;
 
-import arrayList;
+import javax.persistence.Entity;
+import ArrayList;
+import javax.persistence.OneToOne;
 
-public class Driver extends UserRole {
-   private arrayList citiesWillingToStop;
+@Entity
+public class Driver extends UserRole{
+   private ArrayList citiesWillingToStop;
    
-   public void setCitiesWillingToStop(arrayList value) {
-      this.citiesWillingToStop = value;
-   }
-   
-   public arrayList getCitiesWillingToStop() {
-      return this.citiesWillingToStop;
-   }
-   
-   /**
-    * <pre>
-    *           1..1     1..1
-    * Driver ------------------------- Car
-    *           driver        &lt;       car
-    * </pre>
-    */
+   public void setCitiesWillingToStop(ArrayList value) {
+    this.citiesWillingToStop = value;
+    }
+public ArrayList getCitiesWillingToStop() {
+    return this.citiesWillingToStop;
+       }
    private Car car;
    
-   public void setCar(Car value) {
-      this.car = value;
-   }
-   
+   @OneToOne(optional=false)
    public Car getCar() {
       return this.car;
+   }
+   
+   public void setCar(Car car) {
+      this.car = car;
    }
    
    }
