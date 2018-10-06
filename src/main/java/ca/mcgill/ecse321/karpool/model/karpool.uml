@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xmi:XMI xmi:version="20131001" xmlns:xmi="http://www.omg.org/spec/XMI/20131001" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Persistency="http:///schemas/Persistency/NS/0" xmlns:UMLLabProfile="http:///schemas/UMLLabProfile/NS/0" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:uml="http://www.eclipse.org/uml2/5.0.0/UML" xsi:schemaLocation="http:///schemas/Persistency/NS/0 pathmap://PERSISTENCY_PROFILES/Persistency.profile.uml#Persistency_2-Annotation-Persistency http:///schemas/UMLLabProfile/NS/0 pathmap://UMLLAB_PROFILES/UMLLab.profile.uml#UMLLabProfile-Annotation_2-UMLLabProfile">
+  <uml:Model xmi:id="_qx2NIMmZEeimZ4qV05YRpg" name="karpool">
+    <eAnnotations xmi:id="_q6ImcMmZEeimZ4qV05YRpg" source="http://ns.yatta.de/umllab">
+      <contents xmi:type="ecore:EAnnotation" xmi:id="_q6M34MmZEeimZ4qV05YRpg" source="codegen">
+        <details xmi:id="_q6M34cmZEeimZ4qV05YRpg" key="codegenDirectory" value="/karpool/src/main/java"/>
+        <details xmi:id="_rYZ20MmZEeimZ4qV05YRpg" key="AssociatedSourceCode" value="/karpool/src/main/java/ca/mcgill/ecse321/karpool/application/KarpoolApplication.java;2266127818/1;/karpool/src/test/java/ca/mcgill/ecse321/karpool/KarpoolApplicationTests.java;721687357/1;"/>
+      </contents>
+    </eAnnotations>
+    <elementImport xmi:id="_rA4usMmZEeimZ4qV05YRpg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#boolean"/>
+    </elementImport>
+    <elementImport xmi:id="_rA5VwMmZEeimZ4qV05YRpg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#byte"/>
+    </elementImport>
+    <elementImport xmi:id="_rA5VwcmZEeimZ4qV05YRpg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#char"/>
+    </elementImport>
+    <elementImport xmi:id="_rA5VwsmZEeimZ4qV05YRpg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#double"/>
+    </elementImport>
+    <elementImport xmi:id="_rA5Vw8mZEeimZ4qV05YRpg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#float"/>
+    </elementImport>
+    <elementImport xmi:id="_rA5VxMmZEeimZ4qV05YRpg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+    </elementImport>
+    <elementImport xmi:id="_rA5VxcmZEeimZ4qV05YRpg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#long"/>
+    </elementImport>
+    <elementImport xmi:id="_rA5VxsmZEeimZ4qV05YRpg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#short"/>
+    </elementImport>
+    <elementImport xmi:id="_rA6j4MmZEeimZ4qV05YRpg">
+      <importedElement xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+    </elementImport>
+    <packagedElement xmi:type="uml:Package" xmi:id="_rAbbsMmZEeimZ4qV05YRpg" name="ca">
+      <packagedElement xmi:type="uml:Package" xmi:id="_rAcCwMmZEeimZ4qV05YRpg" name="mcgill">
+        <packagedElement xmi:type="uml:Package" xmi:id="_rAcCwcmZEeimZ4qV05YRpg" name="ecse321">
+          <packagedElement xmi:type="uml:Package" xmi:id="_rAcp0MmZEeimZ4qV05YRpg" name="karpool">
+            <packagedElement xmi:type="uml:Package" xmi:id="_rAlzwMmZEeimZ4qV05YRpg" name="application">
+              <packagedElement xmi:type="uml:Class" xmi:id="_rAwL0MmZEeimZ4qV05YRpg" name="KarpoolApplication">
+                <ownedBehavior xmi:type="uml:OpaqueBehavior" xmi:id="_rD4_YMmZEeimZ4qV05YRpg" name="main" specification="_rA7K8MmZEeimZ4qV05YRpg">
+                  <ownedParameter xmi:id="_rD4_YcmZEeimZ4qV05YRpg" name="args">
+                    <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                    <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_rD4_YsmZEeimZ4qV05YRpg" value="*"/>
+                  </ownedParameter>
+                  <language>java</language>
+                  <body>SpringApplication.run(KarpoolApplication.class, args);&#xD;
+	</body>
+                </ownedBehavior>
+                <ownedOperation xmi:id="_rA7K8MmZEeimZ4qV05YRpg" name="main" isStatic="true" method="_rD4_YMmZEeimZ4qV05YRpg">
+                  <ownedParameter xmi:id="_rA7K8cmZEeimZ4qV05YRpg" name="args">
+                    <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                    <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_rA9nMcmZEeimZ4qV05YRpg" value="*"/>
+                  </ownedParameter>
+                </ownedOperation>
+              </packagedElement>
+            </packagedElement>
+            <packagedElement xmi:type="uml:Class" xmi:id="_rBAqgMmZEeimZ4qV05YRpg" name="KarpoolApplicationTests">
+              <eAnnotations xmi:id="_rBB4oMmZEeimZ4qV05YRpg" source="http://ns.yatta.de/umllab">
+                <contents xmi:type="ecore:EAnnotation" xmi:id="_rBB4ocmZEeimZ4qV05YRpg" source="codegen">
+                  <details xmi:id="_rBB4osmZEeimZ4qV05YRpg" key="codegenDirectory" value="/karpool/src/test/java"/>
+                </contents>
+              </eAnnotations>
+              <ownedOperation xmi:id="_rBDt0MmZEeimZ4qV05YRpg" name="contextLoads"/>
+            </packagedElement>
+          </packagedElement>
+        </packagedElement>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_rAhiUMmZEeimZ4qV05YRpg" name="org">
+      <packagedElement xmi:type="uml:Package" xmi:id="_rAhiUcmZEeimZ4qV05YRpg" name="springframework">
+        <packagedElement xmi:type="uml:Package" xmi:id="_rAhiUsmZEeimZ4qV05YRpg" name="boot">
+          <packagedElement xmi:type="uml:Package" xmi:id="_rAiJYMmZEeimZ4qV05YRpg" name="autoconfigure">
+            <packagedElement xmi:type="uml:Interface" xmi:id="_rDfWwMmZEeimZ4qV05YRpg" name="SpringBootApplication"/>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Package" xmi:id="_rAno8MmZEeimZ4qV05YRpg" name="test">
+            <packagedElement xmi:type="uml:Package" xmi:id="_rAno8cmZEeimZ4qV05YRpg" name="context">
+              <packagedElement xmi:type="uml:Interface" xmi:id="_rDkPQcmZEeimZ4qV05YRpg" name="SpringBootTest"/>
+            </packagedElement>
+          </packagedElement>
+          <packagedElement xmi:type="uml:Class" xmi:id="_rDc6gMmZEeimZ4qV05YRpg" name="SpringApplication"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Package" xmi:id="_rAno8smZEeimZ4qV05YRpg" name="test">
+          <packagedElement xmi:type="uml:Package" xmi:id="_rAoQAMmZEeimZ4qV05YRpg" name="context">
+            <packagedElement xmi:type="uml:Package" xmi:id="_rAoQAcmZEeimZ4qV05YRpg" name="junit4">
+              <packagedElement xmi:type="uml:Class" xmi:id="_rDldYcmZEeimZ4qV05YRpg" name="SpringRunner"/>
+            </packagedElement>
+          </packagedElement>
+        </packagedElement>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Package" xmi:id="_rAnB4MmZEeimZ4qV05YRpg" name="junit">
+        <packagedElement xmi:type="uml:Package" xmi:id="_rAnB4cmZEeimZ4qV05YRpg" name="runner">
+          <packagedElement xmi:type="uml:Interface" xmi:id="_rDjBIMmZEeimZ4qV05YRpg" name="RunWith"/>
+        </packagedElement>
+        <packagedElement xmi:type="uml:Interface" xmi:id="_rDhL8MmZEeimZ4qV05YRpg" name="Test"/>
+      </packagedElement>
+    </packagedElement>
+    <profileApplication xmi:id="_q6PUIMmZEeimZ4qV05YRpg">
+      <eAnnotations xmi:id="_q6UMoMmZEeimZ4qV05YRpg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="pathmap://UMLLAB_PROFILES/UMLLab.profile.uml#UMLLabProfile-Annotation_2-UMLLabProfile"/>
+      </eAnnotations>
+      <appliedProfile href="pathmap://UMLLAB_PROFILES/UMLLab.profile.uml#UMLLabProfile"/>
+    </profileApplication>
+    <profileApplication xmi:id="_w3LzsMmZEeimZ4qV05YRpg">
+      <eAnnotations xmi:id="_w3LzscmZEeimZ4qV05YRpg" source="http://www.eclipse.org/uml2/2.0.0/UML">
+        <references xmi:type="ecore:EPackage" href="pathmap://PERSISTENCY_PROFILES/Persistency.profile.uml#Persistency_2-Annotation-Persistency"/>
+      </eAnnotations>
+      <appliedProfile href="pathmap://PERSISTENCY_PROFILES/Persistency.profile.uml#Persistency_2"/>
+    </profileApplication>
+  </uml:Model>
+  <UMLLabProfile:TargetLanguage xmi:id="_q6aTQMmZEeimZ4qV05YRpg" base_Package="_qx2NIMmZEeimZ4qV05YRpg">
+    <languageName>java</languageName>
+  </UMLLabProfile:TargetLanguage>
+  <UMLLabProfile:LegacyStyledElement xmi:id="_rA25gMmZEeimZ4qV05YRpg" base_Element="_rAwL0MmZEeimZ4qV05YRpg"/>
+  <UMLLabProfile:StyledElement xmi:id="_rA9nMMmZEeimZ4qV05YRpg" base_Element="_rA7K8MmZEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Annotations xmi:id="_rA_cYMmZEeimZ4qV05YRpg" base_Element="_rAwL0MmZEeimZ4qV05YRpg">
+    <annotations xmi:id="_rA_cYcmZEeimZ4qV05YRpg" name="SpringBootApplication"/>
+  </UMLLabProfile:Annotations>
+  <UMLLabProfile:LegacyStyledElement xmi:id="_rBDGwMmZEeimZ4qV05YRpg" base_Element="_rBAqgMmZEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Annotations xmi:id="_rBEU4MmZEeimZ4qV05YRpg" base_Element="_rBDt0MmZEeimZ4qV05YRpg">
+    <annotations xmi:id="_rBE78MmZEeimZ4qV05YRpg" name="Test"/>
+  </UMLLabProfile:Annotations>
+  <UMLLabProfile:Annotations xmi:id="_rBFjAMmZEeimZ4qV05YRpg" base_Element="_rBAqgMmZEeimZ4qV05YRpg">
+    <annotations xmi:id="_rBFjAcmZEeimZ4qV05YRpg" name="RunWith">
+      <annotationParameters xmi:id="_rBFjAsmZEeimZ4qV05YRpg" skipName="true" skipArray="true">
+        <valueSpecifications xmi:type="uml:LiteralString" xmi:id="_rD9Q0MmZEeimZ4qV05YRpg" value="SpringRunner.class"/>
+      </annotationParameters>
+    </annotations>
+    <annotations xmi:id="_rBGKEMmZEeimZ4qV05YRpg" name="SpringBootTest"/>
+  </UMLLabProfile:Annotations>
+  <UMLLabProfile:Reference xmi:id="_rDeIoMmZEeimZ4qV05YRpg" base_Element="_rDc6gMmZEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Reference xmi:id="_rDgk4MmZEeimZ4qV05YRpg" base_Element="_rDfWwMmZEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Reference xmi:id="_rDiaEMmZEeimZ4qV05YRpg" base_Element="_rDhL8MmZEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Reference xmi:id="_rDkPQMmZEeimZ4qV05YRpg" base_Element="_rDjBIMmZEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Reference xmi:id="_rDldYMmZEeimZ4qV05YRpg" base_Element="_rDkPQcmZEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Reference xmi:id="_rDmrgMmZEeimZ4qV05YRpg" base_Element="_rDldYcmZEeimZ4qV05YRpg"/>
+  <Persistency:JPA1StyledElement xmi:id="_w3O3AMmZEeimZ4qV05YRpg" base_Element="_rAlzwMmZEeimZ4qV05YRpg"/>
+</xmi:XMI>
