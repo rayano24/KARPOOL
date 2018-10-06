@@ -19,17 +19,6 @@ public class User {
       return this.name;
    }
    
-   private int id;
-   
-   public void setId(int value) {
-      this.id = value;
-   }
-   
-   @Id
-   public int getId() {
-      return this.id;
-   }
-   
    private String email;
    
    public void setEmail(String value) {
