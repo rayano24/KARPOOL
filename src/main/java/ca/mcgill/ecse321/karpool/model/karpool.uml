@@ -4,7 +4,11 @@
     <eAnnotations xmi:id="_q6ImcMmZEeimZ4qV05YRpg" source="http://ns.yatta.de/umllab">
       <contents xmi:type="ecore:EAnnotation" xmi:id="_q6M34MmZEeimZ4qV05YRpg" source="codegen">
         <details xmi:id="_q6M34cmZEeimZ4qV05YRpg" key="codegenDirectory" value="/karpool/src/main/java"/>
-        <details xmi:id="_rYZ20MmZEeimZ4qV05YRpg" key="AssociatedSourceCode" value="/karpool/src/main/java/ca/mcgill/ecse321/karpool/application/KarpoolApplication.java;2266127818/1;/karpool/src/test/java/ca/mcgill/ecse321/karpool/KarpoolApplicationTests.java;721687357/1;"/>
+        <details xmi:id="_rYZ20MmZEeimZ4qV05YRpg" key="AssociatedSourceCode" value="/karpool/src/main/java/ca/mcgill/ecse321/karpool/application/KarpoolApplication.java;2266127818/1;/karpool/src/test/java/ca/mcgill/ecse321/karpool/KarpoolApplicationTests.java;721687357/1;/karpool/src/main/java/ca/mcgill/ecse321/karpool/application/Driver.java;3016895541/1;/karpool/src/main/java/ca/mcgill/ecse321/karpool/application/Passenger.java;2914822481/1;/karpool/src/main/java/ca/mcgill/ecse321/karpool/application/Rating.java;416371791/1;/karpool/src/main/java/ca/mcgill/ecse321/karpool/model/User.java;1020676879/1;/karpool/src/main/java/ca/mcgill/ecse321/karpool/model/UserRole.java;743909422/1;/karpool/src/main/java/ca/mcgill/ecse321/karpool/model/Trip.java;801610580/1;/karpool/src/main/java/ca/mcgill/ecse321/karpool/model/Car.java;3824520253/1;"/>
+      </contents>
+      <contents xmi:type="ecore:EAnnotation" xmi:id="_mUaCYMmiEeimZ4qV05YRpg" source="dangling-refs">
+        <contents xmi:type="uml:Association" xmi:id="_qqt4IMmeEeimZ4qV05YRpg" name="" memberEnd="_qqvGQMmeEeimZ4qV05YRpg"/>
+        <contents xmi:type="uml:Association" xmi:id="_vVsZgMmeEeimZ4qV05YRpg" name="" memberEnd="_vVtnosmeEeimZ4qV05YRpg"/>
       </contents>
     </eAnnotations>
     <elementImport xmi:id="_rA4usMmZEeimZ4qV05YRpg">
@@ -56,6 +60,31 @@
                   </ownedParameter>
                 </ownedOperation>
               </packagedElement>
+              <packagedElement xmi:type="uml:Class" xmi:id="_MZomoMmbEeimZ4qV05YRpg" name="Driver">
+                <generalization xmi:id="_ZRkiYMmbEeimZ4qV05YRpg" general="_GTiLEMmbEeimZ4qV05YRpg"/>
+                <ownedAttribute xmi:id="_kgoUcMmeEeimZ4qV05YRpg" name="car" type="_QvArcMmbEeimZ4qV05YRpg">
+                  <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_kgoUccmeEeimZ4qV05YRpg" value="1"/>
+                  <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kgo7gMmeEeimZ4qV05YRpg" value="1"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_qqvGQMmeEeimZ4qV05YRpg" name="trip" type="_J1dZsMmbEeimZ4qV05YRpg" association="_qqt4IMmeEeimZ4qV05YRpg">
+                  <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_qqvGQcmeEeimZ4qV05YRpg" value="1"/>
+                  <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_qqvGQsmeEeimZ4qV05YRpg" value="1"/>
+                </ownedAttribute>
+              </packagedElement>
+              <packagedElement xmi:type="uml:Class" xmi:id="_PKHKMMmbEeimZ4qV05YRpg" name="Passenger">
+                <generalization xmi:id="_ZoLEgMmbEeimZ4qV05YRpg" general="_GTiLEMmbEeimZ4qV05YRpg"/>
+                <ownedAttribute xmi:id="_vVtnosmeEeimZ4qV05YRpg" name="trip" type="_J1dZsMmbEeimZ4qV05YRpg" association="_vVsZgMmeEeimZ4qV05YRpg">
+                  <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vVuOsMmeEeimZ4qV05YRpg" value="1"/>
+                  <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vVuOscmeEeimZ4qV05YRpg" value="1"/>
+                </ownedAttribute>
+              </packagedElement>
+              <packagedElement xmi:type="uml:Enumeration" xmi:id="_RrHR4MmcEeimZ4qV05YRpg" name="Rating">
+                <ownedLiteral xmi:id="_jt9zUMmcEeimZ4qV05YRpg" name="1"/>
+                <ownedLiteral xmi:id="_k3-vYMmcEeimZ4qV05YRpg" name="2"/>
+                <ownedLiteral xmi:id="_mCuEMMmcEeimZ4qV05YRpg" name="3"/>
+                <ownedLiteral xmi:id="_m_-WoMmcEeimZ4qV05YRpg" name="4"/>
+                <ownedLiteral xmi:id="_oI2qQMmcEeimZ4qV05YRpg" name="5"/>
+              </packagedElement>
             </packagedElement>
             <packagedElement xmi:type="uml:Class" xmi:id="_rBAqgMmZEeimZ4qV05YRpg" name="KarpoolApplicationTests">
               <eAnnotations xmi:id="_rBB4oMmZEeimZ4qV05YRpg" source="http://ns.yatta.de/umllab">
@@ -64,6 +93,70 @@
                 </contents>
               </eAnnotations>
               <ownedOperation xmi:id="_rBDt0MmZEeimZ4qV05YRpg" name="contextLoads"/>
+            </packagedElement>
+            <packagedElement xmi:type="uml:Package" xmi:id="_HftfwMmaEeimZ4qV05YRpg" name="model">
+              <packagedElement xmi:type="uml:Class" xmi:id="_BZVh8MmbEeimZ4qV05YRpg" name="User">
+                <ownedAttribute xmi:id="_bq38EMmbEeimZ4qV05YRpg" name="name" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_tQBN0MmbEeimZ4qV05YRpg" name="id" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_waEvAMmbEeimZ4qV05YRpg" name="email" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_yzZ94MmbEeimZ4qV05YRpg" name="phoneNumber" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_9vl-oMmbEeimZ4qV05YRpg" name="password" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_Ecjl4MmcEeimZ4qV05YRpg" name="rating" visibility="public" type="_RrHR4MmcEeimZ4qV05YRpg"/>
+              </packagedElement>
+              <packagedElement xmi:type="uml:Class" xmi:id="_GTiLEMmbEeimZ4qV05YRpg" name="UserRole" isAbstract="true"/>
+              <packagedElement xmi:type="uml:Class" xmi:id="_J1dZsMmbEeimZ4qV05YRpg" name="Trip">
+                <ownedAttribute xmi:id="_FagmcMmdEeimZ4qV05YRpg" name="seatAvailable" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_Ng8iEMmdEeimZ4qV05YRpg" name="destination" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_Qwr0gMmdEeimZ4qV05YRpg" name="departureTime" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_kPkPEMmdEeimZ4qV05YRpg" name="departureLocation" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_qNp-IMmdEeimZ4qV05YRpg" name="distance" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_qqufMMmeEeimZ4qV05YRpg" name="driver" visibility="public" type="_MZomoMmbEeimZ4qV05YRpg" isReadOnly="true">
+                  <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_qqufMcmeEeimZ4qV05YRpg"/>
+                  <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_qqufMsmeEeimZ4qV05YRpg" value="*"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_vVtAkMmeEeimZ4qV05YRpg" name="passenger" type="_PKHKMMmbEeimZ4qV05YRpg" isReadOnly="true">
+                  <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_vVtnoMmeEeimZ4qV05YRpg"/>
+                  <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_vVtnocmeEeimZ4qV05YRpg" value="*"/>
+                </ownedAttribute>
+              </packagedElement>
+              <packagedElement xmi:type="uml:Class" xmi:id="_QvArcMmbEeimZ4qV05YRpg" name="Car">
+                <ownedAttribute xmi:id="_J9MHcMmdEeimZ4qV05YRpg" name="make" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_tLMGQMmdEeimZ4qV05YRpg" name="seat" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_tNSYAMmdEeimZ4qV05YRpg" name="licensePlate" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_4LlRkMmdEeimZ4qV05YRpg" name="fuelEfficiency" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
+                <ownedAttribute xmi:id="_kgo7gcmeEeimZ4qV05YRpg" name="driver" type="_MZomoMmbEeimZ4qV05YRpg">
+                  <lowerValue xmi:type="uml:LiteralInteger" xmi:id="_kgo7gsmeEeimZ4qV05YRpg" value="1"/>
+                  <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_kgo7g8meEeimZ4qV05YRpg" value="1"/>
+                </ownedAttribute>
+              </packagedElement>
             </packagedElement>
           </packagedElement>
         </packagedElement>
@@ -95,6 +188,23 @@
           <packagedElement xmi:type="uml:Interface" xmi:id="_rDjBIMmZEeimZ4qV05YRpg" name="RunWith"/>
         </packagedElement>
         <packagedElement xmi:type="uml:Interface" xmi:id="_rDhL8MmZEeimZ4qV05YRpg" name="Test"/>
+      </packagedElement>
+      <packagedElement xmi:type="uml:Package" xmi:id="_7wp-AMmhEeimZ4qV05YRpg" name="hibernate">
+        <packagedElement xmi:type="uml:Package" xmi:id="_7wp-AcmhEeimZ4qV05YRpg" name="annotations">
+          <packagedElement xmi:type="uml:Interface" xmi:id="_7wx50MmhEeimZ4qV05YRpg" name="Entity"/>
+        </packagedElement>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_FfLHMMmhEeimZ4qV05YRpg" name="javax">
+      <packagedElement xmi:type="uml:Package" xmi:id="_FfLHMcmhEeimZ4qV05YRpg" name="persistence">
+        <packagedElement xmi:type="uml:Interface" xmi:id="_FfR04MmhEeimZ4qV05YRpg" name="Id"/>
+        <packagedElement xmi:type="uml:Interface" xmi:id="_UyIT4MmhEeimZ4qV05YRpg" name="Entity"/>
+      </packagedElement>
+    </packagedElement>
+    <packagedElement xmi:type="uml:Package" xmi:id="_p4RnMMmhEeimZ4qV05YRpg" name="java">
+      <packagedElement xmi:type="uml:Package" xmi:id="_p4SOQMmhEeimZ4qV05YRpg" name="util">
+        <packagedElement xmi:type="uml:Interface" xmi:id="_p4he0MmhEeimZ4qV05YRpg" name="Set"/>
+        <packagedElement xmi:type="uml:Class" xmi:id="_p4lJMcmhEeimZ4qV05YRpg" name="HashSet"/>
       </packagedElement>
     </packagedElement>
     <profileApplication xmi:id="_q6PUIMmZEeimZ4qV05YRpg">
@@ -137,4 +247,78 @@
   <UMLLabProfile:Reference xmi:id="_rDldYMmZEeimZ4qV05YRpg" base_Element="_rDkPQcmZEeimZ4qV05YRpg"/>
   <UMLLabProfile:Reference xmi:id="_rDmrgMmZEeimZ4qV05YRpg" base_Element="_rDldYcmZEeimZ4qV05YRpg"/>
   <Persistency:JPA1StyledElement xmi:id="_w3O3AMmZEeimZ4qV05YRpg" base_Element="_rAlzwMmZEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_FfMVUMmhEeimZ4qV05YRpg" base_Property="_bq38EMmbEeimZ4qV05YRpg"/>
+  <Persistency:JPA1StyledElement xmi:id="_FfOKgMmhEeimZ4qV05YRpg" base_Element="_bq38EMmbEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Reference xmi:id="_FfVfQMmhEeimZ4qV05YRpg" base_Element="_FfR04MmhEeimZ4qV05YRpg"/>
+  <Persistency:JPA1StyledElement xmi:id="_Ux8tsMmhEeimZ4qV05YRpg" base_Element="_BZVh8MmbEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_Ux_J8MmhEeimZ4qV05YRpg" base_Property="_tQBN0MmbEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_Ux_xAMmhEeimZ4qV05YRpg" base_Property="_waEvAMmbEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_UyA_IMmhEeimZ4qV05YRpg" base_Property="_yzZ94MmbEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_UyBmMMmhEeimZ4qV05YRpg" base_Property="_9vl-oMmbEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_UyC0UMmhEeimZ4qV05YRpg" base_Property="_Ecjl4MmcEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Reference xmi:id="_UyLXMMmhEeimZ4qV05YRpg" base_Element="_UyIT4MmhEeimZ4qV05YRpg"/>
+  <Persistency:JPA1StyledElement xmi:id="_eeGC4MmhEeimZ4qV05YRpg" base_Element="_QvArcMmbEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_eeHRAMmhEeimZ4qV05YRpg" base_Property="_J9MHcMmdEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_eeH4EMmhEeimZ4qV05YRpg" base_Property="_tLMGQMmdEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_eeJGMMmhEeimZ4qV05YRpg" base_Property="_tNSYAMmdEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_eeJtQMmhEeimZ4qV05YRpg" base_Property="_4LlRkMmdEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_eeKUUMmhEeimZ4qV05YRpg" base_Property="_kgo7gcmeEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_p4S1UMmhEeimZ4qV05YRpg" base_Property="_FagmcMmdEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_p4UDcMmhEeimZ4qV05YRpg" base_Property="_Ng8iEMmdEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_p4UqgMmhEeimZ4qV05YRpg" base_Property="_Qwr0gMmdEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_p4VRkMmhEeimZ4qV05YRpg" base_Property="_kPkPEMmdEeimZ4qV05YRpg"/>
+  <Persistency:PrimaryKey xmi:id="_p4V4oMmhEeimZ4qV05YRpg" base_Property="_qNp-IMmdEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Annotations xmi:id="_p4Y78MmhEeimZ4qV05YRpg" base_Element="_p4YU4MmhEeimZ4qV05YRpg">
+    <annotations xmi:id="_p4Y78cmhEeimZ4qV05YRpg" name="Id"/>
+  </UMLLabProfile:Annotations>
+  <Persistency:JPA1StyledElement xmi:id="_p4ZjAMmhEeimZ4qV05YRpg" base_Element="_FagmcMmdEeimZ4qV05YRpg"/>
+  <Persistency:JPA1StyledElement xmi:id="_p4aKEMmhEeimZ4qV05YRpg" base_Element="_Ng8iEMmdEeimZ4qV05YRpg"/>
+  <Persistency:JPA1StyledElement xmi:id="_p4aKEcmhEeimZ4qV05YRpg" base_Element="_Qwr0gMmdEeimZ4qV05YRpg"/>
+  <Persistency:JPA1StyledElement xmi:id="_p4aKEsmhEeimZ4qV05YRpg" base_Element="_kPkPEMmdEeimZ4qV05YRpg"/>
+  <Persistency:JPA1StyledElement xmi:id="_p4aKE8mhEeimZ4qV05YRpg" base_Element="_qNp-IMmdEeimZ4qV05YRpg"/>
+  <UMLLabProfile:LegacyStyledElement xmi:id="_p4axIMmhEeimZ4qV05YRpg" base_Element="_qqufMMmeEeimZ4qV05YRpg">
+    <associatedElement xmi:type="uml:Operation" xmi:id="_p4YU4MmhEeimZ4qV05YRpg" name="getDriver" method="_Vw5z0MmiEeimZ4qV05YRpg">
+      <ownedParameter xmi:id="_UTc-YMmiEeimZ4qV05YRpg" type="_MZomoMmbEeimZ4qV05YRpg" direction="return">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_UTc-YcmiEeimZ4qV05YRpg" value="*"/>
+      </ownedParameter>
+    </associatedElement>
+  </UMLLabProfile:LegacyStyledElement>
+  <UMLLabProfile:LegacyStyledElement xmi:id="_p4axIsmhEeimZ4qV05YRpg" base_Element="_vVtAkMmeEeimZ4qV05YRpg">
+    <associatedElement xmi:type="uml:Operation" xmi:id="_p4axI8mhEeimZ4qV05YRpg" name="getPassenger" method="_p4qBsMmhEeimZ4qV05YRpg">
+      <ownedParameter xmi:id="_p4bYMMmhEeimZ4qV05YRpg" type="_PKHKMMmbEeimZ4qV05YRpg" direction="return">
+        <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_p4bYMcmhEeimZ4qV05YRpg" value="*"/>
+      </ownedParameter>
+    </associatedElement>
+  </UMLLabProfile:LegacyStyledElement>
+  <UMLLabProfile:Annotations xmi:id="_p4bYMsmhEeimZ4qV05YRpg" base_Element="_p4axI8mhEeimZ4qV05YRpg">
+    <annotations xmi:id="_p4bYM8mhEeimZ4qV05YRpg" name="Id"/>
+  </UMLLabProfile:Annotations>
+  <UMLLabProfile:Reference xmi:id="_p4lJMMmhEeimZ4qV05YRpg" base_Element="_p4he0MmhEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Reference xmi:id="_p4oMgMmhEeimZ4qV05YRpg" base_Element="_p4lJMcmhEeimZ4qV05YRpg"/>
+  <uml:OpaqueBehavior xmi:id="_p4qBsMmhEeimZ4qV05YRpg" name="getPassenger" specification="_p4axI8mhEeimZ4qV05YRpg">
+    <ownedParameter xmi:id="_p4qBscmhEeimZ4qV05YRpg" type="_PKHKMMmbEeimZ4qV05YRpg" direction="return">
+      <name xsi:nil="true"/>
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_p4qBssmhEeimZ4qV05YRpg" value="*"/>
+    </ownedParameter>
+    <language>java</language>
+    <body>if (this.passenger == null) {&#xD;
+      this.passenger = new HashSet&lt;Passenger>();&#xD;
+   }&#xD;
+   return this.passenger;&#xD;
+</body>
+  </uml:OpaqueBehavior>
+  <Persistency:JPA1StyledElement xmi:id="_7wpW8MmhEeimZ4qV05YRpg" base_Element="_J1dZsMmbEeimZ4qV05YRpg"/>
+  <UMLLabProfile:Reference xmi:id="_7w2yUMmhEeimZ4qV05YRpg" base_Element="_7wx50MmhEeimZ4qV05YRpg"/>
+  <uml:OpaqueBehavior xmi:id="_Vw5z0MmiEeimZ4qV05YRpg" name="getDriver" specification="_p4YU4MmhEeimZ4qV05YRpg">
+    <ownedParameter xmi:id="_Vw5z0cmiEeimZ4qV05YRpg" type="_MZomoMmbEeimZ4qV05YRpg" direction="return">
+      <upperValue xmi:type="uml:LiteralUnlimitedNatural" xmi:id="_Vw5z0smiEeimZ4qV05YRpg" value="*"/>
+    </ownedParameter>
+    <language>java</language>
+    <body>if (this.driver == null) {&#xD;
+      this.driver = new HashSet&lt;Driver>();&#xD;
+   }&#xD;
+   return this.driver;&#xD;
+</body>
+  </uml:OpaqueBehavior>
+  <Persistency:JPA1StyledElement xmi:id="_Ypi04MmiEeimZ4qV05YRpg" base_Element="_GTiLEMmbEeimZ4qV05YRpg"/>
 </xmi:XMI>

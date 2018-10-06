@@ -1,7 +1,12 @@
 package ca.mcgill.ecse321.karpool.model;
+import javax.persistence.Entity;
 
 import ca.mcgill.ecse321.karpool.application.Driver;
+import javax.persistence.Id;
 
+import org.hibernate.annotations.Entity;
+
+@Entity
 public class Car {
    private String make;
    
@@ -9,6 +14,7 @@ public class Car {
       this.make = value;
    }
    
+   @Id
    public String getMake() {
       return this.make;
    }
@@ -19,6 +25,7 @@ public class Car {
       this.seat = value;
    }
    
+   @Id
    public int getSeat() {
       return this.seat;
    }
@@ -29,6 +36,7 @@ public class Car {
       this.licensePlate = value;
    }
    
+   @Id
    public String getLicensePlate() {
       return this.licensePlate;
    }
@@ -39,6 +47,7 @@ public class Car {
       this.fuelEfficiency = value;
    }
    
+   @Id
    public String getFuelEfficiency() {
       return this.fuelEfficiency;
    }
@@ -56,6 +65,7 @@ public class Car {
       this.driver = value;
    }
    
+   @Id
    public Driver getDriver() {
       return this.driver;
    }

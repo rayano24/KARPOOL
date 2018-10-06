@@ -1,10 +1,17 @@
 package ca.mcgill.ecse321.karpool.model;
+import javax.persistence.Entity;
 
 import ca.mcgill.ecse321.karpool.application.Driver;
 import java.util.Set;
+
+import javax.persistence.Id;
+
+import org.hibernate.annotations.Entity;
+
 import java.util.HashSet;
 import ca.mcgill.ecse321.karpool.application.Passenger;
 
+@Entity
 public class Trip {
    private int seatAvailable;
    
@@ -12,6 +19,7 @@ public class Trip {
       this.seatAvailable = value;
    }
    
+   @Id
    public int getSeatAvailable() {
       return this.seatAvailable;
    }
@@ -22,6 +30,7 @@ public class Trip {
       this.destination = value;
    }
    
+   @Id
    public String getDestination() {
       return this.destination;
    }
@@ -32,6 +41,7 @@ public class Trip {
       this.departureTime = value;
    }
    
+   @Id
    public String getDepartureTime() {
       return this.departureTime;
    }
@@ -42,6 +52,7 @@ public class Trip {
       this.departureLocation = value;
    }
    
+   @Id
    public String getDepartureLocation() {
       return this.departureLocation;
    }
@@ -52,6 +63,7 @@ public class Trip {
       this.distance = value;
    }
    
+   @Id
    public int getDistance() {
       return this.distance;
    }
@@ -65,6 +77,7 @@ public class Trip {
     */
    private Set<Driver> driver;
    
+   @Id
    public Set<Driver> getDriver() {
       if (this.driver == null) {
          this.driver = new HashSet<Driver>();
@@ -81,6 +94,7 @@ public class Trip {
     */
    private Set<Passenger> passenger;
    
+   @Id
    public Set<Passenger> getPassenger() {
       if (this.passenger == null) {
          this.passenger = new HashSet<Passenger>();
