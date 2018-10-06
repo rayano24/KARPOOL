@@ -1,9 +1,9 @@
 package ca.mcgill.ecse321.karpool.model;
 import javax.persistence.Entity;
 
+
 import javax.persistence.Id;
 
-import org.hibernate.annotations.Entity;
 
 import ca.mcgill.ecse321.karpool.application.Rating;
 
