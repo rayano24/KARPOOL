@@ -8,11 +8,15 @@ import javax.persistence.Id;
 
 
 import java.util.HashSet;
+import java.util.*;
+
 import ca.mcgill.ecse321.karpool.application.Passenger;
 
 @Entity
 public class Trip {
+	
 private int tripId;
+private List<Passenger> passengers;
 
 public void setTripId(int value) {
 this.tripId = value;

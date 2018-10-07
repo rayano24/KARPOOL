@@ -1,6 +1,6 @@
 package ca.mcgill.ecse321.karpool.application.controller;
 
-
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
+import ca.mcgill.ecse321.karpool.application.Passenger;
 import ca.mcgill.ecse321.karpool.application.Rating;
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
+	
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "Not found";
 	
@@ -96,6 +99,28 @@ public class KarpoolController {
 		
 	}
 	
+//	public boolean addPassenger(Passenger passenger) {
+//		boolean wasAdded = false;
+//		if (passengers.contains(passenger)) {
+//			return false;
+//		}
+//		Trip existingTrip = passenger.getTrip();
+//		boolean isNewTrip = (existingTrip != null && !this.equals(existingTrip));
+//		
+//		if (isNewTrip) {
+//			passenger.setTrip(this);
+//		}
+//		
+//		else {
+//			passenger.add(passenger);
+//		}
+//		wasAdded = true;
+//		return wasAdded;
+//				
+//
+//		
+//	}
+//	
 	
 
 

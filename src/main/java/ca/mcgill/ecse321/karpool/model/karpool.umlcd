@@ -30,6 +30,14 @@
     <bendpoints xmi:id="_wznJA8meEeimZ4qV05YRpg" sourceY="-41" targetX="115" targetY="43"/>
     <bendpoints xmi:id="_wznJBMmeEeimZ4qV05YRpg" sourceX="-115" sourceY="-41" targetY="43"/>
   </edges>
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_GBdecMmtEeieleQvlIsB7g" source="_J1dZscmbEeimZ4qV05YRpg">
+    <modelElement href="karpool.uml#_vVsZgMmeEeimZ4qV05YRpg"/>
+    <nameVisual xmi:id="_GB-b0MmtEeieleQvlIsB7g" text=""/>
+  </edges>
+  <edges xsi:type="com.yattasolutions.uml.diagrams.classifier:AssociationVisual" xmi:id="_GBzcsMmtEeieleQvlIsB7g" source="_J1dZscmbEeimZ4qV05YRpg">
+    <modelElement href="karpool.uml#_qqt4IMmeEeimZ4qV05YRpg"/>
+    <nameVisual xmi:id="_GB-b0cmtEeieleQvlIsB7g" text=""/>
+  </edges>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:PackageVisual" xmi:id="_DV_4YMmaEeimZ4qV05YRpg" containments="_L_y_wMmaEeimZ4qV05YRpg" name="karpool" nestedPackages="_HfuG0MmaEeimZ4qV05YRpg">
     <modelElement href="karpool.uml#_rAcp0MmZEeimZ4qV05YRpg"/>
     <visualProperties xmi:id="_DWAfcMmaEeimZ4qV05YRpg" position="10.0,30.0" size="-1.0,-1.0"/>
@@ -40,11 +48,11 @@
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_PKHxQMmbEeimZ4qV05YRpg" name="Passenger" generalizations="_ZoLrkMmbEeimZ4qV05YRpg">
     <modelElement href="karpool.uml#_PKHKMMmbEeimZ4qV05YRpg"/>
-    <visualProperties xmi:id="_PKIYUMmbEeimZ4qV05YRpg" position="424.0,366.0" size="111.0,-1.0"/>
+    <visualProperties xmi:id="_PKIYUMmbEeimZ4qV05YRpg" position="424.0,366.0" size="111.0,33.0"/>
     <visibility xmi:id="_PKIYUcmbEeimZ4qV05YRpg" label="+"/>
     <attributes xmi:id="_vV2xkMmeEeimZ4qV05YRpg" name="trip">
       <modelElement href="karpool.uml#_vVtnosmeEeimZ4qV05YRpg"/>
-      <stereotypes xmi:id="_FnmsoMmwEeimZ4qV05YRpg" name="PrimaryKey">
+      <stereotypes xmi:id="_nvJZsMmwEeieleQvlIsB7g" name="PrimaryKey">
         <modelElement href="karpool.uml#_FnkQYMmwEeimZ4qV05YRpg"/>
       </stereotypes>
       <visibility xmi:id="_vV2xkcmeEeimZ4qV05YRpg" label="+"/>
@@ -53,88 +61,55 @@
         <modelElement href="karpool.uml#_J1dZsMmbEeimZ4qV05YRpg"/>
       </type>
     </attributes>
-    <attributes xmi:id="_6wgAMcmvEeimZ4qV05YRpg" name="passengerId">
+    <attributes xmi:id="_nvcUoMmwEeieleQvlIsB7g" name="passengerId">
       <modelElement href="karpool.uml#_6wgAMMmvEeimZ4qV05YRpg"/>
-      <stereotypes xmi:id="_Fnoh0MmwEeimZ4qV05YRpg" name="PrimaryKey">
+      <stereotypes xmi:id="_nvcUocmwEeieleQvlIsB7g" name="PrimaryKey">
         <modelElement href="karpool.uml#_Fnk3cMmwEeimZ4qV05YRpg"/>
       </stereotypes>
-      <visibility xmi:id="_6wgAMsmvEeimZ4qV05YRpg" label="+"/>
-      <cardinality xmi:id="_6wgAM8mvEeimZ4qV05YRpg" label="1" max="1" min="1"/>
-      <type xmi:id="_8gKnAMmvEeimZ4qV05YRpg" name="int">
+      <visibility xmi:id="_nvcUosmwEeieleQvlIsB7g" label="+"/>
+      <cardinality xmi:id="_nvcUo8mwEeieleQvlIsB7g" label="1" max="1" min="1"/>
+      <type xmi:id="_nvcUpMmwEeieleQvlIsB7g" name="int">
         <modelElement href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
       </type>
     </attributes>
   </nodes>
-  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_QvBSgMmbEeimZ4qV05YRpg" containment="_VbQ_MMmbEeimZ4qV05YRpg" name="Car" package="_HfuG0MmaEeimZ4qV05YRpg">
-    <modelElement href="karpool.uml#_QvArcMmbEeimZ4qV05YRpg"/>
-    <visualProperties xmi:id="_QvBSgcmbEeimZ4qV05YRpg" position="455.0,39.0" size="112.0,-1.0"/>
-    <stereotypes xmi:id="_ejaAsMmhEeimZ4qV05YRpg" name="JPA1StyledElement">
-      <modelElement href="karpool.uml#_eeGC4MmhEeimZ4qV05YRpg"/>
-    </stereotypes>
-    <visibility xmi:id="_QvBSgsmbEeimZ4qV05YRpg" label="+"/>
-    <attributes xmi:id="_J9MugMmdEeimZ4qV05YRpg" name="make">
-      <modelElement href="karpool.uml#_J9MHcMmdEeimZ4qV05YRpg"/>
-      <stereotypes xmi:id="_ejbO0MmhEeimZ4qV05YRpg" name="PrimaryKey">
-        <modelElement href="karpool.uml#_eeHRAMmhEeimZ4qV05YRpg"/>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_MZpNsMmbEeimZ4qV05YRpg" name="Driver" generalizations="_ZRqpAMmbEeimZ4qV05YRpg">
+    <modelElement href="karpool.uml#_MZomoMmbEeimZ4qV05YRpg"/>
+    <visualProperties xmi:id="_MZpNscmbEeimZ4qV05YRpg" position="271.0,355.0" size="90.0,34.0"/>
+    <visibility xmi:id="_MZpNssmbEeimZ4qV05YRpg" label="+"/>
+    <attributes xmi:id="_kgsl4MmeEeimZ4qV05YRpg" name="car">
+      <modelElement href="karpool.uml#_kgoUcMmeEeimZ4qV05YRpg"/>
+      <stereotypes xmi:id="_nvPgUMmwEeieleQvlIsB7g" name="PrimaryKey">
+        <modelElement href="karpool.uml#_YlAx0MmwEeimZ4qV05YRpg"/>
       </stereotypes>
-      <visibility xmi:id="_J9MugcmdEeimZ4qV05YRpg" label="+"/>
-      <cardinality xmi:id="_J9MugsmdEeimZ4qV05YRpg" label="1" max="1" min="1"/>
-      <type xmi:id="_Le8OEMmdEeimZ4qV05YRpg" name="String">
-        <modelElement href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      <visibility xmi:id="_kgsl4cmeEeimZ4qV05YRpg" label="+"/>
+      <cardinality xmi:id="_kgsl4smeEeimZ4qV05YRpg" label="1" max="1" min="1"/>
+      <type xmi:id="_kgsl48meEeimZ4qV05YRpg" name="Car">
+        <modelElement href="karpool.uml#_QvArcMmbEeimZ4qV05YRpg"/>
       </type>
     </attributes>
-    <attributes xmi:id="_tLMGQcmdEeimZ4qV05YRpg" name="seat">
-      <modelElement href="karpool.uml#_tLMGQMmdEeimZ4qV05YRpg"/>
-      <stereotypes xmi:id="_ejdrEMmhEeimZ4qV05YRpg" name="PrimaryKey">
-        <modelElement href="karpool.uml#_eeH4EMmhEeimZ4qV05YRpg"/>
+    <attributes xmi:id="_qq0l0MmeEeimZ4qV05YRpg" name="trip">
+      <modelElement href="karpool.uml#_qqvGQMmeEeimZ4qV05YRpg"/>
+      <stereotypes xmi:id="_nvTxwMmwEeieleQvlIsB7g" name="PrimaryKey">
+        <modelElement href="karpool.uml#_YlBY4MmwEeimZ4qV05YRpg"/>
       </stereotypes>
-      <visibility xmi:id="_tLMGQsmdEeimZ4qV05YRpg" label="+"/>
-      <cardinality xmi:id="_tLMGQ8mdEeimZ4qV05YRpg" label="1" max="1" min="1"/>
-      <type xmi:id="_xsDpYMmdEeimZ4qV05YRpg" name="int">
+      <visibility xmi:id="_qq0l0cmeEeimZ4qV05YRpg" label="+"/>
+      <cardinality xmi:id="_qq0l0smeEeimZ4qV05YRpg" label="1" max="1" min="1"/>
+      <type xmi:id="_qq0l08meEeimZ4qV05YRpg" name="Trip">
+        <modelElement href="karpool.uml#_J1dZsMmbEeimZ4qV05YRpg"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_nyJDUMmwEeieleQvlIsB7g" name="driverId">
+      <modelElement href="karpool.uml#_17nAwMmiEeimZ4qV05YRpg"/>
+      <stereotypes xmi:id="_nyJDUcmwEeieleQvlIsB7g" name="PrimaryKey">
+        <modelElement href="karpool.uml#_YlBY4cmwEeimZ4qV05YRpg"/>
+      </stereotypes>
+      <visibility xmi:id="_nyJDUsmwEeieleQvlIsB7g" label="+"/>
+      <cardinality xmi:id="_nyJDU8mwEeieleQvlIsB7g" label="1" max="1" min="1"/>
+      <type xmi:id="_nyJDVMmwEeieleQvlIsB7g" name="int">
         <modelElement href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
       </type>
     </attributes>
-    <attributes xmi:id="_tNSYAcmdEeimZ4qV05YRpg" name="licensePlate">
-      <modelElement href="karpool.uml#_tNSYAMmdEeimZ4qV05YRpg"/>
-      <stereotypes xmi:id="_ejlm4MmhEeimZ4qV05YRpg" name="PrimaryKey">
-        <modelElement href="karpool.uml#_eeJGMMmhEeimZ4qV05YRpg"/>
-      </stereotypes>
-      <visibility xmi:id="_tNSYAsmdEeimZ4qV05YRpg" label="+"/>
-      <cardinality xmi:id="_tNSYA8mdEeimZ4qV05YRpg" label="1" max="1" min="1"/>
-      <type xmi:id="_3460QMmdEeimZ4qV05YRpg" name="String">
-        <modelElement href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-      </type>
-    </attributes>
-    <attributes xmi:id="_4LlRkcmdEeimZ4qV05YRpg" name="fuelEfficiency">
-      <modelElement href="karpool.uml#_4LlRkMmdEeimZ4qV05YRpg"/>
-      <stereotypes xmi:id="_ejncEMmhEeimZ4qV05YRpg" name="PrimaryKey">
-        <modelElement href="karpool.uml#_eeJtQMmhEeimZ4qV05YRpg"/>
-      </stereotypes>
-      <visibility xmi:id="_4LlRksmdEeimZ4qV05YRpg" label="+"/>
-      <cardinality xmi:id="_4LlRk8mdEeimZ4qV05YRpg" label="1" max="1" min="1"/>
-      <type xmi:id="_Ao2Y0MmeEeimZ4qV05YRpg" name="String">
-        <modelElement href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
-      </type>
-    </attributes>
-    <attributes xmi:id="_kgtM8MmeEeimZ4qV05YRpg" name="driver">
-      <modelElement href="karpool.uml#_kgo7gcmeEeimZ4qV05YRpg"/>
-      <stereotypes xmi:id="_ej1egMmhEeimZ4qV05YRpg" name="PrimaryKey">
-        <modelElement href="karpool.uml#_eeKUUMmhEeimZ4qV05YRpg"/>
-      </stereotypes>
-      <visibility xmi:id="_kgtM8cmeEeimZ4qV05YRpg" label="+"/>
-      <cardinality xmi:id="_kgtM8smeEeimZ4qV05YRpg" label="1" max="1" min="1"/>
-      <type xmi:id="_kgtM88meEeimZ4qV05YRpg" name="Driver">
-        <modelElement href="karpool.uml#_MZomoMmbEeimZ4qV05YRpg"/>
-      </type>
-    </attributes>
-  </nodes>
-  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_GTjZMMmbEeimZ4qV05YRpg" containment="_T9muYMmbEeimZ4qV05YRpg" name="UserRole" package="_HfuG0MmaEeimZ4qV05YRpg" subclassedBy="_ZRqpAMmbEeimZ4qV05YRpg _ZoLrkMmbEeimZ4qV05YRpg">
-    <modelElement href="karpool.uml#_GTiLEMmbEeimZ4qV05YRpg"/>
-    <visualProperties xmi:id="_GTjZMcmbEeimZ4qV05YRpg" position="306.0,245.0" size="116.0,37.0"/>
-    <stereotypes xmi:id="_YplRIMmiEeimZ4qV05YRpg" name="JPA1StyledElement">
-      <modelElement href="karpool.uml#_Ypi04MmiEeimZ4qV05YRpg"/>
-    </stereotypes>
-    <visibility xmi:id="_GTjZMsmbEeimZ4qV05YRpg" label="+"/>
   </nodes>
   <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_BZX-MMmbEeimZ4qV05YRpg" containment="_TNvXsMmbEeimZ4qV05YRpg" name="User" package="_HfuG0MmaEeimZ4qV05YRpg">
     <modelElement href="karpool.uml#_BZVh8MmbEeimZ4qV05YRpg"/>
@@ -199,45 +174,90 @@
       <cardinality xmi:id="_EckM8smcEeimZ4qV05YRpg" label="1" max="1" min="1"/>
     </attributes>
   </nodes>
-  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_MZpNsMmbEeimZ4qV05YRpg" name="Driver" generalizations="_ZRqpAMmbEeimZ4qV05YRpg">
-    <modelElement href="karpool.uml#_MZomoMmbEeimZ4qV05YRpg"/>
-    <visualProperties xmi:id="_MZpNscmbEeimZ4qV05YRpg" position="271.0,355.0" size="90.0,-1.0"/>
-    <visibility xmi:id="_MZpNssmbEeimZ4qV05YRpg" label="+"/>
-    <attributes xmi:id="_kgsl4MmeEeimZ4qV05YRpg" name="car">
-      <modelElement href="karpool.uml#_kgoUcMmeEeimZ4qV05YRpg"/>
-      <stereotypes xmi:id="_YlDOEMmwEeimZ4qV05YRpg" name="PrimaryKey">
-        <modelElement href="karpool.uml#_YlAx0MmwEeimZ4qV05YRpg"/>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:EnumerationVisual" xmi:id="_RrHR4cmcEeimZ4qV05YRpg" name="Rating">
+    <modelElement href="karpool.uml#_RrHR4MmcEeimZ4qV05YRpg"/>
+    <visualProperties xmi:id="_RrH48MmcEeimZ4qV05YRpg" position="-107.0,280.0" size="-1.0,-1.0"/>
+    <visibility xmi:id="_RrH48cmcEeimZ4qV05YRpg" label="+"/>
+    <literals xmi:id="_jt-aYMmcEeimZ4qV05YRpg" name="1">
+      <modelElement href="karpool.uml#_jt9zUMmcEeimZ4qV05YRpg"/>
+    </literals>
+    <literals xmi:id="_k3_WcMmcEeimZ4qV05YRpg" name="2">
+      <modelElement href="karpool.uml#_k3-vYMmcEeimZ4qV05YRpg"/>
+    </literals>
+    <literals xmi:id="_mCurQMmcEeimZ4qV05YRpg" name="3">
+      <modelElement href="karpool.uml#_mCuEMMmcEeimZ4qV05YRpg"/>
+    </literals>
+    <literals xmi:id="_m__kwMmcEeimZ4qV05YRpg" name="4">
+      <modelElement href="karpool.uml#_m_-WoMmcEeimZ4qV05YRpg"/>
+    </literals>
+    <literals xmi:id="_oI3RUMmcEeimZ4qV05YRpg" name="5">
+      <modelElement href="karpool.uml#_oI2qQMmcEeimZ4qV05YRpg"/>
+    </literals>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_QvBSgMmbEeimZ4qV05YRpg" containment="_VbQ_MMmbEeimZ4qV05YRpg" name="Car" package="_HfuG0MmaEeimZ4qV05YRpg">
+    <modelElement href="karpool.uml#_QvArcMmbEeimZ4qV05YRpg"/>
+    <visualProperties xmi:id="_QvBSgcmbEeimZ4qV05YRpg" position="455.0,39.0" size="112.0,-1.0"/>
+    <stereotypes xmi:id="_ejaAsMmhEeimZ4qV05YRpg" name="JPA1StyledElement">
+      <modelElement href="karpool.uml#_eeGC4MmhEeimZ4qV05YRpg"/>
+    </stereotypes>
+    <visibility xmi:id="_QvBSgsmbEeimZ4qV05YRpg" label="+"/>
+    <attributes xmi:id="_J9MugMmdEeimZ4qV05YRpg" name="make">
+      <modelElement href="karpool.uml#_J9MHcMmdEeimZ4qV05YRpg"/>
+      <stereotypes xmi:id="_ejbO0MmhEeimZ4qV05YRpg" name="PrimaryKey">
+        <modelElement href="karpool.uml#_eeHRAMmhEeimZ4qV05YRpg"/>
       </stereotypes>
-      <visibility xmi:id="_kgsl4cmeEeimZ4qV05YRpg" label="+"/>
-      <cardinality xmi:id="_kgsl4smeEeimZ4qV05YRpg" label="1" max="1" min="1"/>
-      <type xmi:id="_kgsl48meEeimZ4qV05YRpg" name="Car">
-        <modelElement href="karpool.uml#_QvArcMmbEeimZ4qV05YRpg"/>
+      <visibility xmi:id="_J9MugcmdEeimZ4qV05YRpg" label="+"/>
+      <cardinality xmi:id="_J9MugsmdEeimZ4qV05YRpg" label="1" max="1" min="1"/>
+      <type xmi:id="_Le8OEMmdEeimZ4qV05YRpg" name="String">
+        <modelElement href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
       </type>
     </attributes>
-    <attributes xmi:id="_qq0l0MmeEeimZ4qV05YRpg" name="trip">
-      <modelElement href="karpool.uml#_qqvGQMmeEeimZ4qV05YRpg"/>
-      <stereotypes xmi:id="_YlEcMMmwEeimZ4qV05YRpg" name="PrimaryKey">
-        <modelElement href="karpool.uml#_YlBY4MmwEeimZ4qV05YRpg"/>
+    <attributes xmi:id="_tLMGQcmdEeimZ4qV05YRpg" name="seat">
+      <modelElement href="karpool.uml#_tLMGQMmdEeimZ4qV05YRpg"/>
+      <stereotypes xmi:id="_ejdrEMmhEeimZ4qV05YRpg" name="PrimaryKey">
+        <modelElement href="karpool.uml#_eeH4EMmhEeimZ4qV05YRpg"/>
       </stereotypes>
-      <visibility xmi:id="_qq0l0cmeEeimZ4qV05YRpg" label="+"/>
-      <cardinality xmi:id="_qq0l0smeEeimZ4qV05YRpg" label="1" max="1" min="1"/>
-      <type xmi:id="_qq0l08meEeimZ4qV05YRpg" name="Trip">
-        <modelElement href="karpool.uml#_J1dZsMmbEeimZ4qV05YRpg"/>
-      </type>
-    </attributes>
-    <attributes xmi:id="_17r5QMmiEeimZ4qV05YRpg" name="driverId">
-      <modelElement href="karpool.uml#_17nAwMmiEeimZ4qV05YRpg"/>
-      <stereotypes xmi:id="_YlONMMmwEeimZ4qV05YRpg" name="PrimaryKey">
-        <modelElement href="karpool.uml#_YlBY4cmwEeimZ4qV05YRpg"/>
-      </stereotypes>
-      <visibility xmi:id="_17r5QcmiEeimZ4qV05YRpg" label="+"/>
-      <cardinality xmi:id="_17r5QsmiEeimZ4qV05YRpg" label="1" max="1" min="1"/>
-      <type xmi:id="_6u0lMMmvEeimZ4qV05YRpg" name="int">
+      <visibility xmi:id="_tLMGQsmdEeimZ4qV05YRpg" label="+"/>
+      <cardinality xmi:id="_tLMGQ8mdEeimZ4qV05YRpg" label="1" max="1" min="1"/>
+      <type xmi:id="_xsDpYMmdEeimZ4qV05YRpg" name="int">
         <modelElement href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
       </type>
     </attributes>
+    <attributes xmi:id="_tNSYAcmdEeimZ4qV05YRpg" name="licensePlate">
+      <modelElement href="karpool.uml#_tNSYAMmdEeimZ4qV05YRpg"/>
+      <stereotypes xmi:id="_ejlm4MmhEeimZ4qV05YRpg" name="PrimaryKey">
+        <modelElement href="karpool.uml#_eeJGMMmhEeimZ4qV05YRpg"/>
+      </stereotypes>
+      <visibility xmi:id="_tNSYAsmdEeimZ4qV05YRpg" label="+"/>
+      <cardinality xmi:id="_tNSYA8mdEeimZ4qV05YRpg" label="1" max="1" min="1"/>
+      <type xmi:id="_3460QMmdEeimZ4qV05YRpg" name="String">
+        <modelElement href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_4LlRkcmdEeimZ4qV05YRpg" name="fuelEfficiency">
+      <modelElement href="karpool.uml#_4LlRkMmdEeimZ4qV05YRpg"/>
+      <stereotypes xmi:id="_ejncEMmhEeimZ4qV05YRpg" name="PrimaryKey">
+        <modelElement href="karpool.uml#_eeJtQMmhEeimZ4qV05YRpg"/>
+      </stereotypes>
+      <visibility xmi:id="_4LlRksmdEeimZ4qV05YRpg" label="+"/>
+      <cardinality xmi:id="_4LlRk8mdEeimZ4qV05YRpg" label="1" max="1" min="1"/>
+      <type xmi:id="_Ao2Y0MmeEeimZ4qV05YRpg" name="String">
+        <modelElement href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+      </type>
+    </attributes>
+    <attributes xmi:id="_kgtM8MmeEeimZ4qV05YRpg" name="driver">
+      <modelElement href="karpool.uml#_kgo7gcmeEeimZ4qV05YRpg"/>
+      <stereotypes xmi:id="_ej1egMmhEeimZ4qV05YRpg" name="PrimaryKey">
+        <modelElement href="karpool.uml#_eeKUUMmhEeimZ4qV05YRpg"/>
+      </stereotypes>
+      <visibility xmi:id="_kgtM8cmeEeimZ4qV05YRpg" label="+"/>
+      <cardinality xmi:id="_kgtM8smeEeimZ4qV05YRpg" label="1" max="1" min="1"/>
+      <type xmi:id="_kgtM88meEeimZ4qV05YRpg" name="Driver">
+        <modelElement href="karpool.uml#_MZomoMmbEeimZ4qV05YRpg"/>
+      </type>
+    </attributes>
   </nodes>
-  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_J1dZscmbEeimZ4qV05YRpg" containment="_U61LoMmbEeimZ4qV05YRpg" name="Trip" package="_HfuG0MmaEeimZ4qV05YRpg">
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_J1dZscmbEeimZ4qV05YRpg" containment="_U61LoMmbEeimZ4qV05YRpg" name="Trip" package="_HfuG0MmaEeimZ4qV05YRpg" associationsOut="_GBdecMmtEeieleQvlIsB7g _GBzcsMmtEeieleQvlIsB7g">
     <modelElement href="karpool.uml#_J1dZsMmbEeimZ4qV05YRpg"/>
     <visualProperties xmi:id="_J1dZssmbEeimZ4qV05YRpg" position="627.0,188.0" size="135.0,-1.0"/>
     <stereotypes xmi:id="_7xqDkMmhEeimZ4qV05YRpg" name="JPA1StyledElement">
@@ -336,13 +356,21 @@
         <modelElement href="karpool.uml#_PKHKMMmbEeimZ4qV05YRpg"/>
       </type>
     </attributes>
-    <attributes xmi:id="_ZD6M8MmzEeimZ4qV05YRpg" name="tripId">
+    <attributes xmi:id="_XYM6QMnNEeieleQvlIsB7g" name="tripId">
       <modelElement href="karpool.uml#_ZD5l4MmzEeimZ4qV05YRpg"/>
-      <visibility xmi:id="_ZD6M8cmzEeimZ4qV05YRpg" label="+"/>
-      <cardinality xmi:id="_ZD6M8smzEeimZ4qV05YRpg" label="1" max="1" min="1"/>
-      <type xmi:id="_aeOO0MmzEeimZ4qV05YRpg" name="int">
+      <visibility xmi:id="_XYM6QcnNEeieleQvlIsB7g" label="+"/>
+      <cardinality xmi:id="_XYM6QsnNEeieleQvlIsB7g" label="1" max="1" min="1"/>
+      <type xmi:id="_XYM6Q8nNEeieleQvlIsB7g" name="int">
         <modelElement href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
       </type>
     </attributes>
+  </nodes>
+  <nodes xsi:type="com.yattasolutions.uml.diagrams.classifier:ClassifierVisual" xmi:id="_GTjZMMmbEeimZ4qV05YRpg" containment="_T9muYMmbEeimZ4qV05YRpg" name="UserRole" package="_HfuG0MmaEeimZ4qV05YRpg" subclassedBy="_ZRqpAMmbEeimZ4qV05YRpg _ZoLrkMmbEeimZ4qV05YRpg">
+    <modelElement href="karpool.uml#_GTiLEMmbEeimZ4qV05YRpg"/>
+    <visualProperties xmi:id="_GTjZMcmbEeimZ4qV05YRpg" position="306.0,245.0" size="116.0,37.0"/>
+    <stereotypes xmi:id="_YplRIMmiEeimZ4qV05YRpg" name="JPA1StyledElement">
+      <modelElement href="karpool.uml#_Ypi04MmiEeimZ4qV05YRpg"/>
+    </stereotypes>
+    <visibility xmi:id="_GTjZMsmbEeimZ4qV05YRpg" label="+"/>
   </nodes>
 </com.yattasolutions.uml.diagrams.classifier:ClassDiagram>
