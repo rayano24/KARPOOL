@@ -15,16 +15,16 @@ public class KarpoolController {
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "Not found";
 	
-	@Autowired 
+	@Autowired
 	KarpoolRepository repository;
-	
+
 	@PostMapping("/users/{name}")
-	public String createUser(@PathVariable("name")String name)
+	public String createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating)
 	{
-		User user = repository.createUser(name);
+		User user = repository.createUser(name, email, password, phone, rating);
 		return user.getName();
 	}
-	
+
 	@GetMapping("/users/{name}")
 	public String queryUser(@PathVariable("name")String name)
 	{
@@ -35,6 +35,6 @@ public class KarpoolController {
 		}
 		return user.getName();
 	}
-	
-	
+
+
 }
