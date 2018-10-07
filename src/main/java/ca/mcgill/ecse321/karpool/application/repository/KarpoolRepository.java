@@ -18,7 +18,11 @@ public class KarpoolRepository {
 	EntityManager entityManager;
 	
 	@Transactional
+<<<<<<< HEAD
 	public User createUser(String name, String email, String password, String phoneNumber, Rating rating, Boolean criminalRecord) {
+=======
+	public User createUser(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord ) {
+>>>>>>> 10d9fe4a078ca29da2b641220964b64a3fd37c87
 		User user = new User();
 		user.setName(name);
 		user.setEmail(email);

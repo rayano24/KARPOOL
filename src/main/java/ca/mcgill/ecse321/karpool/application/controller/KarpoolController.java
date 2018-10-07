@@ -17,6 +17,10 @@ import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
 import ca.mcgill.ecse321.karpool.application.*;
 import ca.mcgill.ecse321.karpool.application.Rating;
+<<<<<<< HEAD
+=======
+import ca.mcgill.ecse321.karpool.application.*;	
+>>>>>>> 10d9fe4a078ca29da2b641220964b64a3fd37c87
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
@@ -49,6 +53,17 @@ public class KarpoolController {
 	@PostMapping("/users/{email}")
 	public String createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, boolean criminalRecord)
 	{
+		try {
+			if(phone.length() == 10) {
+				Integer.parseInt(phone);
+			}
+			else {
+				return "You entered an invalid phone number";
+			}
+				
+		} catch(NullPointerException |  NumberFormatException e) {
+			return "You entered an invalid phone number";
+		}
 		User user = repository.createUser(name, email, password, phone, rating, criminalRecord);
 		return user.getName();
 	}
@@ -160,6 +175,62 @@ public class KarpoolController {
 
 }
 	
+<<<<<<< HEAD
+=======
+
+//	public boolean addPassenger(Passenger passenger) {
+//		boolean wasAdded = false;
+//		if (passengers.contains(passenger)) {
+//			return false;
+//		}
+//		Trip existingTrip = passenger.getTrip();
+//		boolean isNewTrip = (existingTrip != null && !this.equals(existingTrip));
+//
+//		if (isNewTrip) {
+//			passenger.setTrip(this);
+//		}
+//
+//		else {
+//			passenger.add(passenger);
+//		}
+//		wasAdded = true;
+//		return wasAdded;
+//
+//
+//
+//	}
+//
+	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException {
+
+        BufferedReader br = null;
+
+        try {
+
+            URL url = new URL("https://www.zipcodeapi.com/rest/GOhazMBKVJ2VDSEOrrkf0sswW4D5c4NYOjZi2mGTjf2wuvgvTkUj5L1KpR2GkRRI/distance.json/" + zipcode1 + "/" +zipcode2 +"/km");
+            br = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String line;
+
+            StringBuilder sb = new StringBuilder();
+
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+
+            String RoughDistance = sb.toString();
+            String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
+            float distance = Float.parseFloat(intValue);
+            return distance;
+
+        } finally {
+
+            if (br != null) {
+                br.close();
+            }
+        }
+    }
+>>>>>>> 10d9fe4a078ca29da2b641220964b64a3fd37c87
 
 
 
