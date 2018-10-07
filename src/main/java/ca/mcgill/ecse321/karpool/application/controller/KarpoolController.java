@@ -80,7 +80,7 @@ public class KarpoolController {
 		}
 		return user.getName();
 	}
-<<<<<<< HEAD
+
 	@PostMapping("/trip/{trip}")
 	public Trip createTrip (@PathVariable ("trip") String departureLocation, String destination, int seatAvailable, String departureTime)
 	{
@@ -104,7 +104,7 @@ public class KarpoolController {
 		
 	
 	}
-=======
+
 	
 	
 	/**
@@ -130,6 +130,6 @@ public class KarpoolController {
 	
 
 
->>>>>>> e3feb2ce2d5d0ea983d1c250843bf445170b448d
+
 }
 
