@@ -1,10 +1,13 @@
 package ca.mcgill.ecse321.karpool.application.repository;
 
+import java.util.HashSet;
+
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import ca.mcgill.ecse321.karpool.application.Passenger;
 import ca.mcgill.ecse321.karpool.application.Rating;
 import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
@@ -52,5 +55,29 @@ public class KarpoolRepository {
 	
 		 	
 	}
+	
+	@Transactional
+	public boolean addPassenger(Passenger passenger, Trip trip) {
+		
+		boolean wasAdded = false;
+		HashSet <Passenger> passengers;
+		if (passengers.contains(passenger)) {
+			return false;
+		}
+		Trip existingTrip = passenger.getTrip();
+		boolean isNewTrip = (existingTrip != null && !this.equals(existingTrip));
+		
+		if (isNewTrip) {
+			passenger.setTrip(this);
+		}
+		
+		else {
+			passenger.add(passenger);
+		}
+		wasAdded = true;
+		return wasAdded;
+		
+	}
+	
 
 }
