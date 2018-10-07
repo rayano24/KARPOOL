@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.karpool.model;
 import javax.persistence.Entity;
+
 import ca.mcgill.ecse321.karpool.application.Rating;
 
 
@@ -52,6 +53,7 @@ public class User {
    }
    
    private Rating rating;
+
    
    public void setRating(Rating value) {
       this.rating = value;
@@ -60,6 +62,17 @@ public class User {
    @Id
    public Rating getRating() {
       return this.rating;
+   }
+   
+   
+   private boolean criminalRecord;
+   @Id
+   public boolean getBackgroundCheck() {
+	   return this.criminalRecord;
+   }
+   
+   public void setRecord(boolean criminalRecord) {
+	   this.criminalRecord = criminalRecord;
    }
    
    }
