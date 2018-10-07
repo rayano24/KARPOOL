@@ -1,11 +1,10 @@
 package ca.mcgill.ecse321.karpool.model;
 import javax.persistence.Entity;
+import ca.mcgill.ecse321.karpool.application.Rating;
 
 
 import javax.persistence.Id;
 
-
-import Rating;
 
 @Entity
 public class User {
@@ -52,14 +51,14 @@ public class User {
       return this.password;
    }
    
-   private String/*No type specified!*/ rating;
+   private Rating rating;
    
-   public void setRating(String/*No type specified!*/ value) {
+   public void setRating(Rating value) {
       this.rating = value;
    }
    
    @Id
-   public String/*No type specified!*/ getRating() {
+   public Rating getRating() {
       return this.rating;
    }
    

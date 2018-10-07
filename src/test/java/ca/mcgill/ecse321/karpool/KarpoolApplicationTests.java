@@ -1,25 +1,21 @@
 package ca.mcgill.ecse321.karpool;
 
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
+
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ca.mcgill.ecse321.karpool.application.controller.KarpoolController;
-import ca.mcgill.ecse321.karpool.application.model.User;
-import ca.mcgill.ecse321.karpool.repository.KarpoolRepository;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import ca.mcgill.ecse321.karpool.application.repository.KarpoolRepository;
+import ca.mcgill.ecse321.karpool.model.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -34,7 +30,7 @@ private KarpoolController controller;
 private static final String USER_KEY = "TestParticipant";
 private static final String NONEXISTING_KEY = "NotAParticipant";
 
-@BeforeEach
+@Before
 void setMockOutput() {
   when(userDao.getUser(anyString())).thenAnswer( (InvocationOnMock invocation) -> {
     if(invocation.getArgument(0).equals(USER_KEY)) {
