@@ -44,9 +44,9 @@ public class KarpoolController {
 	 * @return the users name
 	 */
 	@PostMapping("/users/{email}")
-	public String createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating)
+	public String createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, boolean criminalRecord)
 	{
-		User user = repository.createUser(name, email, password, phone, rating);
+		User user = repository.createUser(name, email, password, phone, rating, criminalRecord);
 		return user.getName();
 	}
 
@@ -86,6 +86,8 @@ public class KarpoolController {
 		}
 		return user.getName();
 	}
+	
+	
 
 	@PostMapping("/trip/{trip}")
 	public Trip createTrip (@PathVariable ("trip") String departureLocation, String destination, int seatAvailable, String departureTime)
@@ -110,6 +112,7 @@ public class KarpoolController {
 
 
 	}
+	
 
 
 
