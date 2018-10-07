@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.karpool.model.User;
+import ca.mcgill.ecse321.karpool.application.Rating;
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
@@ -19,9 +20,9 @@ public class KarpoolController {
 	KarpoolRepository repository;
 	
 	@PostMapping("/users/{name}")
-	public String createUser(@PathVariable("name")String name)
+	public String createUser(@PathVariable("name")String name, String email, String password, String phoneNumber, Rating rating)
 	{
-		User user = repository.createUser(name);
+		User user = repository.createUser(name, email, password, phoneNumber, rating);
 		return user.getName();
 	}
 	
