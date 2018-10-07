@@ -19,23 +19,41 @@ public class KarpoolController {
 	@Autowired
 	KarpoolRepository repository;
 
-	@PostMapping("/users/{name}")
+	@PostMapping("/users/{email}")
 	public String createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating)
 	{
 		User user = repository.createUser(name, email, password, phone, rating);
 		return user.getName();
 	}
 
-	@GetMapping("/users/{name}")
-	public String queryUser(@PathVariable("name")String name)
+	@GetMapping("/users/{email}")
+	public String queryUser(@PathVariable("name")String email)
 	{
-		User user = repository.getUser(name);
+		User user = repository.getUser(email);
 		if(user == null)
 		{
 			return "NOT FOUND";
 		}
 		return user.getName();
 	}
+	
+	@GetMapping("/users/{email}")
+	public void addRating(@PathVariable("email")String email, Rating rating)
+	{
+		
+		try {
+			User user = repository.getUser(email);
+			user.setRating(rating);
+			
+		}
+		catch (NullPointerException e) {
+			System.out.println("NOT FOUND");
+		}
+				
+		
+	}
+	
+	
 
 
 }
