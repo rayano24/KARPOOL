@@ -32,15 +32,25 @@ public class KarpoolRepository {
 		return user;
 	}
 	
+	
 	@Transactional
-	public Trip createTrip(String destination, String departureTime, String departureLocation) {
+	public Trip createTrip(String destination, String departureTime, String departureLocation, int seatAvailable) {
 		Trip trip = new Trip();
 		trip.setDestination(destination);
 		trip.setDepartureTime(departureTime);
-		trip.setDepartureLocation(departureLocation);		
+		trip.setDepartureLocation(departureLocation);
+		trip.setSeatAvailable(seatAvailable);
 		return trip; 	
 	}
+	@Transactional
+	public void closeTrip(Trip trip) {
+		
+		trip.setDestination(null);
+		trip.setDepartureTime(null);
+		trip.setDepartureLocation(null);
+		trip.setSeatAvailable(0);
 	
-	
+		 	
+	}
 
 }
