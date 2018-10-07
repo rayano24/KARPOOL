@@ -15,12 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
-<<<<<<< HEAD
 import ca.mcgill.ecse321.karpool.application.*;
 import ca.mcgill.ecse321.karpool.application.Rating;
-=======
-import ca.mcgill.ecse321.karpool.application.*;	
->>>>>>> bf30acb7e9de8e1b7eba05105a3a48f1859faca7
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
@@ -34,6 +30,9 @@ public class KarpoolController {
 
 	@Autowired
 	Driver driver;
+	
+	@Autowired
+	Set<Passenger> passengers;
 
 	//TODO: Password can't just be read as a regular String. NEEDS some form of encryption.
 	//FIXME: Why does createUser need to return the usersName?
@@ -136,89 +135,31 @@ public class KarpoolController {
 		catch (NullPointerException e) {
 			System.out.println("NOT FOUND");
 		}
-
-
+						
 	}
-<<<<<<< HEAD
 	@GetMapping
-	public boolean addPassenger(Passenger passenger) {
+	public boolean addPassenger(Passenger passenger, Trip trip) {
+		
 		boolean wasAdded = false;
-		if (passengers.contains(passenger)) {
-			return false;
-		}
-		Trip existingTrip = passenger.getTrip();
-		boolean isNewTrip = (existingTrip != null && !this.equals(existingTrip));
-		
-		if (isNewTrip) {
-			passenger.setTrip(this);
-		}
-		
-		else {
-			passenger.add(passenger);
-		}
-		wasAdded = true;
-		return wasAdded;
-				
-
-		
+		if (trip.getSeatAvailable()<=0) {
+		return false;
+	}
+		else if (passengers.contains(passenger)) {
+		return false;
 	}
 	
+	else 
+	{
+		passenger.setTrip(trip);
+	}
 	
-=======
+	wasAdded = true;
+	return wasAdded;
 
-//	public boolean addPassenger(Passenger passenger) {
-//		boolean wasAdded = false;
-//		if (passengers.contains(passenger)) {
-//			return false;
-//		}
-//		Trip existingTrip = passenger.getTrip();
-//		boolean isNewTrip = (existingTrip != null && !this.equals(existingTrip));
-//
-//		if (isNewTrip) {
-//			passenger.setTrip(this);
-//		}
-//
-//		else {
-//			passenger.add(passenger);
-//		}
-//		wasAdded = true;
-//		return wasAdded;
-//
-//
-//
-//	}
-//
-	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException {
->>>>>>> bf30acb7e9de8e1b7eba05105a3a48f1859faca7
 
-        BufferedReader br = null;
 
-        try {
-
-            URL url = new URL("https://www.zipcodeapi.com/rest/GOhazMBKVJ2VDSEOrrkf0sswW4D5c4NYOjZi2mGTjf2wuvgvTkUj5L1KpR2GkRRI/distance.json/" + zipcode1 + "/" +zipcode2 +"/km");
-            br = new BufferedReader(new InputStreamReader(url.openStream()));
-
-            String line;
-
-            StringBuilder sb = new StringBuilder();
-
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-            }
-
-            String RoughDistance = sb.toString();
-            String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
-            float distance = Float.parseFloat(intValue);
-            return distance;
-
-        } finally {
-
-            if (br != null) {
-                br.close();
-            }
-        }
-    }
+}
+	
 
 
 
