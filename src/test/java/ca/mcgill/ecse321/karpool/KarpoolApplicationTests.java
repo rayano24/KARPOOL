@@ -22,7 +22,6 @@ import ca.mcgill.ecse321.karpool.model.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = KarpoolApplication.class)
-@AutoConfigureTestDatabase(replace=AutoConfigureTestDatabase.Replace.NONE)
 public class KarpoolApplicationTests
 {
 	@Mock
