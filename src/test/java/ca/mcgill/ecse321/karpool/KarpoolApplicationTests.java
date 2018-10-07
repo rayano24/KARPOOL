@@ -31,7 +31,7 @@ private static final String USER_KEY = "TestParticipant";
 private static final String NONEXISTING_KEY = "NotAParticipant";
 
 @Before
-void setMockOutput() {
+public void setMockOutput() {
   when(userDao.getUser(anyString())).thenAnswer( (InvocationOnMock invocation) -> {
     if(invocation.getArgument(0).equals(USER_KEY)) {
       User user = new User();
