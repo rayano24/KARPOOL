@@ -17,10 +17,9 @@ import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
 import ca.mcgill.ecse321.karpool.application.*;
 import ca.mcgill.ecse321.karpool.application.Rating;
-<<<<<<< HEAD
-=======
+
 import ca.mcgill.ecse321.karpool.application.*;	
->>>>>>> 10d9fe4a078ca29da2b641220964b64a3fd37c87
+
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
@@ -175,8 +174,6 @@ public class KarpoolController {
 
 }
 	
-<<<<<<< HEAD
-=======
 
 //	public boolean addPassenger(Passenger passenger) {
 //		boolean wasAdded = false;
@@ -200,7 +197,8 @@ public class KarpoolController {
 //
 //	}
 //
-	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException {
+	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException 
+	{
 
         BufferedReader br = null;
 
@@ -230,7 +228,7 @@ public class KarpoolController {
             }
         }
     }
->>>>>>> 10d9fe4a078ca29da2b641220964b64a3fd37c87
+
 
 
 
