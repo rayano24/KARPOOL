@@ -15,12 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
-<<<<<<< HEAD
 import ca.mcgill.ecse321.karpool.application.*;
 import ca.mcgill.ecse321.karpool.application.Rating;
-=======
 import ca.mcgill.ecse321.karpool.application.*;	
->>>>>>> bf30acb7e9de8e1b7eba05105a3a48f1859faca7
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
@@ -139,7 +136,6 @@ public class KarpoolController {
 
 
 	}
-<<<<<<< HEAD
 	@GetMapping
 	public boolean addPassenger(Passenger passenger) {
 		boolean wasAdded = false;
@@ -164,7 +160,6 @@ public class KarpoolController {
 	}
 	
 	
-=======
 
 //	public boolean addPassenger(Passenger passenger) {
 //		boolean wasAdded = false;
@@ -189,7 +184,6 @@ public class KarpoolController {
 //	}
 //
 	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException {
->>>>>>> bf30acb7e9de8e1b7eba05105a3a48f1859faca7
 
         BufferedReader br = null;
 
