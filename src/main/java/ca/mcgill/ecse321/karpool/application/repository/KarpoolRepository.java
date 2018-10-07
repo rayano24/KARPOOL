@@ -56,28 +56,24 @@ public class KarpoolRepository {
 		 	
 	}
 	
-	@Transactional
-	public boolean addPassenger(Passenger passenger, Trip trip) {
-		
-		boolean wasAdded = false;
-		HashSet <Passenger> passengers;
-		if (passengers.contains(passenger)) {
-			return false;
-		}
-		Trip existingTrip = passenger.getTrip();
-		boolean isNewTrip = (existingTrip != null && !this.equals(existingTrip));
-		
-		if (isNewTrip) {
-			passenger.setTrip(this);
-		}
-		
-		else {
-			passenger.add(passenger);
-		}
-		wasAdded = true;
-		return wasAdded;
-		
-	}
+//	@Transactional
+//	public boolean addPassenger(Passenger passenger, Trip trip) {
+//		
+//		boolean wasAdded = false;
+//		HashSet <Passenger> passengers;
+//		if (passengers.contains(passenger)) {
+//			return false;
+//		}
+//		
+//		
+//		else {
+//			trip.getPassenger();
+//		}
+//		
+//		wasAdded = true;
+//		return wasAdded;
+//		
+//	}
 	
 
 }
