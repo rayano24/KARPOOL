@@ -13,12 +13,14 @@ import org.mockito.invocation.InvocationOnMock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import ca.mcgill.ecse321.karpool.application.KarpoolApplication;
 import ca.mcgill.ecse321.karpool.application.controller.KarpoolController;
 import ca.mcgill.ecse321.karpool.application.repository.KarpoolRepository;
 import ca.mcgill.ecse321.karpool.model.User;
 
+
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = KarpoolApplication.class)
 public class KarpoolApplicationTests
 {
 	@Mock
@@ -31,7 +33,7 @@ private static final String USER_KEY = "TestParticipant";
 private static final String NONEXISTING_KEY = "NotAParticipant";
 
 @Before
-void setMockOutput() {
+public void setMockOutput() {
   when(userDao.getUser(anyString())).thenAnswer( (InvocationOnMock invocation) -> {
     if(invocation.getArgument(0).equals(USER_KEY)) {
       User user = new User();
