@@ -12,6 +12,15 @@ import ca.mcgill.ecse321.karpool.application.Passenger;
 
 @Entity
 public class Trip {
+private int tripId;
+
+public void setTripId(int value) {
+this.tripId = value;
+}
+@Id
+public int getTripId() {
+return this.tripId;
+}
    private int seatAvailable;
    
    public void setSeatAvailable(int value) {

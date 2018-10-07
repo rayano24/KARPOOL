@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 
-import ca.mcgill.ecse321.karpool.application.Rating;
+import Rating;
 
 @Entity
 public class User {
@@ -52,14 +52,14 @@ public class User {
       return this.password;
    }
    
-   private Rating rating;
+   private String/*No type specified!*/ rating;
    
-   public void setRating(Rating value) {
+   public void setRating(String/*No type specified!*/ value) {
       this.rating = value;
    }
    
    @Id
-   public Rating getRating() {
+   public String/*No type specified!*/ getRating() {
       return this.rating;
    }
    
