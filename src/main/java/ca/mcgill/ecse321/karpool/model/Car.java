@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.karpool.model;
 import javax.persistence.Entity;
 
+
 import ca.mcgill.ecse321.karpool.application.Driver;
 import javax.persistence.Id;
 
