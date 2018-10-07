@@ -68,7 +68,7 @@ public class User {
    private boolean criminalRecord;
    
    @Id
-   public boolean getBackgroundCheck() {
+   public boolean getRecord() {
 	   return this.criminalRecord;
    }
    

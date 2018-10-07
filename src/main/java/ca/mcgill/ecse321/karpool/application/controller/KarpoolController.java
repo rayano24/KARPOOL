@@ -50,21 +50,26 @@ public class KarpoolController {
 	 * @return the users name
 	 */
 	@PostMapping("/users/{email}")
-	public String createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, boolean criminalRecord)
+	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, boolean criminalRecord)
 	{
 		try {
 			if(phone.length() == 10) {
 				Integer.parseInt(phone);
 			}
 			else {
-				return "You entered an invalid phone number";
+				System.out.println("You entered an invalid phone number");
+				return null;
 			}
 				
 		} catch(NullPointerException |  NumberFormatException e) {
-			return "You entered an invalid phone number";
+			System.out.println("You entered an invalid phone number");
+			return null;
 		}
-		User user = repository.createUser(name, email, password, phone, rating, criminalRecord);
-		return user.getName();
+		if(!criminalRecord) {
+		return repository.createUser(name, email, password, phone, rating, criminalRecord);
+		}
+		
+		return null;
 	}
 
 	/**
