@@ -10,17 +10,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
+<<<<<<< HEAD
 import ca.mcgill.ecse321.karpool.application.Passenger;
+=======
+import ca.mcgill.ecse321.karpool.model.Trip;
+import ca.mcgill.ecse321.karpool.application.*;
+>>>>>>> 49d0a86090281a41cbf9a2a1b67718ed82a59412
 import ca.mcgill.ecse321.karpool.application.Rating;
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
 	
 
+
 	public static final String ERROR_NOT_FOUND_MESSAGE = "Not found";
 	
 	@Autowired
 	KarpoolRepository repository;
+	
+	@Autowired
+	Driver driver;
 
 	//TODO: Password can't just be read as a regular String. NEEDS some form of encryption.
 	//FIXME: Why does createUser need to return the usersName?
@@ -77,6 +86,31 @@ public class KarpoolController {
 		}
 		return user.getName();
 	}
+
+	@PostMapping("/trip/{trip}")
+	public Trip createTrip (@PathVariable ("trip") String departureLocation, String destination, int seatAvailable, String departureTime)
+	{
+		Trip trip = repository.createTrip(destination,departureTime, departureLocation, seatAvailable);
+		return trip;
+	}
+	
+	
+	@RequestMapping(path="/{departureLocation}/{destination}/{seats}/")
+	public Trip queryTrip(@PathVariable("departureLocation") String departureLocation, @PathVariable("destination") String destination, @PathVariable ("seats") int seatAvailable)
+	{
+		Trip Trip = driver.getTrip();
+		
+		return Trip;
+	}
+	
+	@PostMapping("/trip/{trip}")
+	public void closeTrip(@PathVariable ("trip") Trip trip)
+	{
+		repository.closeTrip(trip);
+		
+	
+	}
+
 	
 	
 	/**
@@ -124,4 +158,6 @@ public class KarpoolController {
 	
 
 
+
 }
+
