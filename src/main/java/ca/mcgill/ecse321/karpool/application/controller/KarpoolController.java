@@ -1,23 +1,11 @@
 package ca.mcgill.ecse321.karpool.application.controller;
 
 import java.util.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import ca.mcgill.ecse321.karpool.model.Trip;
-import ca.mcgill.ecse321.karpool.model.User;
-<<<<<<< HEAD
-import ca.mcgill.ecse321.karpool.application.Passenger;
-=======
-import ca.mcgill.ecse321.karpool.model.Trip;
-import ca.mcgill.ecse321.karpool.application.*;
->>>>>>> 49d0a86090281a41cbf9a2a1b67718ed82a59412
-import ca.mcgill.ecse321.karpool.application.Rating;
-import ca.mcgill.ecse321.karpool.application.repository.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class KarpoolController {
 	
@@ -155,7 +143,36 @@ public class KarpoolController {
 //		
 //	}
 //	
-	
+	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException {
+
+        BufferedReader br = null;
+
+        try {
+
+            URL url = new URL("https://www.zipcodeapi.com/rest/GOhazMBKVJ2VDSEOrrkf0sswW4D5c4NYOjZi2mGTjf2wuvgvTkUj5L1KpR2GkRRI/distance.json/" + zipcode1 + "/" +zipcode2 +"/km");
+            br = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String line;
+
+            StringBuilder sb = new StringBuilder();
+
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+            
+            String RoughDistance = sb.toString();
+            String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
+            float distance = Float.parseFloat(intValue);
+            return distance;
+            
+        } finally {
+
+            if (br != null) {
+                br.close();
+            }
+        }
+    }
 
 
 
