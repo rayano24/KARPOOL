@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import org.mockito.Mock.*;
+import org.mockito.Mockito;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -23,7 +25,7 @@ import ca.mcgill.ecse321.karpool.application.Passenger;
 import ca.mcgill.ecse321.karpool.application.Rating;
 import ca.mcgill.ecse321.karpool.application.controller.KarpoolController;
 import ca.mcgill.ecse321.karpool.application.repository.KarpoolRepository;
-import ca.mcgill.ecse321.karpool.model.User;
+import ca.mcgill.ecse321.karpool.model.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = KarpoolApplication.class)
@@ -51,7 +53,9 @@ public class KarpoolApplicationTests {
 	private static final Rating USER_RATING = Rating.NONE;
 	private static final Rating USER_TEST_RATING = Rating.FIVE;
 
-	
+	Passenger mockPassenger = Mockito.mock(Passenger.class);
+	Trip mockTrip = Mockito.mock(Trip.class);
+
 
 	@Before
 	public void setMockOutput() {
@@ -72,10 +76,11 @@ public class KarpoolApplicationTests {
 	}
 
 	@Test
-	public void testAddPassenger() {
-		when(controller.addPassenger(mockPassenger, mockTrip)).thenReturn(true);
-		assertEquals(controller.addPassenger(mockPassenger, mockTrip), wasAdded);
-	}
+	    public void testAddPassenger()
+			{
+	    	assertEquals(wasAdded, controller.addPassenger(mockPassenger, mockTrip));
+
+	    }
 
 	@Test
 	public void contextLoads() {
