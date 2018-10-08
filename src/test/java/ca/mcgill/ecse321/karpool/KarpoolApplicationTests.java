@@ -98,12 +98,12 @@ public void testUserQueryFound() {
 
 	@Test
 	public void testDistanceCorrect() throws MalformedURLException, IOException {
-		assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled);
+		assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled, 0);
 	}
 
 	@Test
 	public void testDistanceIncorrect() throws MalformedURLException, IOException {
-		assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), 0);
+		assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), -1, 0);
 	}
 
 }
