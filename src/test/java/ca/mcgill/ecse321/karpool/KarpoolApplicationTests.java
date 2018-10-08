@@ -94,7 +94,7 @@ public class KarpoolApplicationTests {
 	@Test
 	public void testAddRating() {
 		controller.addRating(USER_EMAIL, USER_TEST_RATING);
-		assertEquals(Rating.FIVE, userDao.getUser(USER_KEY).getRating());
+		assertEquals(Rating.FIVE, userDao.getUser(USER_EMAIL).getRating());
 	}
 
 	@Test
