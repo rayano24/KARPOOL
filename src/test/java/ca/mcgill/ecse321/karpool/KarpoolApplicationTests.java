@@ -48,7 +48,7 @@ public class KarpoolApplicationTests {
 	private static final String USER_PHONE_INCORRECT = "514";
 	private static final Boolean USER_NO_RECORD = false;
 	private static final Boolean USER_RECORD = true;
-	private static final Rating USER_RATING = null;
+	private static final Rating USER_RATING = Rating.NONE;
 	private static final Rating USER_TEST_RATING = Rating.FIVE;
 
 	
@@ -62,7 +62,7 @@ public class KarpoolApplicationTests {
 				user.setEmail(USER_EMAIL);
 				user.setPassword(USER_PASS);
 				user.setPhoneNumber(USER_PHONE);
-				user.setRating(null);
+				user.setRating(USER_RATING);
 				user.setRecord(USER_NO_RECORD);
 				return user;
 			} else {
