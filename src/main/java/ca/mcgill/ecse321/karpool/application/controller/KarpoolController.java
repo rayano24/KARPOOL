@@ -17,9 +17,7 @@ import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
 import ca.mcgill.ecse321.karpool.application.*;
 import ca.mcgill.ecse321.karpool.application.Rating;
-
 import ca.mcgill.ecse321.karpool.application.*;
-
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
@@ -42,15 +40,16 @@ public class KarpoolController {
 
 
 	/**
+	 * Checks if number is appropraite + confirms user does not have a criminal record (to be further implemented in Sprint 2)
 	 * @param name
 	 * @param email
 	 * @param password
 	 * @param phone
 	 * @param rating
-	 * @return the users name
+	 * @return the users object if found, null if not
 	 */
 	@PostMapping("/users/{email}")
-	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, boolean criminalRecord)
+	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, Boolean criminalRecord)
 	{
 		try {
 			if(phone.length() == 10) {
@@ -76,7 +75,7 @@ public class KarpoolController {
 	 *
 	 * @param email
 	 * @param password
-	 * @return OK if the account is authenticated
+	 * @return TRUE if the account is authenticated
 	 */
 	@GetMapping("/users/{email}")
 	public boolean authenticateUser(@PathVariable("email")String email, @PathVariable("password")String password)
@@ -104,7 +103,7 @@ public class KarpoolController {
 		User user = repository.getUser(email);
 		if(user == null)
 		{
-			return "NOT FOUND";
+			return ERROR_NOT_FOUND_MESSAGE;
 		}
 		return user.getName();
 	}
@@ -139,7 +138,7 @@ public class KarpoolController {
 
 
 	/**
-	 * Add a  rating to the user
+	 * Adds a  rating to the user
 	 * @param email
 	 * @param rating
 	 */
@@ -152,7 +151,7 @@ public class KarpoolController {
 
 		}
 		catch (NullPointerException e) {
-			System.out.println("NOT FOUND");
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
 
 	}
