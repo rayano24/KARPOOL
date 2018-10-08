@@ -12,14 +12,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mock.*;
+import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ca.mcgill.ecse321.karpool.application.KarpoolApplication;
+import ca.mcgill.ecse321.karpool.application.Passenger;
 import ca.mcgill.ecse321.karpool.application.controller.KarpoolController;
 import ca.mcgill.ecse321.karpool.application.repository.KarpoolRepository;
+import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
 
 
@@ -42,6 +46,11 @@ private static final int NON_EXISTANT_ZIPCODE = 3423;
 private static final int zipcode1 = 90210;
 private static final int zipcode2 = 72110;
 private static final float DistanceTraveled = (float) 2341.865;
+private static final boolean wasAdded = true;
+
+
+Passenger mockPassenger = Mockito.mock(Passenger.class);
+Trip mockTrip = Mockito.mock(Trip.class);
 
 @Before
 public void setMockOutput() {
@@ -58,11 +67,12 @@ public void setMockOutput() {
   });
 }
 
-//    @Test
-//    public void testAddPassenger() {
-//    	assertEquals(controller.addPassenger(), USER_KEY);
-//    	
-//    }
+    @Test
+    public void testAddPassenger() {
+    //when(controller.addPassenger(mockPassenger, mockTrip)).thenReturn(true);
+    	assertEquals(wasAdded, controller.addPassenger(mockPassenger, mockTrip));
+    	
+    }
 
 	@Test
 	public void contextLoads() {

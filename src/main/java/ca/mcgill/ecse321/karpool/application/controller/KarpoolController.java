@@ -156,6 +156,15 @@ public class KarpoolController {
 		}
 
 	}
+	
+	/**
+	 * This method allows for new passengers to be added to a specific 
+	 * trip taking place. It checks to see if the passenger is already 
+	 * signed up for this trip, if not it adds to passenger to the trip.
+	 * @param passenger
+	 * @param trip
+	 * @return
+	 */
 	@GetMapping
 	public boolean addPassenger(Passenger passenger, Trip trip) {
 
