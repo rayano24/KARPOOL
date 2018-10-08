@@ -38,7 +38,7 @@ private static final String NONEXISTING_KEY = "NotAParticipant";
 private static final String USER_EMAIL = "email";
 private static final String USER_PASS = "correctPass";
 private static final String USER_PASS_INCORRECT = "incorrectPass";
-private static final int NON_EXISTANT_ZIPCODE = 12345;
+private static final int NON_EXISTANT_ZIPCODE = 3423;
 private static final int zipcode1 = 90210;
 private static final int zipcode2 = 72110;
 private static final float DistanceTraveled = (float) 2341.865;
@@ -93,12 +93,12 @@ public void testAuthenticateUserFailed()
 
 @Test
 public void testDistanceCorrect() throws MalformedURLException, IOException {
-	assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled, DistanceTraveled);
+	assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled);
 }
 
 @Test
 public void testDistanceIncorrect() throws MalformedURLException, IOException{
-	assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), 0 , 0);
+	assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), 0);
 }
 
 }
