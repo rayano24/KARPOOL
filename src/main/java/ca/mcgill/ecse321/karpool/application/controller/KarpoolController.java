@@ -24,8 +24,8 @@ import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
 
-
-
+;
+	public static final Rating rating;
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
 
 	@Autowired
@@ -52,6 +52,7 @@ public class KarpoolController {
 	@PostMapping("/users/{email}")
 	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, boolean criminalRecord)
 	{
+		
 		try {
 			if(phone.length() == 10) {
 				Integer.parseInt(phone);

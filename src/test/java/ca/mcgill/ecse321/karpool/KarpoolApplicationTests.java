@@ -30,9 +30,10 @@ import ca.mcgill.ecse321.karpool.model.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = KarpoolApplication.class)
-public class KarpoolApplicationTests {
-	@Mock
+public class KarpoolApplicationTests
+{
 
+	@Mock
 private KarpoolRepository userDao;
 
 @InjectMocks
@@ -58,8 +59,6 @@ private static final Boolean USER_NO_RECORD = false;
 private static final Boolean USER_RECORD = true;
 private static final Rating USER_RATING = null;
 
-
-
 @Before
 public void setMockOutput() {
   when(userDao.getUser(anyString())).thenAnswer( (InvocationOnMock invocation) -> {
@@ -81,8 +80,7 @@ public void setMockOutput() {
     public void testAddPassenger() {
     	when(controller.addPassenger(mockPassenger, mockTrip)).thenReturn(true);
     	assertEquals(controller.addPassenger(mockPassenger, mockTrip), wasAdded);
-
-    }
+		}
 
 	@Test
 	public void contextLoads() {

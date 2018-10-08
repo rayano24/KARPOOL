@@ -5,5 +5,5 @@ import javax.persistence.Entity;
 @Entity
 public enum Rating{
 	
-	ONE, TWO, THREE, FOUR, FIVE;
+	NULL, ONE, TWO, THREE, FOUR, FIVE;
 }
