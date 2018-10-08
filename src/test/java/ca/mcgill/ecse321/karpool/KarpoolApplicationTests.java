@@ -61,7 +61,7 @@ public void setMockOutput() {
 //    @Test
 //    public void testAddPassenger() {
 //    	assertEquals(controller.addPassenger(), USER_KEY);
-//    	
+//
 //    }
 
 	@Test
@@ -81,14 +81,14 @@ public void testUserQueryNotFound() {
 @Test
 public void testAuthenticateUserPassed()
 {
-	assertEquals(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS), true);
+	assertEquals(true, controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), userDao.getUser(USER_KEY).getPassword()));
 	//when(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), userDao.getUser(USER_KEY).getPassword())).thenReturn(true);
 }
 
 @Test
 public void testAuthenticateUserFailed()
 {
-	assertEquals(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS_INCORRECT), false);
+	assertEquals(false, controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS_INCORRECT));
 }
 
 @Test
@@ -96,7 +96,7 @@ public void testDistanceCorrect() throws MalformedURLException, IOException {
 	assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled, DistanceTraveled);
 }
 
-@Test 
+@Test
 public void testDistanceIncorrect() throws MalformedURLException, IOException{
 	assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), 0 , 0);
 }
