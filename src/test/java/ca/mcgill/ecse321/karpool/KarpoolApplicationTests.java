@@ -35,6 +35,7 @@ private static final String NONEXISTING_KEY = "NotAParticipant";
 private static final String USER_EMAIL = "email";
 private static final String USER_PASS = "correctPass";
 private static final String USER_PASS_INCORRECT = "incorrectPass";
+private static final int NON_EXISTANT_ZIPCODE = 12345;
 
 @Before
 public void setMockOutput() {
@@ -76,6 +77,16 @@ public void testAuthenticateUserPassed()
 public void testAuthenticateUserFailed()
 {
 	assertEquals(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS_INCORRECT), false);
+}
+
+@Test
+public void testDistanceCorrect() {
+	assertEquals(controller.Distance(zipcode1, zipcode2), false);
+}
+
+@Test 
+public void testDistanceIncorrect() {
+	assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), true);
 }
 
 }

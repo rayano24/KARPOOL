@@ -222,6 +222,9 @@ public class KarpoolController {
             }
 
             String RoughDistance = sb.toString();
+            if (RoughDistance.charAt(2) == 'e') {
+            	return 0;
+            }
             String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
             float distance = Float.parseFloat(intValue);
             return distance;
