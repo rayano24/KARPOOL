@@ -4,6 +4,9 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -84,12 +87,12 @@ public void testAuthenticateUserFailed()
 }
 
 @Test
-public void testDistanceCorrect() {
+public void testDistanceCorrect() throws MalformedURLException, IOException {
 	assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled, DistanceTraveled);
 }
 
 @Test 
-public void testDistanceIncorrect() {
+public void testDistanceIncorrect() throws MalformedURLException, IOException{
 	assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), 0 , 0);
 }
 
