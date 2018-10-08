@@ -42,8 +42,8 @@ public void setMockOutput() {
     if(invocation.getArgument(0).equals(USER_KEY)) {
       User user = new User();
       user.setName(USER_KEY);
-	  user.setEmail(USER_EMAIL);
-	  user.setPassword(USER_PASS);
+			user.setEmail(USER_EMAIL);
+			user.setPassword(USER_PASS);
       return user;
     } else {
       return null;
@@ -51,6 +51,11 @@ public void setMockOutput() {
   });
 }
 
+//    @Test
+//    public void testAddPassenger() {
+//    	assertEquals(controller.addPassenger(), USER_KEY);
+//    	
+//    }
 
 	@Test
 	public void contextLoads() {
