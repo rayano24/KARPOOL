@@ -180,28 +180,6 @@ public class KarpoolController {
 }
 
 
-//	public boolean addPassenger(Passenger passenger) {
-//		boolean wasAdded = false;
-//		if (passengers.contains(passenger)) {
-//			return false;
-//		}
-//		Trip existingTrip = passenger.getTrip();
-//		boolean isNewTrip = (existingTrip != null && !this.equals(existingTrip));
-//
-//		if (isNewTrip) {
-//			passenger.setTrip(this);
-//		}
-//
-//		else {
-//			passenger.add(passenger);
-//		}
-//		wasAdded = true;
-//		return wasAdded;
-//
-//
-//
-//	}
-//
 	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
 	{
 
