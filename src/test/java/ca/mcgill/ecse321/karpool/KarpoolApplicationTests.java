@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.karpool;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -24,64 +25,94 @@ import ca.mcgill.ecse321.karpool.application.controller.KarpoolController;
 import ca.mcgill.ecse321.karpool.application.repository.KarpoolRepository;
 import ca.mcgill.ecse321.karpool.model.User;
 
-
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = KarpoolApplication.class)
-public class KarpoolApplicationTests
-{
+public class KarpoolApplicationTests {
 	@Mock
-private KarpoolRepository userDao;
+	private KarpoolRepository userDao;
 
-@InjectMocks
-private KarpoolController controller;
+	@InjectMocks
+	private KarpoolController controller;
 
-private static final String USER_KEY = "TestParticipant";
-private static final String NONEXISTING_KEY = "NotAParticipant";
-private static final String USER_EMAIL = "email";
-private static final String USER_PASS = "correctPass";
-private static final String USER_PASS_INCORRECT = "incorrectPass";
-private static final int NON_EXISTANT_ZIPCODE = 3423;
-private static final int zipcode1 = 90210;
-private static final int zipcode2 = 72110;
-private static final float DistanceTraveled = (float) 2341.865;
-private static final boolean wasAdded = true;
-private static final String USER_PHONE = "5141231234";
-private static final String USER_PHONE_INCORRECT = "514";
-private static final Boolean USER_NO_RECORD = false;
-private static final Boolean USER_RECORD = true;
-private static final Rating USER_RATING = null;
+	private static final String USER_KEY = "TestParticipant";
+	private static final String NONEXISTING_KEY = "NotAParticipant";
+	private static final String USER_EMAIL = "email";
+	private static final String USER_PASS = "correctPass";
+	private static final String USER_PASS_INCORRECT = "incorrectPass";
+	private static final int NON_EXISTANT_ZIPCODE = 3423;
+	private static final int zipcode1 = 90210;
+	private static final int zipcode2 = 72110;
+	private static final float DistanceTraveled = (float) 2341.865;
+	private static final boolean wasAdded = true;
+	private static final String USER_PHONE = "5141231234";
+	private static final String USER_PHONE_INCORRECT = "514";
+	private static final Boolean USER_NO_RECORD = false;
+	private static final Boolean USER_RECORD = true;
+	private static final Rating USER_RATING = null;
+	private static final Rating USER_TEST_RATING = Rating.FIVE;
 
-@Before
-public void setMockOutput() {
-  when(userDao.getUser(anyString())).thenAnswer( (InvocationOnMock invocation) -> {
-    if(invocation.getArgument(0).equals(USER_KEY)) {
-      User user = new User();
-      user.setName(USER_KEY);
-			user.setEmail(USER_EMAIL);
-			user.setPassword(USER_PASS);
-      return user;
-    } else {
-      return null;
-    }
-  });
-}
+	
 
+	@Before
+	public void setMockOutput() {
+		when(userDao.getUser(anyString())).thenAnswer((InvocationOnMock invocation) -> {
+			if (invocation.getArgument(0).equals(USER_KEY)) {
+				User user = new User();
+				user.setName(USER_KEY);
+				user.setEmail(USER_EMAIL);
+				user.setPassword(USER_PASS);
+				user.setPhoneNumber(USER_PHONE);
+				user.setRating(null);
+				user.setRecord(USER_NO_RECORD);
+				return user;
+			} else {
+				return null;
+			}
+		});
+	}
 
-
-    @Test
-    public void testAddPassenger() {
-    	when(controller.addPassenger(mockPassenger, mockTrip)).thenReturn(true);
-    	assertEquals(controller.addPassenger(mockPassenger, mockTrip), wasAdded);
-		}
+	@Test
+	public void testAddPassenger() {
+		when(controller.addPassenger(mockPassenger, mockTrip)).thenReturn(true);
+		assertEquals(controller.addPassenger(mockPassenger, mockTrip), wasAdded);
+	}
 
 	@Test
 	public void contextLoads() {
 	}
 
 	@Test
-public void testUserQueryFound() {
-  assertEquals(controller.queryUser(USER_KEY), USER_KEY);
-}
+	public void testUserQueryFound() {
+		assertEquals(controller.queryUser(USER_KEY), USER_KEY);
+	}
+
+	@Test
+	public void testAddRating() {
+		controller.addRating(USER_EMAIL, USER_TEST_RATING);
+		assertEquals(Rating.FIVE, userDao.getUser(USER_KEY).getRating());
+	}
+
+	@Test
+	public void testRegisterSuccess() {
+		Boolean isAccountCreatedSuccessfully = false;
+		if (controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, USER_RATING, USER_RECORD) != null) {
+
+			isAccountCreatedSuccessfully = true;
+
+		}
+		assertTrue(isAccountCreatedSuccessfully);
+	}
+
+	@Test
+	public void testRegisterFailure() {
+		Boolean accountCreationFailed = false;
+		if (controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE_INCORRECT, USER_RATING,
+				USER_RECORD) == null) {
+			accountCreationFailed = true;
+
+		}
+		assertTrue(accountCreationFailed);
+	}
 
 	@Test
 	public void testAuthenticateUserPassed() {
