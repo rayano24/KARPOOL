@@ -1,12 +1,12 @@
 package ca.mcgill.ecse321.karpool.application.controller;
 
 import java.util.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
+import ca.mcgill.ecse321.karpool.application.*;
+import ca.mcgill.ecse321.karpool.application.Rating;
+
 import ca.mcgill.ecse321.karpool.application.*;	
+
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
@@ -29,6 +33,9 @@ public class KarpoolController {
 
 	@Autowired
 	Driver driver;
+	
+	@Autowired
+	Set<Passenger> passengers;
 
 	//TODO: Password can't just be read as a regular String. NEEDS some form of encryption.
 	//FIXME: Why does createUser need to return the usersName?
@@ -43,10 +50,26 @@ public class KarpoolController {
 	 * @return the users name
 	 */
 	@PostMapping("/users/{email}")
-	public String createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating)
+	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, boolean criminalRecord)
 	{
-		User user = repository.createUser(name, email, password, phone, rating);
-		return user.getName();
+		try {
+			if(phone.length() == 10) {
+				Integer.parseInt(phone);
+			}
+			else {
+				System.out.println("You entered an invalid phone number");
+				return null;
+			}
+				
+		} catch(NullPointerException |  NumberFormatException e) {
+			System.out.println("You entered an invalid phone number");
+			return null;
+		}
+		if(!criminalRecord) {
+		return repository.createUser(name, email, password, phone, rating, criminalRecord);
+		}
+		
+		return null;
 	}
 
 	/**
@@ -85,6 +108,8 @@ public class KarpoolController {
 		}
 		return user.getName();
 	}
+	
+	
 
 	@PostMapping("/trip/{trip}")
 	public Trip createTrip (@PathVariable ("trip") String departureLocation, String destination, int seatAvailable, String departureTime)
@@ -109,6 +134,7 @@ public class KarpoolController {
 
 
 	}
+	
 
 
 
@@ -128,9 +154,31 @@ public class KarpoolController {
 		catch (NullPointerException e) {
 			System.out.println("NOT FOUND");
 		}
-
-
+						
 	}
+	@GetMapping
+	public boolean addPassenger(Passenger passenger, Trip trip) {
+		
+		boolean wasAdded = false;
+		if (trip.getSeatAvailable()<=0) {
+		return false;
+	}
+		else if (passengers.contains(passenger)) {
+		return false;
+	}
+	
+	else 
+	{
+		passenger.setTrip(trip);
+	}
+	
+	wasAdded = true;
+	return wasAdded;
+
+
+
+}
+	
 
 //	public boolean addPassenger(Passenger passenger) {
 //		boolean wasAdded = false;
@@ -154,7 +202,8 @@ public class KarpoolController {
 //
 //	}
 //
-	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException {
+	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException 
+	{
 
         BufferedReader br = null;
 
@@ -184,6 +233,7 @@ public class KarpoolController {
             }
         }
     }
+
 
 
 

@@ -16,7 +16,6 @@ import ca.mcgill.ecse321.karpool.application.Passenger;
 public class Trip {
 	
 private int tripId;
-private List<Passenger> passengers;
 
 public void setTripId(int value) {
 this.tripId = value;
