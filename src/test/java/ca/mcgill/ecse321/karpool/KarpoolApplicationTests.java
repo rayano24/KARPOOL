@@ -32,6 +32,9 @@ private KarpoolController controller;
 
 private static final String USER_KEY = "TestParticipant";
 private static final String NONEXISTING_KEY = "NotAParticipant";
+private static final String USER_EMAIL = "email";
+private static final String USER_PASS = "correctPass";
+private static final String USER_PASS_INCORRECT = "incorrectPass";
 
 @Before
 public void setMockOutput() {
@@ -39,6 +42,8 @@ public void setMockOutput() {
     if(invocation.getArgument(0).equals(USER_KEY)) {
       User user = new User();
       user.setName(USER_KEY);
+			user.setEmail(USER_EMAIL);
+			user.setPassword(USER_PASS);
       return user;
     } else {
       return null;
@@ -58,6 +63,19 @@ public void testUserQueryFound() {
 @Test
 public void testUserQueryNotFound() {
   assertEquals(controller.queryUser(NONEXISTING_KEY), KarpoolController.ERROR_NOT_FOUND_MESSAGE);
+}
+
+@Test
+public void testAuthenticateUserPassed()
+{
+	assertEquals(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS), true);
+	//when(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), userDao.getUser(USER_KEY).getPassword())).thenReturn(true);
+}
+
+@Test
+public void testAuthenticateUserFailed()
+{
+	assertEquals(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS_INCORRECT), false);
 }
 
 }
