@@ -21,11 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ca.mcgill.ecse321.karpool.application.KarpoolApplication;
-<<<<<<< HEAD
 import ca.mcgill.ecse321.karpool.application.Passenger;
-=======
 import ca.mcgill.ecse321.karpool.application.Rating;
->>>>>>> cc359f92f6e3fa585d382c233b4c7d07b1e4788e
 import ca.mcgill.ecse321.karpool.application.controller.KarpoolController;
 import ca.mcgill.ecse321.karpool.application.repository.KarpoolRepository;
 import ca.mcgill.ecse321.karpool.model.Trip;
@@ -35,7 +32,7 @@ import ca.mcgill.ecse321.karpool.model.User;
 @SpringBootTest(classes = KarpoolApplication.class)
 public class KarpoolApplicationTests {
 	@Mock
-<<<<<<< HEAD
+
 private KarpoolRepository userDao;
 
 @InjectMocks
@@ -55,6 +52,11 @@ private static final int zipcode1 = 90210;
 private static final int zipcode2 = 72110;
 private static final float DistanceTraveled = (float) 2341.865;
 private static final boolean wasAdded = true;
+private static final String USER_PHONE = "5141231234";
+private static final String USER_PHONE_INCORRECT = "514";
+private static final Boolean USER_NO_RECORD = false;
+private static final Boolean USER_RECORD = true;
+private static final Rating USER_RATING = null;
 
 
 
@@ -79,50 +81,8 @@ public void setMockOutput() {
     public void testAddPassenger() {
     	when(controller.addPassenger(mockPassenger, mockTrip)).thenReturn(true);
     	assertEquals(controller.addPassenger(mockPassenger, mockTrip), wasAdded);
-    	
+
     }
-=======
-	private KarpoolRepository userDao;
-
-	@InjectMocks
-	private KarpoolController controller;
-
-	private static final String USER_KEY = "TestParticipant";
-	private static final String NONEXISTING_KEY = "NotAParticipant";
-	private static final String USER_EMAIL = "email";
-	private static final String USER_PASS = "correctPass";
-	private static final String USER_PASS_INCORRECT = "incorrectPass";
-	private static final int NON_EXISTANT_ZIPCODE = 3423;
-	private static final int zipcode1 = 90210;
-	private static final int zipcode2 = 72110;
-	private static final float DistanceTraveled = (float) 2341.865;
-	private static final String USER_PHONE = "5141231234";
-	private static final String USER_PHONE_INCORRECT = "514";
-	private static final Boolean USER_NO_RECORD = false;
-	private static final Boolean USER_RECORD = true;
-	private static final Rating USER_RATING = null;
-
-	@Before
-	public void setMockOutput() {
-		when(userDao.getUser(anyString())).thenAnswer((InvocationOnMock invocation) -> {
-			if (invocation.getArgument(0).equals(USER_KEY)) {
-				User user = new User();
-				user.setName(USER_KEY);
-				user.setEmail(USER_EMAIL);
-				user.setPassword(USER_PASS);
-				return user;
-			} else {
-				return null;
-			}
-		});
-	}
-
-	// @Test
-	// public void testAddPassenger() {
-	// assertEquals(controller.addPassenger(), USER_KEY);
-	//
-	// }
->>>>>>> cc359f92f6e3fa585d382c233b4c7d07b1e4788e
 
 	@Test
 	public void contextLoads() {
