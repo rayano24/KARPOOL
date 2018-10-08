@@ -18,7 +18,7 @@ import ca.mcgill.ecse321.karpool.model.User;
 import ca.mcgill.ecse321.karpool.application.*;
 import ca.mcgill.ecse321.karpool.application.Rating;
 
-import ca.mcgill.ecse321.karpool.application.*;	
+import ca.mcgill.ecse321.karpool.application.*;
 
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
@@ -26,14 +26,14 @@ public class KarpoolController {
 
 
 
-	public static final String ERROR_NOT_FOUND_MESSAGE = "Not found";
+	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
 
 	@Autowired
 	KarpoolRepository repository;
 
 	@Autowired
 	Driver driver;
-	
+
 	@Autowired
 	Set<Passenger> passengers;
 
@@ -60,7 +60,7 @@ public class KarpoolController {
 				System.out.println("You entered an invalid phone number");
 				return null;
 			}
-				
+
 		} catch(NullPointerException |  NumberFormatException e) {
 			System.out.println("You entered an invalid phone number");
 			return null;
@@ -68,7 +68,7 @@ public class KarpoolController {
 		if(!criminalRecord) {
 		return repository.createUser(name, email, password, phone, rating, criminalRecord);
 		}
-		
+
 		return null;
 	}
 
@@ -108,8 +108,8 @@ public class KarpoolController {
 		}
 		return user.getName();
 	}
-	
-	
+
+
 
 	@PostMapping("/trip/{trip}")
 	public Trip createTrip (@PathVariable ("trip") String departureLocation, String destination, int seatAvailable, String departureTime)
@@ -134,7 +134,7 @@ public class KarpoolController {
 
 
 	}
-	
+
 
 
 
@@ -154,11 +154,11 @@ public class KarpoolController {
 		catch (NullPointerException e) {
 			System.out.println("NOT FOUND");
 		}
-						
+
 	}
 	@GetMapping
 	public boolean addPassenger(Passenger passenger, Trip trip) {
-		
+
 		boolean wasAdded = false;
 		if (trip.getSeatAvailable()<=0) {
 		return false;
@@ -166,19 +166,19 @@ public class KarpoolController {
 		else if (passengers.contains(passenger)) {
 		return false;
 	}
-	
-	else 
+
+	else
 	{
 		passenger.setTrip(trip);
 	}
-	
+
 	wasAdded = true;
 	return wasAdded;
 
 
 
 }
-	
+
 
 //	public boolean addPassenger(Passenger passenger) {
 //		boolean wasAdded = false;
@@ -202,7 +202,7 @@ public class KarpoolController {
 //
 //	}
 //
-	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException 
+	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
 	{
 
         BufferedReader br = null;
