@@ -5,6 +5,7 @@ import java.util.HashSet;
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.karpool.application.Passenger;
@@ -14,8 +15,11 @@ import ca.mcgill.ecse321.karpool.model.User;
 
 public class KarpoolRepository {
 
+	@Value("${spring.datasource.url}")
+  private String dbUrl;
+
 	@Autowired
-	EntityManager entityManager;
+	private EntityManager entityManager;
 
 	@Transactional
 	public User createUser(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord )

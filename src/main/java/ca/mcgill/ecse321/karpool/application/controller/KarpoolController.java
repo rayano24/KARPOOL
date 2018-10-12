@@ -22,8 +22,6 @@ import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
 
-
-
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
 
 	@Autowired
@@ -51,6 +49,7 @@ public class KarpoolController {
 	@PostMapping("/USERS/{email}")
 	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, Boolean criminalRecord)
 	{
+		//TODO: need to check the rest of the inputs as well, not just phone number
 		try {
 			if(phone.length() == 10) {
 				Integer.parseInt(phone);

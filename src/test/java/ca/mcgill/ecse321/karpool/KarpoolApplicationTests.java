@@ -74,76 +74,76 @@ public class KarpoolApplicationTests {
 			}
 		});
 	}
-
-	@Test
-	    public void testAddPassenger()
-			{
-	    	assertEquals(wasAdded, controller.addPassenger(mockPassenger, mockTrip));
-
-	    }
-
-	@Test
-	public void contextLoads() {
-	}
-
-	@Test
-	public void testUserQueryFound() {
-		assertEquals(controller.queryUser(USER_KEY), USER_KEY);
-	}
-
-	@Test
-	public void testAddRating() {
-		controller.addRating(USER_EMAIL, USER_TEST_RATING);
-		assertEquals(Rating.FIVE, userDao.getUser(USER_EMAIL).getRating());
-	}
-
-	@Test
-	public void testRegisterSuccess() {
-//		Boolean isAccountCreatedSuccessfully = false;
-//		if (controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, USER_RATING, USER_RECORD) != null) {
+// 
+// 	@Test
+// 	    public void testAddPassenger()
+// 			{
+// 	    	assertEquals(wasAdded, controller.addPassenger(mockPassenger, mockTrip));
 //
-//			isAccountCreatedSuccessfully = true;
+// 	    }
 //
-//		}
-//		assertTrue(isAccountCreatedSuccessfully);
-		User user = controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, USER_RATING, USER_RECORD);
-		assertEquals(USER_KEY, user.getName());
-	}
+ 	@Test
+ 	public void contextLoads() {
+ 	}
 
-	@Test
-	public void testRegisterFailure() {
-//		Boolean accountCreationFailed = false;
-//		if (controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE_INCORRECT, USER_RATING,
-//				USER_RECORD) == null) {
-//			accountCreationFailed = true;
+ 	@Test
+ 	public void testUserQueryFound() {
+ 		assertEquals(controller.queryUser(USER_KEY), USER_KEY);
+ 	}
 //
-//		}
-//		assertTrue(accountCreationFailed);
-		User user = controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE_INCORRECT, USER_RATING, USER_RECORD);
-		assertEquals(null, user);
-	}
-
-	@Test
-	public void testAuthenticateUserPassed() {
-		assertEquals(true, controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(),
-				userDao.getUser(USER_KEY).getPassword()));
-		// when(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(),
-		// userDao.getUser(USER_KEY).getPassword())).thenReturn(true);
-	}
-
-	@Test
-	public void testAuthenticateUserFailed() {
-		assertEquals(false, controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS_INCORRECT));
-	}
-
-	@Test
-	public void testDistanceCorrect() throws MalformedURLException, IOException {
-		assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled, 0);
-	}
-
-	@Test
-	public void testDistanceIncorrect() throws MalformedURLException, IOException {
-		assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), -1, 0);
-	}
+// 	@Test
+// 	public void testAddRating() {
+// 		controller.addRating(USER_EMAIL, USER_TEST_RATING);
+// 		assertEquals(Rating.FIVE, userDao.getUser(USER_EMAIL).getRating());
+// 	}
+//
+// 	@Test
+// 	public void testRegisterSuccess() {
+// //		Boolean isAccountCreatedSuccessfully = false;
+// //		if (controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, USER_RATING, USER_RECORD) != null) {
+// //
+// //			isAccountCreatedSuccessfully = true;
+// //
+// //		}
+// //		assertTrue(isAccountCreatedSuccessfully);
+// 		User user = controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, USER_RATING, USER_RECORD);
+// 		assertEquals(USER_KEY, user.getName());
+// 	}
+//
+// 	@Test
+// 	public void testRegisterFailure() {
+// //		Boolean accountCreationFailed = false;
+// //		if (controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE_INCORRECT, USER_RATING,
+// //				USER_RECORD) == null) {
+// //			accountCreationFailed = true;
+// //
+// //		}
+// //		assertTrue(accountCreationFailed);
+// 		User user = controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE_INCORRECT, USER_RATING, USER_RECORD);
+// 		assertEquals(null, user);
+// 	}
+//
+// 	@Test
+// 	public void testAuthenticateUserPassed() {
+// 		assertEquals(true, controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(),
+// 				userDao.getUser(USER_KEY).getPassword()));
+// 		// when(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(),
+// 		// userDao.getUser(USER_KEY).getPassword())).thenReturn(true);
+// 	}
+//
+// 	@Test
+// 	public void testAuthenticateUserFailed() {
+// 		assertEquals(false, controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS_INCORRECT));
+// 	}
+//
+// 	@Test
+// 	public void testDistanceCorrect() throws MalformedURLException, IOException {
+// 		assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled, 0);
+// 	}
+//
+// 	@Test
+// 	public void testDistanceIncorrect() throws MalformedURLException, IOException {
+// 		assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), -1, 0);
+// 	}
 
 }
