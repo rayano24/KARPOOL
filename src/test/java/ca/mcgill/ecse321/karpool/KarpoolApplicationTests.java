@@ -99,24 +99,28 @@ public class KarpoolApplicationTests {
 
 	@Test
 	public void testRegisterSuccess() {
-		Boolean isAccountCreatedSuccessfully = false;
-		if (controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, USER_RATING, USER_RECORD) != null) {
-
-			isAccountCreatedSuccessfully = true;
-
-		}
-		assertTrue(isAccountCreatedSuccessfully);
+//		Boolean isAccountCreatedSuccessfully = false;
+//		if (controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, USER_RATING, USER_RECORD) != null) {
+//
+//			isAccountCreatedSuccessfully = true;
+//
+//		}
+//		assertTrue(isAccountCreatedSuccessfully);
+		User user = controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, USER_RATING, USER_RECORD);
+		assertEquals(USER_KEY, user.getName());
 	}
 
 	@Test
 	public void testRegisterFailure() {
-		Boolean accountCreationFailed = false;
-		if (controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE_INCORRECT, USER_RATING,
-				USER_RECORD) == null) {
-			accountCreationFailed = true;
-
-		}
-		assertTrue(accountCreationFailed);
+//		Boolean accountCreationFailed = false;
+//		if (controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE_INCORRECT, USER_RATING,
+//				USER_RECORD) == null) {
+//			accountCreationFailed = true;
+//
+//		}
+//		assertTrue(accountCreationFailed);
+		User user = controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE_INCORRECT, USER_RATING, USER_RECORD);
+		assertEquals(null, user);
 	}
 
 	@Test

@@ -48,7 +48,7 @@ public class KarpoolController {
 	 * @param rating
 	 * @return the users object if found, null if not
 	 */
-	@PostMapping("/users/{email}")
+	@PostMapping("/USERS/{email}")
 	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, Boolean criminalRecord)
 	{
 		try {
@@ -77,7 +77,7 @@ public class KarpoolController {
 	 * @param password
 	 * @return TRUE if the account is authenticated
 	 */
-	@GetMapping("/users/{email}")
+	@GetMapping("/USERS/{email}")
 	public boolean authenticateUser(@PathVariable("email")String email, @PathVariable("password")String password)
 	{
 		try {
@@ -97,7 +97,7 @@ public class KarpoolController {
 	 * @param email
 	 * @return the account that was searched for
 	 */
-	@GetMapping("/users/{email}")
+	@GetMapping("/USERS/{email}")
 	public String queryUser(@PathVariable("email")String email)
 	{
 		User user = repository.getUser(email);
@@ -110,7 +110,7 @@ public class KarpoolController {
 
 
 
-	@PostMapping("/trip/{trip}")
+	@PostMapping("/TRIPS/{trip}")
 	public Trip createTrip (@PathVariable ("trip") String departureLocation, String destination, int seatAvailable, String departureTime)
 	{
 		Trip trip = repository.createTrip(destination,departureTime, departureLocation, seatAvailable);
@@ -126,7 +126,7 @@ public class KarpoolController {
 		return Trip;
 	}
 
-	@PostMapping("/trip/{trip}")
+	@PostMapping("/TRIPS/{trip}")
 	public void closeTrip(@PathVariable ("trip") Trip trip)
 	{
 		repository.closeTrip(trip);
@@ -142,7 +142,7 @@ public class KarpoolController {
 	 * @param email
 	 * @param rating
 	 */
-	@GetMapping("/users/{email}")
+	@GetMapping("/USERS/{email}")
 	public void addRating(@PathVariable("email")String email, Rating rating)
 	{
 		try {

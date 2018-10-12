@@ -13,16 +13,13 @@ import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
 
 public class KarpoolRepository {
-	
-	@Autowired 
+
+	@Autowired
 	EntityManager entityManager;
-	
+
 	@Transactional
-
-	
-
-	public User createUser(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord ) {
-
+	public User createUser(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord )
+	{
 		User user = new User();
 		user.setName(name);
 		user.setEmail(email);
@@ -32,14 +29,14 @@ public class KarpoolRepository {
 		entityManager.persist(user);
 		return user;
 	}
-	
+
 	@Transactional
 	public User getUser(String email) {
 		User user = entityManager.find(User.class, email);
 		return user;
 	}
-	
-	
+
+
 	@Transactional
 	public Trip createTrip(String destination, String departureTime, String departureLocation, int seatAvailable) {
 		Trip trip = new Trip();
@@ -47,37 +44,37 @@ public class KarpoolRepository {
 		trip.setDepartureTime(departureTime);
 		trip.setDepartureLocation(departureLocation);
 		trip.setSeatAvailable(seatAvailable);
-		return trip; 	
+		entityManager.persist(trip);
+		return trip;
 	}
 	@Transactional
-	public void closeTrip(Trip trip) {
-		
+	public void closeTrip(Trip trip)
+	{
 		trip.setDestination(null);
 		trip.setDepartureTime(null);
 		trip.setDepartureLocation(null);
 		trip.setSeatAvailable(0);
-	
-		 	
+		entityManager.persist(trip);
 	}
-	
+
 //	@Transactional
 //	public boolean addPassenger(Passenger passenger, Trip trip) {
-//		
+//
 //		boolean wasAdded = false;
 //		HashSet <Passenger> passengers;
 //		if (passengers.contains(passenger)) {
 //			return false;
 //		}
-//		
-//		
+//
+//
 //		else {
 //			trip.getPassenger();
 //		}
-//		
+//
 //		wasAdded = true;
 //		return wasAdded;
-//		
+//
 //	}
-	
+
 
 }
