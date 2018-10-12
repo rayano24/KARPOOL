@@ -2,8 +2,10 @@
 
 # Overview
 
-KARPOOL is a software system to help drivers and passengers who are travelling on
-similar/identical intercity routes to find one another
+KARPOOL is a software system that was created to help drivers and passengers who are travelling on
+similar/identical intercity routes within the United States find one another
+
+
 
 # Requirements
 
