@@ -17,8 +17,8 @@ public class Passenger extends UserRole
 		this.trip = value;
 	}
 	
-	@ManyToOne
-	@JoinColumn(name="tripId")
+	@ManyToOne(targetEntity=Trip.class)
+//	@JoinColumn(name="tripId")
 	public Trip getTrip() {
 		return this.trip;
 	}

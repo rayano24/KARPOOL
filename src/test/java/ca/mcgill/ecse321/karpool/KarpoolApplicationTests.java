@@ -67,47 +67,47 @@ public void setMockOutput() {
   });
 }
 
-    @Test
-    public void testAddPassenger() {
-    	assertEquals(wasAdded, controller.addPassenger(mockPassenger, mockTrip));
-    	
-    }
+//    @Test
+//    public void testAddPassenger() {
+//    	assertEquals(wasAdded, controller.addPassenger(mockPassenger, mockTrip));
+//    	
+//    }
 
 	@Test
 	public void contextLoads() {
 	}
 
-	@Test
-public void testUserQueryFound() {
-  assertEquals(controller.queryUser(USER_KEY), USER_KEY);
-}
-
-@Test
-public void testUserQueryNotFound() {
-  assertEquals(controller.queryUser(NONEXISTING_KEY), KarpoolController.ERROR_NOT_FOUND_MESSAGE);
-}
-
-@Test
-public void testAuthenticateUserPassed()
-{
-	assertEquals(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS), true);
-	//when(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), userDao.getUser(USER_KEY).getPassword())).thenReturn(true);
-}
-
-@Test
-public void testAuthenticateUserFailed()
-{
-	assertEquals(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS_INCORRECT), false);
-}
-
-@Test
-public void testDistanceCorrect() throws MalformedURLException, IOException {
-	assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled);
-}
-
-@Test 
-public void testDistanceIncorrect() throws MalformedURLException, IOException{
-	assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), 0);
-}
+//	@Test
+//public void testUserQueryFound() {
+//  assertEquals(controller.queryUser(USER_KEY), USER_KEY);
+//}
+//
+//@Test
+//public void testUserQueryNotFound() {
+//  assertEquals(controller.queryUser(NONEXISTING_KEY), KarpoolController.ERROR_NOT_FOUND_MESSAGE);
+//}
+//
+//@Test
+//public void testAuthenticateUserPassed()
+//{
+//	assertEquals(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS), true);
+//	//when(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), userDao.getUser(USER_KEY).getPassword())).thenReturn(true);
+//}
+//
+//@Test
+//public void testAuthenticateUserFailed()
+//{
+//	assertEquals(controller.authenticateUser(userDao.getUser(USER_KEY).getEmail(), USER_PASS_INCORRECT), false);
+//}
+//
+//@Test
+//public void testDistanceCorrect() throws MalformedURLException, IOException {
+//	assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled);
+//}
+//
+//@Test 
+//public void testDistanceIncorrect() throws MalformedURLException, IOException{
+//	assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), 0);
+//}
 
 }
