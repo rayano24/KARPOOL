@@ -69,7 +69,6 @@ public void setMockOutput() {
 
     @Test
     public void testAddPassenger() {
-    //when(controller.addPassenger(mockPassenger, mockTrip)).thenReturn(true);
     	assertEquals(wasAdded, controller.addPassenger(mockPassenger, mockTrip));
     	
     }
