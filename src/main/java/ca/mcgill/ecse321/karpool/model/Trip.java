@@ -1,34 +1,31 @@
 package ca.mcgill.ecse321.karpool.model;
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 
 import ca.mcgill.ecse321.karpool.application.Driver;
 import java.util.Set;
 
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.OneToMany;
 
 import java.util.HashSet;
 
 import ca.mcgill.ecse321.karpool.application.Passenger;
 
 @Entity
-@Table(name = "TRIPS")
 public class Trip {
 
-	@Id
-	@Column(name = "TRIP_ID")
 	private int tripId;
 
 	public void setTripId(int value) {
 		this.tripId = value;
 	}
 
+	@Id
 	public int getTripId() {
 		return this.tripId;
 	}
-	@Id
-	@Column(name = "AVAILABLE_SEATS")
+
 	private int seatAvailable;
 
 	public void setSeatAvailable(int value) {
@@ -39,8 +36,7 @@ public class Trip {
 	public int getSeatAvailable() {
 		return this.seatAvailable;
 	}
-	@Id
-	@Column(name = "DESTINATION")
+
 	private String destination;
 
 	public void setDestination(String value) {
@@ -52,8 +48,6 @@ public class Trip {
 		return this.destination;
 	}
 
-	@Id
-	@Column(name = "DEPARTURE_TIME")
 	private String departureTime;
 
 	public void setDepartureTime(String value) {
@@ -65,8 +59,6 @@ public class Trip {
 		return this.departureTime;
 	}
 
-	@Id
-	@Column(name = "DEPARTURE_LOCATION")
 	private String departureLocation;
 
 	public void setDepartureLocation(String value) {
@@ -78,8 +70,6 @@ public class Trip {
 		return this.departureLocation;
 	}
 
-	@Id
-	@Column(name = "DISTANCE")
 	private int distance;
 
 	public void setDistance(int value) {
@@ -98,8 +88,7 @@ public class Trip {
 	 *           trip        &lt;       driver
 	 * </pre>
 	 */
-	@Id
-	@Column(name = "DRIVER")
+
 	private Set<Driver> driver;
 
 
@@ -117,11 +106,10 @@ public class Trip {
 	 *           trip        &lt;       passenger
 	 * </pre>
 	 */
-	@Id
-	@Column(name = "PASSENGER")
+
 	private Set<Passenger> passenger;
 
-
+	@OneToMany(targetEntity=Passenger.class, mappedBy="trip", cascade=CascadeType.ALL)
 	public Set<Passenger> getPassenger() {
 		if (this.passenger == null) {
 			this.passenger = new HashSet<Passenger>();
