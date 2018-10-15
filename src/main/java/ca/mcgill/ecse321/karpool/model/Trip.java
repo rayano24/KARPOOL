@@ -2,7 +2,6 @@ package ca.mcgill.ecse321.karpool.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 
-import ca.mcgill.ecse321.karpool.application.Driver;
 import java.util.Set;
 
 import javax.persistence.Id;
@@ -10,7 +9,6 @@ import javax.persistence.OneToMany;
 
 import java.util.HashSet;
 
-import ca.mcgill.ecse321.karpool.application.Passenger;
 
 @Entity
 public class Trip {

@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.karpool.application;
+package ca.mcgill.ecse321.karpool.model;
 
 
 public enum Rating{

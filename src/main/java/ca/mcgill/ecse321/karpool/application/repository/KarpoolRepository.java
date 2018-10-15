@@ -8,8 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.mcgill.ecse321.karpool.application.Passenger;
-import ca.mcgill.ecse321.karpool.application.Rating;
+import ca.mcgill.ecse321.karpool.model.Passenger;
+import ca.mcgill.ecse321.karpool.model.Rating;
 import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
 

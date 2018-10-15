@@ -12,19 +12,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
-import ca.mcgill.ecse321.karpool.application.*;
-import ca.mcgill.ecse321.karpool.application.Rating;
-
-import ca.mcgill.ecse321.karpool.application.*;
+import ca.mcgill.ecse321.karpool.model.Driver;
+import ca.mcgill.ecse321.karpool.model.Passenger;
+import ca.mcgill.ecse321.karpool.model.Rating;
 
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
-
-
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
 
