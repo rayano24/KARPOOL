@@ -1,45 +1,31 @@
 package ca.mcgill.ecse321.karpool.application.repository;
 
-import java.util.HashSet;
-
 import javax.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import ca.mcgill.ecse321.karpool.model.Passenger;
-import ca.mcgill.ecse321.karpool.model.Rating;
-import ca.mcgill.ecse321.karpool.model.Trip;
-import ca.mcgill.ecse321.karpool.model.User;
+import ca.mcgill.ecse321.karpool.model.*;
 
-public class KarpoolRepository {
-
-	@Value("${spring.datasource.url}")
-  private String dbUrl;
-
+@Repository
+public class KarpoolRepository 
+{
 	@Autowired
 	private EntityManager entityManager;
 
 	@Transactional
-	public User createUser(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord )
-	{
-		User user = new User();
-		user.setName(name);
-		user.setEmail(email);
-		user.setPassword(password);
-		user.setPhoneNumber(phoneNumber);
-		user.setRating(null);
+	public User createUser(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord){
+		User user = new User(name, email, phoneNumber, password);
 		entityManager.persist(user);
 		return user;
 	}
 
 	@Transactional
-	public User getUser(String email) {
-		User user = entityManager.find(User.class, email);
+	public User getUser(String name) {
+		User user = entityManager.find(User.class, name);
 		return user;
 	}
-
 
 	@Transactional
 	public Trip createTrip(String destination, String departureTime, String departureLocation, int seatAvailable) {
@@ -51,6 +37,7 @@ public class KarpoolRepository {
 		entityManager.persist(trip);
 		return trip;
 	}
+	
 	@Transactional
 	public void closeTrip(Trip trip)
 	{
@@ -60,25 +47,23 @@ public class KarpoolRepository {
 		trip.setSeatAvailable(0);
 		entityManager.persist(trip);
 	}
-
-//	@Transactional
-//	public boolean addPassenger(Passenger passenger, Trip trip) {
-//
-//		boolean wasAdded = false;
-//		HashSet <Passenger> passengers;
-//		if (passengers.contains(passenger)) {
-//			return false;
-//		}
-//
-//
-//		else {
-//			trip.getPassenger();
-//		}
-//
-//		wasAdded = true;
-//		return wasAdded;
-//
-//	}
-
-
+	
+	@Transactional
+	public Driver createDriver(Car car, Trip trip)
+	{
+		Driver d = new Driver();
+		d.setCar(car);
+		d.setTrip(trip);
+		entityManager.persist(d);
+		return d;
+	}
+	
+	@Transactional
+	public Trip addPassenger(Passenger passenger, Trip trip)
+	{
+		trip.getPassenger().add(passenger);
+		trip.setSeatAvailable(trip.getSeatAvailable()-1);
+		entityManager.persist(trip);
+		return trip;
+	}
 }

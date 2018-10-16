@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
 import ca.mcgill.ecse321.karpool.model.Driver;
@@ -20,6 +22,7 @@ import ca.mcgill.ecse321.karpool.model.Rating;
 
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
+@RestController
 public class KarpoolController {
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
@@ -27,15 +30,22 @@ public class KarpoolController {
 	@Autowired
 	KarpoolRepository repository;
 
-	@Autowired
+//	@Autowired
 	Driver driver;
 
-	@Autowired
+//	@Autowired
 	Set<Passenger> passengers;
+	
+//	@Autowired
+	User user;
 
 	//TODO: Password can't just be read as a regular String. NEEDS some form of encryption.
 	//FIXME: Why does createUser need to return the usersName?
-
+	
+	@RequestMapping("/")
+	public String greeting(){
+		return "Hello world!";
+	}
 
 	/**
 	 * @param name
@@ -45,27 +55,29 @@ public class KarpoolController {
 	 * @param rating
 	 * @return the users name
 	 */
-	@PostMapping("/users/{email}")
-	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, boolean criminalRecord)
+	@PostMapping("/users/{name}")
+	public String createUser(@PathVariable("name")String name/*, String email, String password, String phone, Rating rating, boolean criminalRecord*/)
 	{
-		try {
-			if(phone.length() == 10) {
-				Integer.parseInt(phone);
-			}
-			else {
-				System.out.println("You entered an invalid phone number");
-				return null;
-			}
-
-		} catch(NullPointerException |  NumberFormatException e) {
-			System.out.println("You entered an invalid phone number");
-			return null;
-		}
-		if(!criminalRecord) {
-		return repository.createUser(name, email, password, phone, rating, criminalRecord);
-		}
-
-		return null;
+//		try {
+//			if(phone.length() == 10) {
+//				Integer.parseInt(phone);
+//			}
+//			else {
+//				System.out.println("You entered an invalid phone number");
+//				return null;
+//			}
+//
+//		} catch(NullPointerException |  NumberFormatException e) {
+//			System.out.println("You entered an invalid phone number");
+//			return null;
+//		}
+//		if(!criminalRecord) {
+//		return repository.createUser(name, email, password, phone, rating, criminalRecord);
+//		}
+//
+//		return null;
+		User u = repository.createUser(name, "email", "password", "1234567890", Rating.NONE, false);
+		return u.getName();
 	}
 
 	/**
@@ -91,13 +103,13 @@ public class KarpoolController {
 
 	/**
 	 *
-	 * @param email
+	 * @param name
 	 * @return the account that was searched for
 	 */
-	@GetMapping("/users/{email}")
-	public String queryUser(@PathVariable("email")String email)
+	@GetMapping("/users/{name}")
+	public String queryUser(@PathVariable("name")String name)
 	{
-		User user = repository.getUser(email);
+		User user = repository.getUser(name);
 		if(user == null)
 		{
 			return "NOT FOUND";
@@ -123,35 +135,35 @@ public class KarpoolController {
 		return Trip;
 	}
 
-	@PostMapping("/trip/{trip}")
-	public void closeTrip(@PathVariable ("trip") Trip trip)
-	{
-		repository.closeTrip(trip);
+//	@PostMapping("/trip/{trip}")
+//	public void closeTrip(@PathVariable ("trip") Trip trip)
+//	{
+//		repository.closeTrip(trip);
+//
+//
+//	}
 
 
-	}
 
 
-
-
-	/**
-	 * Add a  rating to the user
-	 * @param email
-	 * @param rating
-	 */
-	@GetMapping("/users/{email}")
-	public void addRating(@PathVariable("email")String email, Rating rating)
-	{
-		try {
-			User user = repository.getUser(email);
-			user.setRating(rating);
-
-		}
-		catch (NullPointerException e) {
-			System.out.println("NOT FOUND");
-		}
-
-	}
+//	/**
+//	 * Add a  rating to the user
+//	 * @param email
+//	 * @param rating
+//	 */
+//	@GetMapping("/users/{email}")
+//	public void addRating(@PathVariable("email")String email, Rating rating)
+//	{
+//		try {
+//			User user = repository.getUser(email);
+//			user.setRating(rating);
+//
+//		}
+//		catch (NullPointerException e) {
+//			System.out.println("NOT FOUND");
+//		}
+//
+//	}
 	
 	/**
 	 * This method allows for new passengers to be added to a specific 

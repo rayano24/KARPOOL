@@ -42,6 +42,7 @@ private static final String NONEXISTING_KEY = "NotAParticipant";
 private static final String USER_EMAIL = "email";
 private static final String USER_PASS = "correctPass";
 private static final String USER_PASS_INCORRECT = "incorrectPass";
+private static final String USER_PHONE = "1234567890";
 private static final int NON_EXISTANT_ZIPCODE = 3423;
 private static final int zipcode1 = 90210;
 private static final int zipcode2 = 72110;
@@ -56,16 +57,20 @@ Trip mockTrip = Mockito.mock(Trip.class);
 public void setMockOutput() {
   when(userDao.getUser(anyString())).thenAnswer( (InvocationOnMock invocation) -> {
     if(invocation.getArgument(0).equals(USER_KEY)) {
-      User user = new User();
-      user.setName(USER_KEY);
-			user.setEmail(USER_EMAIL);
-			user.setPassword(USER_PASS);
+      User user = new User(USER_KEY, USER_EMAIL, USER_PHONE, USER_PASS);
       return user;
     } else {
       return null;
     }
   });
 }
+
+//@Test
+//public void testCreateUser()
+//{
+//	String u = controller.createUser(USER_KEY);
+//	assertEquals(USER_KEY, u);
+//}
 
 //    @Test
 //    public void testAddPassenger() {

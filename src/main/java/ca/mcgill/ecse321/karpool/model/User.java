@@ -74,4 +74,22 @@ public class User {
 		this.criminalRecord = criminalRecord;
 	}
 
+	/**
+	 * Constructor for User, rating is set to NONE and criminalRecord to false by default
+	 * 
+	 * @param name
+	 * @param email
+	 * @param phoneNumber
+	 * @param password
+	 * @param criminalRecord
+	 */
+	public User(String name, String email, String phoneNumber, String password) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.password = password;
+		this.criminalRecord = false;
+		this.rating = Rating.NONE;
+	}
 }

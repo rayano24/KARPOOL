@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.karpool.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 import java.util.Set;
 
@@ -13,6 +15,7 @@ import java.util.HashSet;
 @Entity
 public class Trip {
 
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private int tripId;
 
 	public void setTripId(int value) {

@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.karpool.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import ca.mcgill.ecse321.karpool.model.UserRole;
@@ -31,6 +33,7 @@ public class Driver extends UserRole
 		return this.trip;
 	}
 	
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private int driverId;
 
 	public void setDriverId(int value) {
