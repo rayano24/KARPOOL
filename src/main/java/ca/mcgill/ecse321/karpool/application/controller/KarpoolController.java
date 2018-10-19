@@ -28,7 +28,7 @@ public class KarpoolController {
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
 
 	@Autowired
-	KarpoolRepository repository;
+	KarpoolRepository repository = new KarpoolRepository();
 
 //	@Autowired
 	Driver driver;
@@ -42,12 +42,23 @@ public class KarpoolController {
 	//TODO: Password can't just be read as a regular String. NEEDS some form of encryption.
 	//FIXME: Why does createUser need to return the usersName?
 	
-	@RequestMapping("/")
-	public String greeting(){
-		return "Hello world!";
+	@RequestMapping("/name/{name}")
+	public String greeting(@PathVariable("name")String name)
+	{
+		if(name == null)
+		{
+			return "Hello world!";
+		}
+		else
+		{
+			return "Hello, " + name + "!";
+		}
+		
 	}
 
 	/**
+	 * Creates a user via the createUser method from KarpoolRepository. Performs parameter validation
+	 * 
 	 * @param name
 	 * @param email
 	 * @param password
@@ -55,29 +66,39 @@ public class KarpoolController {
 	 * @param rating
 	 * @return the users name
 	 */
-	@PostMapping("/users/{name}")
-	public String createUser(@PathVariable("name")String name/*, String email, String password, String phone, Rating rating, boolean criminalRecord*/)
+	@PostMapping("/users/{name}/email/{email}/password/{password}/"
+			+ "phone/{phone}/rating/{rating}/record/{criminalRecord}")
+	public User createUser(@PathVariable("name")String name, @PathVariable("email")String email, @PathVariable("password")String password, 
+			@PathVariable("phone")String phone, @PathVariable("rating")Rating rating, @PathVariable("record")boolean criminalRecord)
 	{
-//		try {
-//			if(phone.length() == 10) {
-//				Integer.parseInt(phone);
-//			}
-//			else {
-//				System.out.println("You entered an invalid phone number");
-//				return null;
-//			}
-//
-//		} catch(NullPointerException |  NumberFormatException e) {
-//			System.out.println("You entered an invalid phone number");
-//			return null;
-//		}
-//		if(!criminalRecord) {
-//		return repository.createUser(name, email, password, phone, rating, criminalRecord);
-//		}
-//
-//		return null;
-		User u = repository.createUser(name, "email", "password", "1234567890", Rating.NONE, false);
-		return u.getName();
+		try 
+		{
+			if(phone.length() == 10) 
+			{
+				Integer.parseInt(phone);
+			}
+			else 
+			{
+				System.out.println("You entered an invalid phone number");
+				return null;
+			}
+		} 
+		catch(NullPointerException |  NumberFormatException e) 
+		{
+			System.out.println("Exception - Invalid phone number");
+			return null;
+		}
+		User u;
+		
+		if(!criminalRecord) {
+			u = repository.createUser(name, email, password, phone, rating, criminalRecord);
+			return u;
+		}
+		else
+		{
+			System.out.println("Error - Criminal record");
+			return null;
+		}
 	}
 
 	/**
@@ -86,18 +107,18 @@ public class KarpoolController {
 	 * @param password
 	 * @return OK if the account is authenticated
 	 */
-	@GetMapping("/users/{email}")
-	public boolean authenticateUser(@PathVariable("email")String email, @PathVariable("password")String password)
+	@GetMapping("/users/{name}/password/{password}")
+	public boolean authenticateUser(@PathVariable("name")String name, @PathVariable("password")String password)
 	{
 		try {
-			User user = repository.getUser(email);
+			User user = repository.getUser(name);
 			if(user.getPassword().equals(password))
 				return true;
 		}
 		catch(NullPointerException e) {
+			System.out.println("Error - Attempted to authenticate null user");
 			return false;
 		}
-
 		return false;
 	}
 
@@ -119,17 +140,21 @@ public class KarpoolController {
 
 
 
-	@PostMapping("/trip/{trip}")
-	public Trip createTrip (@PathVariable ("trip") String departureLocation, String destination, int seatAvailable, String departureTime)
+	@PostMapping("/trip/{trip}/destination/{destination}/seats/{seatAvailable}/time/{departureTime}")
+	public Trip createTrip (@PathVariable("trip")String departureLocation, @PathVariable("destination")String destination, 
+			@PathVariable("seats")int seatAvailable, @PathVariable("time")String departureTime)
 	{
 		Trip trip = repository.createTrip(destination,departureTime, departureLocation, seatAvailable);
 		return trip;
 	}
 
 
-	@RequestMapping(path="/{departureLocation}/{destination}/{seats}/")
-	public Trip queryTrip(@PathVariable("departureLocation") String departureLocation, @PathVariable("destination") String destination, @PathVariable ("seats") int seatAvailable)
+//	@RequestMapping(path="/{departureLocation}/{destination}/{seats}/")
+	@GetMapping("/departureLocation/{departureLocation}/destination/{destination}/seats/{seatAvailable}")
+	public Trip queryTrip(@PathVariable("departureLocation") String departureLocation, 
+			@PathVariable("destination") String destination, @PathVariable ("seats") int seatAvailable)
 	{
+		//should be querying trip from repository with matching departure and destination, with required number of seats
 		Trip Trip = driver.getTrip();
 
 		return Trip;
