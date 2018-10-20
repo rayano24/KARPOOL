@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.karpool.model;
+package ca.mcgill.ecse321.karpool.application.model;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

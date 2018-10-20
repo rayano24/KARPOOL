@@ -1,6 +1,6 @@
-package ca.mcgill.ecse321.karpool.model;
-import javax.persistence.Entity;
+package ca.mcgill.ecse321.karpool.application.model;
 
+import javax.persistence.Entity;
 import javax.persistence.Id;
 
 

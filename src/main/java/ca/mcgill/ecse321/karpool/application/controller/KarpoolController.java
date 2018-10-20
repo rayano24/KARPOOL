@@ -14,11 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ca.mcgill.ecse321.karpool.model.Trip;
-import ca.mcgill.ecse321.karpool.model.User;
-import ca.mcgill.ecse321.karpool.model.Driver;
-import ca.mcgill.ecse321.karpool.model.Passenger;
-import ca.mcgill.ecse321.karpool.model.Rating;
+import ca.mcgill.ecse321.karpool.application.model.*;
+
 
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
@@ -28,21 +25,27 @@ public class KarpoolController {
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
 
 	@Autowired
-	KarpoolRepository repository = new KarpoolRepository();
+	KarpoolRepository repository;
 
-//	@Autowired
+	@Autowired
 	Driver driver;
 
-//	@Autowired
+	@Autowired
 	Set<Passenger> passengers;
 	
-//	@Autowired
+	@Autowired
 	User user;
 
 	//TODO: Password can't just be read as a regular String. NEEDS some form of encryption.
 	//FIXME: Why does createUser need to return the usersName?
 	
-	@RequestMapping("/name/{name}")
+	@RequestMapping("/")
+	public String greeting()
+	{
+		return "Hello world!";
+	}
+	
+	@PostMapping("/{name}")
 	public String greeting(@PathVariable("name")String name)
 	{
 		if(name == null)
@@ -53,7 +56,6 @@ public class KarpoolController {
 		{
 			return "Hello, " + name + "!";
 		}
-		
 	}
 
 	/**
@@ -66,10 +68,10 @@ public class KarpoolController {
 	 * @param rating
 	 * @return the users name
 	 */
-	@PostMapping("/users/{name}/email/{email}/password/{password}/"
-			+ "phone/{phone}/rating/{rating}/record/{criminalRecord}")
-	public User createUser(@PathVariable("name")String name, @PathVariable("email")String email, @PathVariable("password")String password, 
-			@PathVariable("phone")String phone, @PathVariable("rating")Rating rating, @PathVariable("record")boolean criminalRecord)
+	@PostMapping("/users/{name}/{email}/{password}/"
+			+ "{phone}/{rating}/{record}")
+	public User createUser(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
+			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
 	{
 		try 
 		{
@@ -107,7 +109,7 @@ public class KarpoolController {
 	 * @param password
 	 * @return OK if the account is authenticated
 	 */
-	@GetMapping("/users/{name}/password/{password}")
+	@GetMapping("/users/auth/{name}/{password}")
 	public boolean authenticateUser(@PathVariable("name")String name, @PathVariable("password")String password)
 	{
 		try {
@@ -123,9 +125,10 @@ public class KarpoolController {
 	}
 
 	/**
+	 * searches for a user with given name
 	 *
 	 * @param name
-	 * @return the account that was searched for
+	 * @return the queried user
 	 */
 	@GetMapping("/users/{name}")
 	public String queryUser(@PathVariable("name")String name)
@@ -138,20 +141,34 @@ public class KarpoolController {
 		return user.getName();
 	}
 
-
-
-	@PostMapping("/trip/{trip}/destination/{destination}/seats/{seatAvailable}/time/{departureTime}")
-	public Trip createTrip (@PathVariable("trip")String departureLocation, @PathVariable("destination")String destination, 
-			@PathVariable("seats")int seatAvailable, @PathVariable("time")String departureTime)
+	/**
+	 * creates trip with given parameters
+	 * 
+	 * @param departureLocation
+	 * @param destination
+	 * @param seatAvailable
+	 * @param departureTime
+	 * @return the created trip
+	 */
+	@PostMapping("/trips/{location}/{destination}/{seats}/{time}")
+	public Trip createTrip (@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
+			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime)
 	{
 		Trip trip = repository.createTrip(destination,departureTime, departureLocation, seatAvailable);
 		return trip;
 	}
 
 
-//	@RequestMapping(path="/{departureLocation}/{destination}/{seats}/")
-	@GetMapping("/departureLocation/{departureLocation}/destination/{destination}/seats/{seatAvailable}")
-	public Trip queryTrip(@PathVariable("departureLocation") String departureLocation, 
+	/**
+	 * finds a trip that matches departure location and destination, with matching number of seats
+	 * 
+	 * @param departureLocation
+	 * @param destination
+	 * @param seatAvailable
+	 * @return queried trip
+	 */
+	@GetMapping("/trips/{location}/{destination}/{seats}")
+	public Trip queryTrip(@PathVariable("location") String departureLocation, 
 			@PathVariable("destination") String destination, @PathVariable ("seats") int seatAvailable)
 	{
 		//should be querying trip from repository with matching departure and destination, with required number of seats
@@ -168,27 +185,26 @@ public class KarpoolController {
 //
 //	}
 
+	/**
+	 * Add a  rating to the user
+	 * 
+	 * @param name
+	 * @param rating
+	 */
+	@PostMapping("/users/rate/{name}/{rating}")
+	public void addRating(@PathVariable("name") String name,@PathVariable("rating") Rating rating)
+	{
+		//need to check if rating is a valid rating
+		try {
+			User user = repository.getUser(name);
+			user.setRating(rating);
 
+		}
+		catch (NullPointerException e) {
+			System.out.println("NOT FOUND");
+		}
 
-
-//	/**
-//	 * Add a  rating to the user
-//	 * @param email
-//	 * @param rating
-//	 */
-//	@GetMapping("/users/{email}")
-//	public void addRating(@PathVariable("email")String email, Rating rating)
-//	{
-//		try {
-//			User user = repository.getUser(email);
-//			user.setRating(rating);
-//
-//		}
-//		catch (NullPointerException e) {
-//			System.out.println("NOT FOUND");
-//		}
-//
-//	}
+	}
 	
 	/**
 	 * This method allows for new passengers to be added to a specific 

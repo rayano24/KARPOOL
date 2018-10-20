@@ -1,4 +1,4 @@
-package ca.mcgill.ecse321.karpool.model;
+package ca.mcgill.ecse321.karpool.application.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -6,8 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import ca.mcgill.ecse321.karpool.model.UserRole;
-import ca.mcgill.ecse321.karpool.model.Trip;
+import ca.mcgill.ecse321.karpool.application.model.UserRole;
+import ca.mcgill.ecse321.karpool.application.model.Trip;
 
 @Entity
 public class Passenger extends UserRole
