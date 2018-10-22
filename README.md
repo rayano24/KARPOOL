@@ -3,7 +3,9 @@
 # Overview
 
 KARPOOL is a software system that was created to help drivers and passengers who are travelling on
-similar/identical intercity routes within the United States find one another
+similar/identical intercity routes within the United States find one another.
+
+**[Click here to visit our app!](https://karpool-spring-14.herokuapp.com/)** 
 
 
 
