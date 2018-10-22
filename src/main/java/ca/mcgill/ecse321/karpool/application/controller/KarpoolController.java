@@ -17,14 +17,10 @@ import ca.mcgill.ecse321.karpool.model.Trip;
 import ca.mcgill.ecse321.karpool.model.User;
 import ca.mcgill.ecse321.karpool.application.*;
 import ca.mcgill.ecse321.karpool.application.Rating;
-
 import ca.mcgill.ecse321.karpool.application.*;
-
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 public class KarpoolController {
-
-
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
 
@@ -42,16 +38,18 @@ public class KarpoolController {
 
 
 	/**
+	 * Checks if number is appropraite + confirms user does not have a criminal record (to be further implemented in Sprint 2)
 	 * @param name
 	 * @param email
 	 * @param password
 	 * @param phone
 	 * @param rating
-	 * @return the users name
+	 * @return the users object if found, null if not
 	 */
-	@PostMapping("/users/{email}")
-	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, boolean criminalRecord)
+	@PostMapping("/USERS/{email}")
+	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, Boolean criminalRecord)
 	{
+		//TODO: need to check the rest of the inputs as well, not just phone number
 		try {
 			if(phone.length() == 10) {
 				Integer.parseInt(phone);
@@ -76,9 +74,9 @@ public class KarpoolController {
 	 *
 	 * @param email
 	 * @param password
-	 * @return OK if the account is authenticated
+	 * @return TRUE if the account is authenticated
 	 */
-	@GetMapping("/users/{email}")
+	@GetMapping("/USERS/{email}")
 	public boolean authenticateUser(@PathVariable("email")String email, @PathVariable("password")String password)
 	{
 		try {
@@ -98,20 +96,20 @@ public class KarpoolController {
 	 * @param email
 	 * @return the account that was searched for
 	 */
-	@GetMapping("/users/{email}")
+	@GetMapping("/USERS/{email}")
 	public String queryUser(@PathVariable("email")String email)
 	{
 		User user = repository.getUser(email);
 		if(user == null)
 		{
-			return "NOT FOUND";
+			return ERROR_NOT_FOUND_MESSAGE;
 		}
 		return user.getName();
 	}
 
 
 
-	@PostMapping("/trip/{trip}")
+	@PostMapping("/TRIPS/{trip}")
 	public Trip createTrip (@PathVariable ("trip") String departureLocation, String destination, int seatAvailable, String departureTime)
 	{
 		Trip trip = repository.createTrip(destination,departureTime, departureLocation, seatAvailable);
@@ -127,7 +125,7 @@ public class KarpoolController {
 		return Trip;
 	}
 
-	@PostMapping("/trip/{trip}")
+	@PostMapping("/TRIPS/{trip}")
 	public void closeTrip(@PathVariable ("trip") Trip trip)
 	{
 		repository.closeTrip(trip);
@@ -139,11 +137,11 @@ public class KarpoolController {
 
 
 	/**
-	 * Add a  rating to the user
+	 * Adds a  rating to the user
 	 * @param email
 	 * @param rating
 	 */
-	@GetMapping("/users/{email}")
+	@GetMapping("/USERS/{email}")
 	public void addRating(@PathVariable("email")String email, Rating rating)
 	{
 		try {
@@ -152,14 +150,21 @@ public class KarpoolController {
 
 		}
 		catch (NullPointerException e) {
-			System.out.println("NOT FOUND");
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
 
 	}
+<<<<<<< HEAD
 	
 	/**
 	 * This method allows for new passengers to be added to a specific 
 	 * trip taking place. It checks to see if the passenger is already 
+=======
+
+	/**
+	 * This method allows for new passengers to be added to a specific
+	 * trip taking place. It checks to see if the passenger is already
+>>>>>>> f727ddf3a7469fcd43e6c43fb35526ea14385b43
 	 * signed up for this trip, if not it adds to passenger to the trip.
 	 * @param passenger
 	 * @param trip
