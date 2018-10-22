@@ -13,18 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-<<<<<<< HEAD:src/main/java/ca/mcgill/ecse321/karpool/application/controller/KarpoolController.java
-import ca.mcgill.ecse321.karpool.model.Trip;
-import ca.mcgill.ecse321.karpool.model.User;
-import ca.mcgill.ecse321.karpool.application.*;
-import ca.mcgill.ecse321.karpool.application.Rating;
-import ca.mcgill.ecse321.karpool.application.*;
-=======
-
 import ca.mcgill.ecse321.karpool.application.model.*;
 
-
->>>>>>> e2e7e2f6c0a028cda1776d49e381acaa8a2ea8ca:backend/src/main/java/ca/mcgill/ecse321/karpool/application/controller/KarpoolController.java
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 @RestController
@@ -67,12 +57,8 @@ public class KarpoolController {
 	}
 
 	/**
-<<<<<<< HEAD:src/main/java/ca/mcgill/ecse321/karpool/application/controller/KarpoolController.java
-	 * Checks if number is appropraite + confirms user does not have a criminal record (to be further implemented in Sprint 2)
-=======
 	 * Creates a user via the createUser method from KarpoolRepository. Performs parameter validation
 	 * 
->>>>>>> e2e7e2f6c0a028cda1776d49e381acaa8a2ea8ca:backend/src/main/java/ca/mcgill/ecse321/karpool/application/controller/KarpoolController.java
 	 * @param name
 	 * @param email
 	 * @param password
@@ -80,14 +66,6 @@ public class KarpoolController {
 	 * @param rating
 	 * @return the users object if found, null if not
 	 */
-
-	@PostMapping("/USERS/{email}")
-	public User createUser(@PathVariable("name")String name, String email, String password, String phone, Rating rating, Boolean criminalRecord)
-	{
-		//TODO: need to check the rest of the inputs as well, not just phone number
-		try {
-			if(phone.length() == 10) {
-
 	@PostMapping("/users/{name}/{email}/{password}/"
 			+ "{phone}/{rating}/{record}")
 	public User createUser(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
@@ -130,10 +108,6 @@ public class KarpoolController {
 	 * @param password
 	 * @return TRUE if the account is authenticated
 	 */
-
-	@GetMapping("/USERS/{email}")
-	public boolean authenticateUser(@PathVariable("email")String email, @PathVariable("password")String password)
-
 	@GetMapping("/users/auth/{name}/{password}")
 	public boolean authenticateUser(@PathVariable("name")String name, @PathVariable("password")String password)
 
@@ -156,10 +130,6 @@ public class KarpoolController {
 	 * @param name
 	 * @return the queried user
 	 */
-
-	@GetMapping("/USERS/{email}")
-	public String queryUser(@PathVariable("email")String email)
-
 	@GetMapping("/users/{name}")
 	public String queryUser(@PathVariable("name")String name)
 
@@ -171,12 +141,6 @@ public class KarpoolController {
 		}
 		return user.getName();
 	}
-
-
-
-
-	@PostMapping("/TRIPS/{trip}")
-	public Trip createTrip (@PathVariable ("trip") String departureLocation, String destination, int seatAvailable, String departureTime)
 
 	/**
 	 * creates trip with given parameters
@@ -221,27 +185,8 @@ public class KarpoolController {
 	{
 		repository.closeTrip(trip);
 
-
 	}
 
-
-
-
-	/**
-	 * Adds a  rating to the user
-	 * @param email
-	 * @param rating
-	 */
-	@GetMapping("/USERS/{email}")
-	public void addRating(@PathVariable("email")String email, Rating rating)
-
-//	@PostMapping("/trip/{trip}")
-//	public void closeTrip(@PathVariable ("trip") Trip trip)
-//	{
-//		repository.closeTrip(trip);
-//
-//
-//	}
 
 	/**
 	 * Add a  rating to the user
@@ -269,12 +214,6 @@ public class KarpoolController {
 	/**
 	 * This method allows for new passengers to be added to a specific 
 	 * trip taking place. It checks to see if the passenger is already 
-=======
-
-	/**
-	 * This method allows for new passengers to be added to a specific
-	 * trip taking place. It checks to see if the passenger is already
->>>>>>> f727ddf3a7469fcd43e6c43fb35526ea14385b43
 	 * signed up for this trip, if not it adds to passenger to the trip.
 	 * @param passenger
 	 * @param trip
