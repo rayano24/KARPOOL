@@ -71,22 +71,22 @@ public class KarpoolApplicationTests
 		assertEquals(USER_KEY, name);
 	}
 
-	
-	
+
+
 	//    @Test
 	//    public void testAddPassenger() {
 	//    	assertEquals(wasAdded, controller.addPassenger(mockPassenger, mockTrip));
-	//    	
+	//
 	//    }
 
 	@Test
 	public void contextLoads() {
 	}
 
-	//	@Test
-	//public void testUserQueryFound() {
-	//  assertEquals(controller.queryUser(USER_KEY), USER_KEY);
-	//}
+		@Test
+	public void testUserQueryFound() {
+	 assertEquals(controller.queryUser(USER_KEY), USER_KEY);
+	}
 	//
 	//@Test
 	//public void testUserQueryNotFound() {
@@ -111,7 +111,7 @@ public class KarpoolApplicationTests
 	//	assertEquals(controller.Distance(zipcode1, zipcode2), DistanceTraveled);
 	//}
 	//
-	//@Test 
+	//@Test
 	//public void testDistanceIncorrect() throws MalformedURLException, IOException{
 	//	assertEquals(controller.Distance(NON_EXISTANT_ZIPCODE, zipcode2), 0);
 	//}
