@@ -22,8 +22,8 @@ public class KarpoolController {
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
 
-	@Autowired
-	KarpoolRepository repository;
+//	@Autowired
+	KarpoolRepository repository = new KarpoolRepository();
 
 	@Autowired
 	Driver driver;

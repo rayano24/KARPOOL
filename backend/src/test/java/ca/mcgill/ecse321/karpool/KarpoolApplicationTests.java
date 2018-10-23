@@ -83,10 +83,10 @@ public class KarpoolApplicationTests
 	public void contextLoads() {
 	}
 
-		@Test
-	public void testUserQueryFound() {
-	 assertEquals(controller.queryUser(USER_KEY), USER_KEY);
-	}
+//		@Test
+//	public void testUserQueryFound() {
+//	 assertEquals(controller.queryUser(USER_KEY), USER_KEY);
+//	}
 	//
 	//@Test
 	//public void testUserQueryNotFound() {
