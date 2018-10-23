@@ -1,9 +1,11 @@
 package ca.mcgill.ecse321.karpool.application.model;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import ca.mcgill.ecse321.karpool.application.model.UserRole;
@@ -18,8 +20,8 @@ public class Passenger extends UserRole
 		this.trip = value;
 	}
 	
-	@ManyToOne(targetEntity=Trip.class)
-//	@JoinColumn(name="tripId")
+	@ManyToOne
+	@JoinColumn(name="trip")
 	public Trip getTrip() {
 		return this.trip;
 	}
@@ -32,6 +34,7 @@ public class Passenger extends UserRole
 	}
 
 	@Id
+	@Column(name="passenger_id")
 	public int getPassengerId() {
 		return this.passengerId;
 	}

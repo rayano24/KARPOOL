@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.karpool.application.model;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -7,7 +8,10 @@ import javax.persistence.GenerationType;
 import java.util.Set;
 
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import java.util.HashSet;
 
@@ -23,6 +27,7 @@ public class Trip {
 	}
 
 	@Id
+	@Column(name="trip_id")
 	public int getTripId() {
 		return this.tripId;
 	}
@@ -33,7 +38,7 @@ public class Trip {
 		this.seatAvailable = value;
 	}
 
-
+	@Column(name="seat_available")
 	public int getSeatAvailable() {
 		return this.seatAvailable;
 	}
@@ -44,7 +49,7 @@ public class Trip {
 		this.destination = value;
 	}
 
-
+	@Column(name="destination")
 	public String getDestination() {
 		return this.destination;
 	}
@@ -55,7 +60,7 @@ public class Trip {
 		this.departureTime = value;
 	}
 
-
+	@Column(name="departure_time")
 	public String getDepartureTime() {
 		return this.departureTime;
 	}
@@ -66,7 +71,7 @@ public class Trip {
 		this.departureLocation = value;
 	}
 
-
+	@Column(name="departure_location")
 	public String getDepartureLocation() {
 		return this.departureLocation;
 	}
@@ -77,29 +82,24 @@ public class Trip {
 		this.distance = value;
 	}
 
-
+	@Column(name="distance")
 	public int getDistance() {
 		return this.distance;
 	}
 
-	/**
-	 * <pre>
-	 *           1..1     0..*
-	 * Trip ------------------------- Driver
-	 *           trip        &lt;       driver
-	 * </pre>
-	 */
+	private Driver driver;
 
-	private Set<Driver> driver;
-
-
-	public Set<Driver> getDriver() {
-		if (this.driver == null) {
-			this.driver = new HashSet<Driver>();
-		}
-		return this.driver;
+	public void setDriver(Driver value) 
+	{
+		this.driver = value;
 	}
 
+	@ManyToOne
+	@JoinColumn(name="driver")
+	public Driver getDriver() {
+		return this.driver;
+	}
+	
 	/**
 	 * <pre>
 	 *           1..1     0..*
@@ -110,7 +110,9 @@ public class Trip {
 
 	private Set<Passenger> passenger;
 
-	@OneToMany(targetEntity=Passenger.class, mappedBy="trip", cascade=CascadeType.ALL)
+	@Transient
+	@JoinColumn(name = "passenger")
+	@OneToMany(targetEntity=Passenger.class, mappedBy="trip")
 	public Set<Passenger> getPassenger() {
 		if (this.passenger == null) {
 			this.passenger = new HashSet<Passenger>();
