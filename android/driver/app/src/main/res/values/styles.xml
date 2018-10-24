@@ -1,5 +1,7 @@
 <resources>
 
+    <!-- PRIMARY APP THEME -->
+
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -17,6 +19,8 @@
         <item name="android:textColor">@color/textColor</item>
         <item name="android:windowBackground">@color/windowBackground</item>
     </style>
+
+
 
 
 </resources>
