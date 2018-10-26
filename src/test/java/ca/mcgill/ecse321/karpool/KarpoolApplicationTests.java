@@ -55,14 +55,14 @@ public class KarpoolApplicationTests
 //		});
 //	}
 	
-	@Test
-	public void testCreateUser()
-	{
-
-		EndUser u = controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, Rating.NONE, false);
-		String name = u.getName();
-		assertEquals(USER_KEY, name);
-	}
+//	@Test
+//	public void testCreateUser()
+//	{
+//
+//		EndUser u = controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, Rating.NONE, false);
+//		String name = u.getName();
+//		assertEquals(USER_KEY, name);
+//	}
 
 
 
