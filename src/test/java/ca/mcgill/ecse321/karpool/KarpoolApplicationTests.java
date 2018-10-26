@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -23,9 +24,10 @@ public class KarpoolApplicationTests
 	//	@Mock
 	//private KarpoolRepository userDao;
 
-	private static KarpoolController controller = new KarpoolController();
+	@Autowired
+	private KarpoolController controller;
 
-	private static final String USER_KEY = "TestParticipant";
+	private static final String USER_KEY = "Participant";
 	private static final String NONEXISTING_KEY = "NotAParticipant";
 	private static final String USER_EMAIL = "email";
 	private static final String USER_PASS = "correctPass";
@@ -52,9 +54,6 @@ public class KarpoolApplicationTests
 //			}
 //		});
 //	}
-
-	@Mock
-	EntityManager manager;
 	
 	@Test
 	public void testCreateUser()
