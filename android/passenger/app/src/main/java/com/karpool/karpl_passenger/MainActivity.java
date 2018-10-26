@@ -1,4 +1,4 @@
-package com.karpool.karpl_driver;
+package com.karpool.karpl_passenger;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

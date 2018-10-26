@@ -81,6 +81,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // TODO If user is signed in, skip this activity and launch main
+        // I'll fix this when database or mock is set up..
+
 
         signInPrompt = findViewById(R.id.signInPrompt);
         registerPrompt = findViewById(R.id.registerPrompt);

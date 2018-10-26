@@ -81,6 +81,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        // TODO If user is signed in, skip this activity and launch main
+        // I'll fix this when database or mock is set up..
+
 
         signInPrompt = findViewById(R.id.signInPrompt);
         registerPrompt = findViewById(R.id.registerPrompt);
@@ -577,8 +580,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 // TODO Decide on passenger design
-                /*Intent I = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(I); */
+                Intent I = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(I);
                 finish();
             } else {
                 signInPassword.setError(getString(R.string.error_incorrect_password));
