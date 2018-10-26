@@ -22,17 +22,14 @@ public class KarpoolController {
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
 
-//	@Autowired
-	KarpoolRepository repository = new KarpoolRepository();
-
 	@Autowired
+	KarpoolRepository repository;
+
 	Driver driver;
 
-	@Autowired
 	Set<Passenger> passengers;
 	
-	@Autowired
-	User user;
+	EndUser user;
 
 	//TODO: Password can't just be read as a regular String. NEEDS some form of encryption.
 	//FIXME: Why does createUser need to return the usersName?
@@ -68,7 +65,7 @@ public class KarpoolController {
 	 */
 	@PostMapping("/users/{name}/{email}/{password}/"
 			+ "{phone}/{rating}/{record}")
-	public User createUser(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
+	public EndUser createUser(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
 			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
 	{
 		try 
@@ -89,7 +86,7 @@ public class KarpoolController {
 			System.out.println("Exception - Invalid phone number");
 			return null;
 		}
-		User u;
+		EndUser u;
 		
 		if(!criminalRecord) {
 			u = repository.createUser(name, email, password, phone, rating, criminalRecord);
@@ -113,7 +110,7 @@ public class KarpoolController {
 
 	{
 		try {
-			User user = repository.getUser(name);
+			EndUser user = repository.getUser(name);
 			if(user.getPassword().equals(password))
 				return true;
 		}
@@ -131,15 +128,16 @@ public class KarpoolController {
 	 * @return the queried user
 	 */
 	@GetMapping("/users/{name}")
-	public String queryUser(@PathVariable("name")String name)
+	public EndUser queryUser(@PathVariable("name")String name)
 
 	{
-		User user = repository.getUser(name);
+		EndUser user = repository.getUser(name);
 		if(user == null)
 		{
-			return ERROR_NOT_FOUND_MESSAGE;
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			return null;
 		}
-		return user.getName();
+		return user;
 	}
 
 	/**
@@ -200,7 +198,7 @@ public class KarpoolController {
 	{
 		//need to check if rating is a valid rating
 		try {
-			User user = repository.getUser(name);
+			EndUser user = repository.getUser(name);
 			user.setRating(rating);
 
 		}

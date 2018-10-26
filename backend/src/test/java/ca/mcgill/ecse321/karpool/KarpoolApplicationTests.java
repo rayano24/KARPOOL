@@ -1,28 +1,19 @@
 package ca.mcgill.ecse321.karpool;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
+import javax.persistence.EntityManager;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mock.*;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import ca.mcgill.ecse321.karpool.application.KarpoolApplication;
 import ca.mcgill.ecse321.karpool.application.controller.KarpoolController;
-import ca.mcgill.ecse321.karpool.application.repository.KarpoolRepository;
-import ca.mcgill.ecse321.karpool.application.model.*;
+import ca.mcgill.ecse321.karpool.application.model.Rating;
+import ca.mcgill.ecse321.karpool.application.model.EndUser;
 
 
 @RunWith(SpringRunner.class)
@@ -62,11 +53,14 @@ public class KarpoolApplicationTests
 //		});
 //	}
 
+	@Mock
+	EntityManager manager;
+	
 	@Test
 	public void testCreateUser()
 	{
 
-		User u = controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, Rating.NONE, false);
+		EndUser u = controller.createUser(USER_KEY, USER_EMAIL, USER_PASS, USER_PHONE, Rating.NONE, false);
 		String name = u.getName();
 		assertEquals(USER_KEY, name);
 	}

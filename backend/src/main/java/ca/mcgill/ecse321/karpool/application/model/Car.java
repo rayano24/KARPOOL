@@ -4,9 +4,12 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 
 @Entity
+@Table(name="car")
 public class Car 
 {
 
@@ -16,7 +19,7 @@ public class Car
 		this.make = value;
 	}
 
-	@Column(name="make")
+//	@Column(name="make")
 	public String getMake() {
 		return this.make;
 	}
@@ -27,7 +30,7 @@ public class Car
 		this.seat = value;
 	}
 
-	@Column(name="seat")
+//	@Column(name="seat")
 	public int getSeat() {
 		return this.seat;
 	}
@@ -39,7 +42,7 @@ public class Car
 	}
 
 	@Id
-	@Column(name="license_plate")
+//	@Column(name="license_plate")
 	public String getLicensePlate() {
 		return this.licensePlate;
 	}
@@ -50,7 +53,7 @@ public class Car
 		this.fuelEfficiency = value;
 	}
 
-	@Column(name="fuel_efficiency")
+//	@Column(name="fuel_efficiency")
 	public String getFuelEfficiency() {
 		return this.fuelEfficiency;
 	}
@@ -68,8 +71,7 @@ public class Car
 		this.driver = value;
 	}
 	
-	@ManyToOne
-	@Column(name="driver")
+	@OneToOne
 	public Driver getDriver() {
 		return this.driver;
 	}

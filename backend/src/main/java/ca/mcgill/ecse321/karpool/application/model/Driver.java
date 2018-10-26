@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +17,7 @@ import ca.mcgill.ecse321.karpool.application.model.Car;
 import ca.mcgill.ecse321.karpool.application.model.Trip;
 
 @Entity
+@Table(name="driver")
 public class Driver extends UserRole
 {
 	private Car car;
@@ -23,8 +26,7 @@ public class Driver extends UserRole
 		this.car = value;
 	}
 
-	@ManyToOne
-	@JoinColumn(name="car")
+	@OneToOne
 	public Car getCar() {
 		return this.car;
 	}
@@ -36,7 +38,7 @@ public class Driver extends UserRole
 	}
 
 	@ManyToOne
-	@JoinColumn(name="trip")
+	@JoinColumn //(name="trip")
 	public Trip getTrip() {
 		return this.trip;
 	}
@@ -49,7 +51,7 @@ public class Driver extends UserRole
 	}
 
 	@Id
-	@Column(name="driver_id")
+//	@Column(name="driver_id")
 	public int getDriverId() {
 		return this.driverId;
 	}

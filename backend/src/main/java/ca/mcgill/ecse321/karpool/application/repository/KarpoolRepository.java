@@ -1,8 +1,8 @@
 package ca.mcgill.ecse321.karpool.application.repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,19 +11,25 @@ import ca.mcgill.ecse321.karpool.application.model.*;
 @Repository
 public class KarpoolRepository 
 {
-	@Autowired
+	@PersistenceContext
 	private EntityManager entityManager;
 
 	@Transactional
-	public User createUser(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord){
-		User user = new User(name, email, phoneNumber, password);
+	public EndUser createUser(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord){
+		EndUser user = new EndUser();
+		user.setName(name);
+		user.setEmail(email);
+		user.setPassword(password);
+		user.setPhoneNumber(phoneNumber);
+		user.setRating(rating);
+		user.setRecord(criminalRecord);
 		entityManager.persist(user);
 		return user;
 	}
 
 	@Transactional
-	public User getUser(String name) {
-		User user = entityManager.find(User.class, name);
+	public EndUser getUser(String name) {
+		EndUser user = entityManager.find(EndUser.class, name);
 		return user;
 	}
 

@@ -7,11 +7,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import ca.mcgill.ecse321.karpool.application.model.UserRole;
 import ca.mcgill.ecse321.karpool.application.model.Trip;
 
 @Entity
+@Table(name="passenger")
 public class Passenger extends UserRole
 {
 	private Trip trip;
@@ -21,7 +23,7 @@ public class Passenger extends UserRole
 	}
 	
 	@ManyToOne
-	@JoinColumn(name="trip")
+	@JoinColumn //(name="trip")
 	public Trip getTrip() {
 		return this.trip;
 	}
@@ -34,7 +36,7 @@ public class Passenger extends UserRole
 	}
 
 	@Id
-	@Column(name="passenger_id")
+//	@Column(name="passenger_id")
 	public int getPassengerId() {
 		return this.passengerId;
 	}

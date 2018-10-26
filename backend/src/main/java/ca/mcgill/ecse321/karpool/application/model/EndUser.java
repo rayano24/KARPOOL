@@ -3,9 +3,11 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-public class User {
+@Table(name="end_user")
+public class EndUser {
 	
 	private String name;
 
@@ -14,7 +16,7 @@ public class User {
 	}
 
 	@Id
-	@Column(name="name")
+//	@Column(name="name")
 	public String getName() {
 		return this.name;
 	}
@@ -25,7 +27,7 @@ public class User {
 		this.email = value;
 	}
 
-	@Column(name="email")
+//	@Column(name="email")
 	public String getEmail() {
 		return this.email;
 	}
@@ -36,7 +38,7 @@ public class User {
 		this.phoneNumber = value;
 	}
 
-	@Column(name="phone_number")
+//	@Column(name="phone_number")
 	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}
@@ -47,7 +49,7 @@ public class User {
 		this.password = value;
 	}
 
-	@Column(name="passord")
+//	@Column(name="passord")
 	public String getPassword() {
 		return this.password;
 	}
@@ -59,38 +61,19 @@ public class User {
 		this.rating = value;
 	}
 
-	@Column(name="rating")
+//	@Column(name="rating")
 	public Rating getRating() {
 		return this.rating;
 	}
 
 	private boolean criminalRecord;
 
-	@Column(name="record")
+//	@Column(name="record")
 	public boolean getRecord() {
 		return this.criminalRecord;
 	}
 
 	public void setRecord(boolean criminalRecord) {
 		this.criminalRecord = criminalRecord;
-	}
-
-	/**
-	 * Constructor for User, rating is set to NONE and criminalRecord to false by default
-	 * 
-	 * @param name
-	 * @param email
-	 * @param phoneNumber
-	 * @param password
-	 * @param criminalRecord
-	 */
-	public User(String name, String email, String phoneNumber, String password) {
-		super();
-		this.name = name;
-		this.email = email;
-		this.phoneNumber = phoneNumber;
-		this.password = password;
-		this.criminalRecord = false;
-		this.rating = Rating.NONE;
 	}
 }

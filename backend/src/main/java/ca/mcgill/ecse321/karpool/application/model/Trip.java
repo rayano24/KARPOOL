@@ -11,12 +11,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import java.util.HashSet;
 
 
 @Entity
+@Table(name="trip")
 public class Trip {
 
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
@@ -27,7 +29,7 @@ public class Trip {
 	}
 
 	@Id
-	@Column(name="trip_id")
+//	@Column(name="trip_id")
 	public int getTripId() {
 		return this.tripId;
 	}
@@ -38,7 +40,7 @@ public class Trip {
 		this.seatAvailable = value;
 	}
 
-	@Column(name="seat_available")
+//	@Column(name="seat_available")
 	public int getSeatAvailable() {
 		return this.seatAvailable;
 	}
@@ -49,7 +51,7 @@ public class Trip {
 		this.destination = value;
 	}
 
-	@Column(name="destination")
+//	@Column(name="destination")
 	public String getDestination() {
 		return this.destination;
 	}
@@ -60,7 +62,7 @@ public class Trip {
 		this.departureTime = value;
 	}
 
-	@Column(name="departure_time")
+//	@Column(name="departure_time")
 	public String getDepartureTime() {
 		return this.departureTime;
 	}
@@ -71,7 +73,7 @@ public class Trip {
 		this.departureLocation = value;
 	}
 
-	@Column(name="departure_location")
+//	@Column(name="departure_location")
 	public String getDepartureLocation() {
 		return this.departureLocation;
 	}
@@ -82,7 +84,7 @@ public class Trip {
 		this.distance = value;
 	}
 
-	@Column(name="distance")
+//	@Column(name="distance")
 	public int getDistance() {
 		return this.distance;
 	}
@@ -95,7 +97,7 @@ public class Trip {
 	}
 
 	@ManyToOne
-	@JoinColumn(name="driver")
+	@JoinColumn //(name="driver")
 	public Driver getDriver() {
 		return this.driver;
 	}
@@ -111,8 +113,8 @@ public class Trip {
 	private Set<Passenger> passenger;
 
 	@Transient
-	@JoinColumn(name = "passenger")
-	@OneToMany(targetEntity=Passenger.class, mappedBy="trip")
+	@JoinColumn //(name = "passenger")
+	@OneToMany //(targetEntity=Passenger.class, mappedBy="trip")
 	public Set<Passenger> getPassenger() {
 		if (this.passenger == null) {
 			this.passenger = new HashSet<Passenger>();
