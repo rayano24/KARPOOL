@@ -16,9 +16,9 @@ public class MainActivity extends AppCompatActivity {
     //List that holds the fragments
     private List<Fragment> fragments = new ArrayList<>(3);
 
-    private static final String TAG_FRAGMENT_HOME = "tag_frag_home";
-    private static final String TAG_FRAGMENT_DASHBOARD = "tag_frag_dashboard";
-    private static final String TAG_FRAGMENT_NOTIFICATIONS = "tag_frag_notifications";
+    private static final String TAG_FRAGMENT_SEARCH = "tag_frag_search";
+    private static final String TAG_FRAGMENT_TRIPS = "tag_frag_trips";
+    private static final String TAG_FRAGMENT_SETTINGS = "tag_frag_settings";
 
 
 
@@ -28,14 +28,14 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    switchFragment(0, TAG_FRAGMENT_HOME);
+                case R.id.navigation_search:
+                    switchFragment(0, TAG_FRAGMENT_SEARCH);
                     return true;
-                case R.id.navigation_dashboard:
-                    switchFragment(1, TAG_FRAGMENT_DASHBOARD);
+                case R.id.navigation_trips:
+                    switchFragment(1, TAG_FRAGMENT_TRIPS);
                     return true;
-                case R.id.navigation_notifications:
-                    switchFragment(2, TAG_FRAGMENT_NOTIFICATIONS);
+                case R.id.navigation_settings:
+                    switchFragment(2, TAG_FRAGMENT_SETTINGS);
                     return true;
             }
             return false;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         buildFragmentsList();
 
 
-        switchFragment(0, TAG_FRAGMENT_HOME);
+        switchFragment(0, TAG_FRAGMENT_SEARCH);
 
 
 
@@ -69,13 +69,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void buildFragmentsList() {
-        FragmentOne homeFragment = buildFragmentOne("Home");
-        FragmentTwo dashboardFragment = buildFragmentTwo("Dashboard");
-        FragmentThree notificationsFragment = buildFragmentThree("Notifications");
+        FragmentOne searchFragment = buildFragmentOne(getResources().getString(R.string.title_search));
+        FragmentTwo tripsFragment = buildFragmentTwo(getResources().getString(R.string.title_trips));
+        FragmentThree settingsFragment = buildFragmentThree(getResources().getString(R.string.title_settings));
 
-        fragments.add(homeFragment);
-        fragments.add(dashboardFragment);
-        fragments.add(notificationsFragment);
+        fragments.add(searchFragment);
+        fragments.add(tripsFragment);
+        fragments.add(settingsFragment);
     }
 
     private FragmentOne buildFragmentOne(String title) {
