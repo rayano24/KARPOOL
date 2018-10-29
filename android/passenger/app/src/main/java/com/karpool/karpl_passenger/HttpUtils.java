@@ -1,4 +1,4 @@
-package com.karpool.karpl_driver;
+package com.karpool.karpl_passenger;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;

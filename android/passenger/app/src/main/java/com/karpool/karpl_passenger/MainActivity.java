@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_FRAGMENT_TRIPS = "tag_frag_trips";
     private static final String TAG_FRAGMENT_SETTINGS = "tag_frag_settings";
 
-
+    private String error = null;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {

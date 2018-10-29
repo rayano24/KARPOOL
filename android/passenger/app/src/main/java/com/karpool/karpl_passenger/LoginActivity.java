@@ -36,8 +36,16 @@ import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -45,6 +53,20 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
+    private String error = null;
+
+//    private void refreshErrorMessage() {
+//        // set the error message
+//        TextView tvError = (TextView) findViewById(R.id.error);
+//        tvError.setText(error);
+//
+//        if (error == null || error.length() == 0) {
+//            tvError.setVisibility(View.GONE);
+//        } else {
+//            tvError.setVisibility(View.VISIBLE);
+//        }
+//    }
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -571,6 +593,34 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
 
             return false;
+        }
+
+        /**
+         * Authenticates user to log in
+         * @param v view
+         */
+        public void authenticateParticipant(View v)
+        {
+            error = "";
+            final TextView email = (TextView) findViewById(R.id.signInEmail);
+            final TextView pass = (TextView) findViewById(R.id.signInPassword);
+            HttpUtils.post("users/auth/" + email.getText().toString() + "/" + pass.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public void onFinish() {
+//                  refreshErrorMessage();
+                    email.setText("");
+                    pass.setText("");
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    try {
+                        error += errorResponse.get("message").toString();
+                    } catch (JSONException e) {
+                        error += e.getMessage();
+                    }
+//                  refreshErrorMessage();
+                }
+            });
         }
 
         @Override
