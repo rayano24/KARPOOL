@@ -28,7 +28,7 @@ import ca.mcgill.ecse321.karpool.application.repository.*;
 
 @RestController
 public class KarpoolController {
-//test
+
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
 
 	@Autowired
