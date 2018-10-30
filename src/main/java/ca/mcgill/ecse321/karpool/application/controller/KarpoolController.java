@@ -105,12 +105,12 @@ public class KarpoolController {
 	 * @param password
 	 * @return TRUE if the account is authenticated
 	 */
-	@GetMapping("/users/auth/{name}/{password}")
-	public boolean authenticateUser(@PathVariable("name")String name, @PathVariable("password")String password)
+	@GetMapping("/users/auth/{email}/{password}")
+	public boolean authenticateUser(@PathVariable("email")String email, @PathVariable("password")String password)
 
 	{
 		try {
-			EndUser user = repository.getUser(name);
+			EndUser user = repository.getUser(email);
 			if(user.getPassword().equals(password))
 				return true;
 		}
