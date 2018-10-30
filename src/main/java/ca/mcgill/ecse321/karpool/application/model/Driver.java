@@ -43,7 +43,6 @@ public class Driver extends UserRole
 		return this.trip;
 	}
 	
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private int driverId;
 
 	public void setDriverId(int value) {
@@ -51,6 +50,7 @@ public class Driver extends UserRole
 	}
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 //	@Column(name="driver_id")
 	public int getDriverId() {
 		return this.driverId;

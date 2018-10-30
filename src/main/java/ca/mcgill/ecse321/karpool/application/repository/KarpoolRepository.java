@@ -1,7 +1,10 @@
 package ca.mcgill.ecse321.karpool.application.repository;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +45,23 @@ public class KarpoolRepository
 		trip.setSeatAvailable(seatAvailable);
 		entityManager.persist(trip);
 		return trip;
+	}
+	
+	@Transactional
+	public List<Integer> getTrips(String dest)
+	{
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE destination= :destination");
+		q.setParameter("destination", dest);
+		@SuppressWarnings("unchecked")
+		List<Integer> trips = q.getResultList();
+		return trips;
+	}
+	
+	@Transactional
+	public Trip getSpecificTrip(int id)
+	{
+		Trip t = entityManager.find(Trip.class, id);
+		return t;
 	}
 	
 	@Transactional

@@ -28,7 +28,6 @@ public class Passenger extends UserRole
 		return this.trip;
 	}
 
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private int passengerId;
 
 	public void setPassengerId(int value) {
@@ -36,6 +35,7 @@ public class Passenger extends UserRole
 	}
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 //	@Column(name="passenger_id")
 	public int getPassengerId() {
 		return this.passengerId;

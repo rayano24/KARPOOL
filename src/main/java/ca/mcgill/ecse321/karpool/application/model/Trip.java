@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -21,7 +22,7 @@ import java.util.HashSet;
 @Table(name="trip")
 public class Trip {
 
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	
 	private int tripId;
 
 	public void setTripId(int value) {
@@ -29,6 +30,7 @@ public class Trip {
 	}
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 //	@Column(name="trip_id")
 	public int getTripId() {
 		return this.tripId;

@@ -152,7 +152,6 @@ public class KarpoolController {
 	@PostMapping("/trips/{location}/{destination}/{seats}/{time}")
 	public Trip createTrip (@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
 			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime)
-
 	{
 		Trip trip = repository.createTrip(destination,departureTime, departureLocation, seatAvailable);
 		return trip;
@@ -168,13 +167,18 @@ public class KarpoolController {
 	 * @return queried trip
 	 */
 	@GetMapping("/trips/{location}/{destination}/{seats}")
-	public Trip queryTrip(@PathVariable("location") String departureLocation, 
+	public List<Trip> queryTrip(@PathVariable("location") String departureLocation, 
 			@PathVariable("destination") String destination, @PathVariable ("seats") int seatAvailable)
 	{
 		//should be querying trip from repository with matching departure and destination, with required number of seats
-		Trip Trip = driver.getTrip();
+		List<Integer> trips = repository.getTrips(destination);
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		for(int t: trips)
+		{
+			fullTrip.add(repository.getSpecificTrip(t));
+		}
 
-		return Trip;
+		return fullTrip;
 	}
 
 
@@ -241,40 +245,40 @@ public class KarpoolController {
 }
 
 
-	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
-	{
-
-        BufferedReader br = null;
-
-        try {
-
-            URL url = new URL("https://www.zipcodeapi.com/rest/GOhazMBKVJ2VDSEOrrkf0sswW4D5c4NYOjZi2mGTjf2wuvgvTkUj5L1KpR2GkRRI/distance.json/" + zipcode1 + "/" +zipcode2 +"/km");
-            br = new BufferedReader(new InputStreamReader(url.openStream()));
-
-            String line;
-
-            StringBuilder sb = new StringBuilder();
-
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-            }
-
-            String RoughDistance = sb.toString();
-            if (RoughDistance.charAt(2) == 'e') {
-            	return 0;
-            }
-            String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
-            float distance = Float.parseFloat(intValue);
-            return distance;
-
-        } finally {
-
-            if (br != null) {
-                br.close();
-            }
-        }
-    }
+//	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
+//	{
+//
+//        BufferedReader br = null;
+//
+//        try {
+//
+//            URL url = new URL("https://www.zipcodeapi.com/rest/GOhazMBKVJ2VDSEOrrkf0sswW4D5c4NYOjZi2mGTjf2wuvgvTkUj5L1KpR2GkRRI/distance.json/" + zipcode1 + "/" +zipcode2 +"/km");
+//            br = new BufferedReader(new InputStreamReader(url.openStream()));
+//
+//            String line;
+//
+//            StringBuilder sb = new StringBuilder();
+//
+//            while ((line = br.readLine()) != null) {
+//                sb.append(line);
+//                sb.append(System.lineSeparator());
+//            }
+//
+//            String RoughDistance = sb.toString();
+//            if (RoughDistance.charAt(2) == 'e') {
+//            	return 0;
+//            }
+//            String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
+//            float distance = Float.parseFloat(intValue);
+//            return distance;
+//
+//        } finally {
+//
+//            if (br != null) {
+//                br.close();
+//            }
+//        }
+//    }
 
 
 
