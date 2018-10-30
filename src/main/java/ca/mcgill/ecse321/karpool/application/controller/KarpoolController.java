@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.karpool.application.controller;
 
 import java.util.*;
+import ca.mcgill.ecse321.karpool.application.model.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -76,6 +77,7 @@ public class KarpoolController {
 	public EndUser createUser(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
 			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
 	{
+		
 		try 
 		{
 			if(phone.length() == 10) 
@@ -268,27 +270,27 @@ public class KarpoolController {
 	@GetMapping
 	public boolean addPassenger(Passenger passenger, Trip trip) {
 
-		boolean wasAdded = false;
-		if (trip.getSeatAvailable()<=0) {
-		return false;
-	}
+		/*check this because its a mess */
+		if (trip.getSeatAvailable() <= 0) {
+			return false;
+		}
+	
 		else if (passengers.contains(passenger)) {
-		return false;
-	}
+			return false;
+		}
 
-	else
-	{
-		passenger.setTrip(trip);
-	}
+		else {
+			passenger.setTrip(trip);
+			trip.getPassenger().add(passenger);
+			return true;
+		}	
 
-	wasAdded = true;
-	return wasAdded;
-
-
-
+	//wasAdded = true;
+	//return wasAdded;
+	
 }
 
-
+/*
 	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
 	{
 
@@ -323,8 +325,10 @@ public class KarpoolController {
             }
         }
     }
+*/
 
 
 
 
 }
+
