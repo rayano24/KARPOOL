@@ -166,6 +166,7 @@ public class KarpoolController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		LocalDate currDate = LocalDate.now();
 		LocalTime currTime = LocalTime.now();
+		destination = (destination.toUpperCase()).replaceAll("\\s+","");
 		
 		
 		
@@ -183,6 +184,13 @@ public class KarpoolController {
 				return null;
 			}
 			
+			//compares system time to departureTime
+			else if ((sdf.format(departureTime)).compareTo((sdf.format(currTime))) < 0) {
+				System.out.println("Cannot set a time that has already passed");
+				return null;
+			}
+			
+		
 			
 		} 
 		catch(NullPointerException |  NumberFormatException e) 
