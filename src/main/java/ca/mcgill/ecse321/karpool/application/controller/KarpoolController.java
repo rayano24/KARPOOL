@@ -1,12 +1,21 @@
 package ca.mcgill.ecse321.karpool.application.controller;
 
 import java.util.*;
+import ca.mcgill.ecse321.karpool.application.model.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -68,6 +77,7 @@ public class KarpoolController {
 	public EndUser createUser(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
 			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
 	{
+		
 		try 
 		{
 			if(phone.length() == 10) 
@@ -149,10 +159,50 @@ public class KarpoolController {
 	 * @param departureTime
 	 * @return the created trip
 	 */
-	@PostMapping("/trips/{location}/{destination}/{seats}/{time}")
+	@PostMapping("/trips/{location}/{destination}/{seats}/{time}/{date}")
 	public Trip createTrip (@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
-			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime)
+			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate)
 	{
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		LocalDate currDate = LocalDate.now();
+		LocalTime currTime = LocalTime.now();
+		destination = (destination.toUpperCase()).replaceAll("\\s+","");
+		
+		
+		
+		try 
+		{
+			if(seatAvailable == 0) {
+				
+				System.out.println("Must have one or more seats available");
+				return null;
+			} 
+			
+			//compares system date to departureDate
+			else if ((sdf.format(departureDate)).compareTo((sdf.format(currDate))) < 0) {
+				System.out.println("Cannot set a date that has already passed");
+				return null;
+			}
+			
+			//compares system time to departureTime
+			else if ((sdf.format(departureTime)).compareTo((sdf.format(currTime))) < 0) {
+				System.out.println("Cannot set a time that has already passed");
+				return null;
+			}
+			
+		
+			
+		} 
+		catch(NullPointerException |  NumberFormatException e) 
+		{
+			System.out.println("Exception - Invalid seat number");
+			return null;
+			
+		}
+		
+		
+		
 		Trip trip = repository.createTrip(destination,departureTime, departureLocation, seatAvailable);
 		return trip;
 	}
@@ -224,26 +274,25 @@ public class KarpoolController {
 	@GetMapping
 	public boolean addPassenger(Passenger passenger, Trip trip) {
 
-		boolean wasAdded = false;
-		if (trip.getSeatAvailable()<=0) {
-		return false;
-	}
+		/*check this because its a mess */
+		if (trip.getSeatAvailable() <= 0) {
+			return false;
+		}
+	
 		else if (passengers.contains(passenger)) {
-		return false;
-	}
+			return false;
+		}
 
-	else
-	{
-		passenger.setTrip(trip);
-	}
+		else {
+			passenger.setTrip(trip);
+			trip.getPassenger().add(passenger);
+			return true;
+		}	
 
-	wasAdded = true;
-	return wasAdded;
-
-
-
+	//wasAdded = true;
+	//return wasAdded;
+	
 }
-
 
 //	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
 //	{
@@ -280,7 +329,5 @@ public class KarpoolController {
 //        }
 //    }
 
-
-
-
 }
+
