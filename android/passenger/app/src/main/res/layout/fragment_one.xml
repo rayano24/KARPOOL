@@ -31,6 +31,9 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        tools:itemCount="37"
+        tools:listitem="@layout/recycler_view_item" />
 
 </LinearLayout>

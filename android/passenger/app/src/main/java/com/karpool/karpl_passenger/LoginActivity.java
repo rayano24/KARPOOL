@@ -54,19 +54,6 @@ import static android.Manifest.permission.READ_CONTACTS;
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
-    private String error = null;
-
-//    private void refreshErrorMessage() {
-//        // set the error message
-//        TextView tvError = (TextView) findViewById(R.id.error);
-//        tvError.setText(error);
-//
-//        if (error == null || error.length() == 0) {
-//            tvError.setVisibility(View.GONE);
-//        } else {
-//            tvError.setVisibility(View.VISIBLE);
-//        }
-//    }
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -85,6 +72,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mlogInAuthTask = null;
     private UserRegisterTask mRegAuthTask = null;
+
+
+    private boolean authenticateUser;
+    private String error;
 
 
     // UI references.
@@ -558,6 +549,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
+
+
     /**
      * Represents an asynchronous login task used to authenticate
      * the user.
@@ -576,52 +569,35 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            // DUMMY VERIFICATION
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            return false;
-        }
-
-        /**
-         * Authenticates user to log in
-         * @param v view
-         */
-        public void authenticateParticipant(View v)
-        {
-            error = "";
-            final TextView email = (TextView) findViewById(R.id.signInEmail);
-            final TextView pass = (TextView) findViewById(R.id.signInPassword);
-            HttpUtils.post("users/auth/" + email.getText().toString() + "/" + pass.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
+            HttpUtils.get("users/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
-                public void onFinish() {
-//                  refreshErrorMessage();
-                    email.setText("");
-                    pass.setText("");
+                public boolean getUseSynchronousMode() {
+                    return false;
+                }
+
+                @Override
+                public void setUseSynchronousMode(boolean useSynchronousMode) {
+
+                }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    authenticateUser = true;
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     try {
-                        error += errorResponse.get("message").toString();
+                        error = errorResponse.get("message").toString();
                     } catch (JSONException e) {
-                        error += e.getMessage();
+                        error = e.getMessage();
                     }
-//                  refreshErrorMessage();
                 }
             });
+
+
+            return authenticateUser;
         }
+
+
 
         @Override
         protected void onPostExecute(final Boolean success) {
@@ -629,12 +605,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showSignInProgress(false);
 
             if (success) {
-                // TODO Decide on passenger design
                 Intent I = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(I);
                 finish();
             } else {
-                signInPassword.setError(getString(R.string.error_incorrect_password));
+                signInPassword.setError(error);
                 signInPassword.requestFocus();
             }
         }
