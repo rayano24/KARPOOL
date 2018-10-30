@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.karpool.application.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +22,7 @@ public class Passenger extends UserRole
 	}
 	
 	@ManyToOne
-	@JoinColumn //(name="trip")
+	@JoinColumn
 	public Trip getTrip() {
 		return this.trip;
 	}
@@ -36,7 +35,6 @@ public class Passenger extends UserRole
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-//	@Column(name="passenger_id")
 	public int getPassengerId() {
 		return this.passengerId;
 	}

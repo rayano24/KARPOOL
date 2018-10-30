@@ -3,26 +3,16 @@ package ca.mcgill.ecse321.karpool.application.controller;
 import java.util.*;
 import ca.mcgill.ecse321.karpool.application.model.*;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ca.mcgill.ecse321.karpool.application.model.*;
 
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
