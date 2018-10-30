@@ -28,8 +28,8 @@ public class KarpoolRepository
 	}
 
 	@Transactional
-	public EndUser getUser(String email) {
-		EndUser user = entityManager.find(EndUser.class, email);
+	public EndUser getUser(String name) {
+		EndUser user = entityManager.find(EndUser.class, name);
 		return user;
 	}
 

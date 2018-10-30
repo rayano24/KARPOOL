@@ -15,6 +15,7 @@ public class EndUser {
 		this.name = value;
 	}
 
+	@Id
 //	@Column(name="name")
 	public String getName() {
 		return this.name;
@@ -26,7 +27,6 @@ public class EndUser {
 		this.email = value;
 	}
 
-	@Id
 //	@Column(name="email")
 	public String getEmail() {
 		return this.email;
