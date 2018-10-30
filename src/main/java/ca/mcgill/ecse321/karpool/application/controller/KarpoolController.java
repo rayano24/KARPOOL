@@ -83,7 +83,7 @@ public class KarpoolController {
 			if(phone.length() == 10) 
 			{
 
-				Integer.parseInt(phone);
+				Long.parseLong(phone);
 			}
 			else 
 			{
@@ -91,9 +91,14 @@ public class KarpoolController {
 				return null;
 			}
 		} 
-		catch(NullPointerException |  NumberFormatException e) 
+		catch(NullPointerException e1) 
 		{
-			System.out.println("Exception - Invalid phone number");
+			System.out.println("Exception - Null pointer");
+			return null;
+		}
+		catch(NumberFormatException e2)
+		{
+			System.out.println("Exception - Number format");
 			return null;
 		}
 		EndUser u;
