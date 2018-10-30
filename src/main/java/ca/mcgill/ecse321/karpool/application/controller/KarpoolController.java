@@ -3,11 +3,19 @@ package ca.mcgill.ecse321.karpool.application.controller;
 import java.util.*;
 import ca.mcgill.ecse321.karpool.application.model.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -153,9 +161,41 @@ public class KarpoolController {
 	 */
 	@PostMapping("/trips/{location}/{destination}/{seats}/{time}")
 	public Trip createTrip (@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
-			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime)
+			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate)
 
 	{
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		LocalDate currDate = LocalDate.now();
+		LocalTime currTime = LocalTime.now();
+		
+		
+		
+		try 
+		{
+			if(seatAvailable == 0) {
+				
+				System.out.println("Must have one or more seats available");
+				return null;
+			} 
+			
+			//compares system date to departureDate
+			else if ((sdf.format(departureDate)).compareTo((sdf.format(currDate))) < 0) {
+				System.out.println("Cannot set a date that has already passed");
+				return null;
+			}
+			
+			
+		} 
+		catch(NullPointerException |  NumberFormatException e) 
+		{
+			System.out.println("Exception - Invalid seat number");
+			return null;
+			
+		}
+		
+		
+		
 		Trip trip = repository.createTrip(destination,departureTime, departureLocation, seatAvailable);
 		return trip;
 	}
