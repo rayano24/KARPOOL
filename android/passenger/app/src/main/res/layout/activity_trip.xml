@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    tools:layout_editor_absoluteY="25dp">
+    tools:context=".TripActivity">
+
+
+    <TextView
+        android:id="@+id/tripOrigin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="47dp"
+        android:text="Montreal"
+        android:textSize="30sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tripDestination"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="47dp"
+        android:layout_marginEnd="28dp"
+        android:text="Compton"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tripDriver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="28dp"
+        android:text="Ajay Patel"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tripDestination" />
+
+    <TextView
+        android:id="@+id/tripPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:text="$50"
+        android:textColor="@color/colorAccent"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toTopOf="@+id/tripDate"
+        app:layout_constraintStart_toStartOf="@+id/tripDate" />
+
+    <TextView
+        android:id="@+id/tripDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="43dp"
+        android:text="10-31-2018"
+        android:textColor="@color/colorAccent"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/joinButton"
+        app:layout_constraintStart_toStartOf="@+id/joinButton" />
+
+    <TextView
+        android:id="@+id/tripTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="19dp"
+        android:text="15:00"
+        android:textColor="@color/colorAccent"
+        android:textSize="15sp"
+        app:layout_constraintStart_toStartOf="@+id/tripDate"
+        app:layout_constraintTop_toBottomOf="@+id/tripDate" />
+
+    <Button
+        android:id="@+id/joinButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="316dp"
+        android:text="@string/trip_join"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tripArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="35dp"
+        android:text="→	"
+        android:textColor="@color/colorAccent"
+        android:textSize="35sp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tripDestination"
+        app:layout_constraintEnd_toStartOf="@+id/tripDestination" />
+
+    <TextView
+        android:id="@+id/driverLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:text="Driver"
+        android:textSize="25sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tripOrigin" />
+
+    <ImageView
+        android:id="@+id/driverRating5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/driverRating4"
+        app:layout_constraintEnd_toEndOf="@+id/tripDriver"
+        app:layout_constraintStart_toEndOf="@+id/driverRating4"
+        app:layout_constraintTop_toBottomOf="@+id/tripDriver"
+        app:srcCompat="@android:drawable/btn_star" />
+
+    <ImageView
+        android:id="@+id/driverRating4"
+        android:layout_width="22dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="22dp"
+        android:layout_marginEnd="22dp"
+        app:layout_constraintBottom_toBottomOf="@+id/driverRating3"
+        app:layout_constraintEnd_toEndOf="@+id/tripDriver"
+        app:layout_constraintStart_toStartOf="@+id/driverRating3"
+        app:layout_constraintTop_toBottomOf="@+id/tripDriver"
+        app:srcCompat="@android:drawable/btn_star" />
+
+    <ImageView
+        android:id="@+id/driverRating3"
+        android:layout_width="22dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/driverRating2"
+        app:layout_constraintEnd_toEndOf="@+id/tripDriver"
+        app:layout_constraintStart_toStartOf="@+id/tripDriver"
+        app:layout_constraintTop_toBottomOf="@+id/tripDriver"
+        app:srcCompat="@android:drawable/btn_star" />
+
+    <ImageView
+        android:id="@+id/driverRating1"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="34dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="47dp"
+        app:layout_constraintBottom_toTopOf="@+id/tripPrice"
+        app:layout_constraintEnd_toStartOf="@+id/driverRating2"
+        app:layout_constraintStart_toStartOf="@+id/tripDriver"
+        app:layout_constraintTop_toTopOf="@+id/tripDriver"
+        app:srcCompat="@android:drawable/btn_star" />
+
+    <ImageView
+        android:id="@+id/driverRating2"
+        android:layout_width="22dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginEnd="22dp"
+        app:layout_constraintBottom_toBottomOf="@+id/driverRating1"
+        app:layout_constraintEnd_toEndOf="@+id/driverRating3"
+        app:layout_constraintStart_toStartOf="@+id/tripDriver"
+        app:layout_constraintTop_toBottomOf="@+id/tripDriver"
+        app:srcCompat="@android:drawable/btn_star" />
+</android.support.constraint.ConstraintLayout>

@@ -60,10 +60,11 @@ public class KarpoolRepository
 	}
 
 	@Transactional
-	public Trip createTrip(String destination, String departureTime, String departureLocation, int seatAvailable) {
+	public Trip createTrip(String destination, String departureTime, String departureDate, String departureLocation, int seatAvailable) {
 		Trip trip = new Trip();
 		trip.setDestination(destination);
 		trip.setDepartureTime(departureTime);
+		trip.setDepartureDate(departureDate);
 		trip.setDepartureLocation(departureLocation);
 		trip.setSeatAvailable(seatAvailable);
 		entityManager.persist(trip);
@@ -71,9 +72,10 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
-	public List<Integer> getTrips(String dest)
+	public List<Integer> getTrips(String depart, String dest)
 	{
-		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE destination= :destination");
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE departure_location= :departure AND destination= :destination");
+		q.setParameter("departure", depart);
 		q.setParameter("destination", dest);
 		@SuppressWarnings("unchecked")
 		List<Integer> trips = q.getResultList();
@@ -94,6 +96,15 @@ public class KarpoolRepository
 	{
 		Trip t = entityManager.find(Trip.class, id);
 		return t;
+	}
+	
+	@Transactional
+	public List<Integer> getAllSortedTripsTime() 
+	{
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip ORDER BY departure_time");
+		@SuppressWarnings("unchecked")
+		List<Integer> trips = q.getResultList();
+		return trips;
 	}
 	
 	@Transactional

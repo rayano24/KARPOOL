@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.karpool.application.controller;
 import java.util.*;
 import ca.mcgill.ecse321.karpool.application.model.*;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -302,9 +303,14 @@ public class KarpoolController {
 		{
 			fullUser.add(repository.getUser(u));
 		}
-		
+		if(fullUser.isEmpty())
+		{
+			System.out.println("There are no users in the database");
+			return null;
+		}
 		return fullUser;
 	}
+	
 
 	/**
 	 * creates trip with given parameters
@@ -314,15 +320,32 @@ public class KarpoolController {
 	 * @param seatAvailable
 	 * @param departureTime
 	 * @return the created trip
+	 * @throws ParseException 
 	 */
 	@PostMapping("/trips/{location}/{destination}/{seats}/{time}/{date}")
 	public Trip createTrip (@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
-			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate)
+			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate) throws ParseException
 	{
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		LocalDate currDate = LocalDate.now();
-		LocalTime currTime = LocalTime.now();
-		destination = (destination.toUpperCase()).replaceAll("\\s+","");
+		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//		LocalDate currDate = LocalDate.now();
+//		LocalTime currTime = LocalTime.now();
+//		currDate = sdf.format(currDate);
+//		destination = (destination.toLowerCase()).replaceAll("\\s+","");
+		//Date tripDate = sdf.parse(departureDate);
+		
+		Date date = new Date();
+		Date time = new Date();
+		        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date dateInput = sdf.parse(departureDate);
+        String date1 = sdf.format(dateInput);        
+        String date2 = sdf.format(date);
+        
+        SimpleDateFormat sdf2 = new SimpleDateFormat("HHmm");
+        Date timeInput = sdf2.parse(departureTime);
+        String time1 = sdf2.format(timeInput);
+        String time2 = sdf2.format(time);
+		
 		
 		try 
 		{
@@ -333,13 +356,13 @@ public class KarpoolController {
 			} 
 			
 			//compares system date to departureDate
-			else if ((sdf.format(departureDate)).compareTo((sdf.format(currDate))) < 0) {
+			else if ((date1.compareTo(date2)) < 0) {
 				System.out.println("Cannot set a date that has already passed");
 				return null;
 			}
 			
 			//compares system time to departureTime
-			else if ((sdf.format(departureTime)).compareTo((sdf.format(currTime))) < 0) {
+			else if ((time1.compareTo(time2)) < 0) {
 				System.out.println("Cannot set a time that has already passed");
 				return null;
 			}
@@ -356,7 +379,7 @@ public class KarpoolController {
 		
 		
 		
-		Trip trip = repository.createTrip(destination,departureTime, departureLocation, seatAvailable);
+		Trip trip = repository.createTrip(destination,departureTime, departureDate, departureLocation, seatAvailable);
 		return trip;
 	}
 
@@ -369,20 +392,46 @@ public class KarpoolController {
 	 * @param seatAvailable
 	 * @return queried trip
 	 */
-	@GetMapping("/trips/{location}/{destination}/{seats}")
+	@GetMapping("/trips/{location}/{destination}")
 	public List<Trip> queryTrip(@PathVariable("location") String departureLocation, 
-			@PathVariable("destination") String destination, @PathVariable ("seats") int seatAvailable)
+			@PathVariable("destination") String destination)
 	{
-		//should be querying trip from repository with matching departure and destination, with required number of seats
-		List<Integer> trips = repository.getTrips(destination);
+		List<Integer> trips = repository.getTrips(departureLocation, destination);
 		List<Trip> fullTrip = new ArrayList<Trip>();
 		for(int t: trips)
 		{
 			fullTrip.add(repository.getSpecificTrip(t));
 		}
-
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
 		return fullTrip;
 	}
+	
+	/**
+	 * lists all trips in the database in ascending order of times
+	 * 
+	 * @return sorted list of trips
+	 */
+	@GetMapping("/trips/all/date")
+	public List<Trip> listAllTripsAscendingDate()
+	{
+		List<Integer> trips = repository.getAllSortedTripsTime();
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		for(int t: trips)
+		{
+			fullTrip.add(repository.getSpecificTrip(t));
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
+		return fullTrip;
+	}
+	
 	
 	/**
 	 * lists all trips in the database
@@ -401,6 +450,7 @@ public class KarpoolController {
 		
 		return fullTrip;
 	}
+
 
 
 	@PostMapping("/trips/{trip}")
