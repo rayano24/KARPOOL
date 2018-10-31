@@ -35,6 +35,15 @@ public class KarpoolRepository
 		EndUser user = entityManager.find(EndUser.class, name);
 		return user;
 	}
+	
+	@Transactional
+	public List<String> getAllUsers() 
+	{
+		Query q = entityManager.createNativeQuery("SELECT name FROM end_user");
+		@SuppressWarnings("unchecked")
+		List<String> users = q.getResultList();
+		return users;
+	}
 
 	@Transactional
 	public Trip createTrip(String destination, String departureTime, String departureLocation, int seatAvailable) {
@@ -52,6 +61,15 @@ public class KarpoolRepository
 	{
 		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE destination= :destination");
 		q.setParameter("destination", dest);
+		@SuppressWarnings("unchecked")
+		List<Integer> trips = q.getResultList();
+		return trips;
+	}
+	
+	@Transactional
+	public List<Integer> getAllTrips() 
+	{
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip");
 		@SuppressWarnings("unchecked")
 		List<Integer> trips = q.getResultList();
 		return trips;
@@ -92,4 +110,5 @@ public class KarpoolRepository
 		entityManager.persist(trip);
 		return trip;
 	}
+
 }

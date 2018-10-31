@@ -114,16 +114,17 @@ public class KarpoolController {
 	public boolean authenticateUser(@PathVariable("email")String email, @PathVariable("password")String password)
 
 	{
+		boolean authenticate = false;
 		try {
 			EndUser user = repository.getUser(email);
 			if(user.getPassword().equals(password))
-				return true;
+				authenticate = true;
 		}
 		catch(NullPointerException e) {
 			System.out.println("Error - Attempted to authenticate null user");
-			return false;
+			authenticate =  false;
 		}
-		return false;
+		return authenticate;
 	}
 
 	/**
@@ -144,6 +145,24 @@ public class KarpoolController {
 		}
 		return user;
 	}
+	
+	/**
+	 * lists all users in the database
+	 * 
+	 * @return list of users
+	 */
+	@GetMapping("/users/all")
+	public List<EndUser> listAllUsers()
+	{
+		List<String> users = repository.getAllUsers();
+		List<EndUser> fullUser = new ArrayList<EndUser>();
+		for(String u: users)
+		{
+			fullUser.add(repository.getUser(u));
+		}
+		
+		return fullUser;
+	}
 
 	/**
 	 * creates trip with given parameters
@@ -158,13 +177,10 @@ public class KarpoolController {
 	public Trip createTrip (@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
 			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate)
 	{
-		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		LocalDate currDate = LocalDate.now();
 		LocalTime currTime = LocalTime.now();
 		destination = (destination.toUpperCase()).replaceAll("\\s+","");
-		
-		
 		
 		try 
 		{
@@ -225,9 +241,27 @@ public class KarpoolController {
 
 		return fullTrip;
 	}
+	
+	/**
+	 * lists all trips in the database
+	 * 
+	 * @return list of trips
+	 */
+	@GetMapping("/trips/all")
+	public List<Trip> listAllTrips()
+	{
+		List<Integer> trips = repository.getAllTrips();
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		for(int t: trips)
+		{
+			fullTrip.add(repository.getSpecificTrip(t));
+		}
+		
+		return fullTrip;
+	}
 
 
-	@PostMapping("/TRIPS/{trip}")
+	@PostMapping("/trips/{trip}")
 	public void closeTrip(@PathVariable ("trip") Trip trip)
 	{
 		repository.closeTrip(trip);
