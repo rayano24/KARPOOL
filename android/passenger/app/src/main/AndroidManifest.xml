@@ -3,7 +3,7 @@
     package="com.karpool.karpl_passenger">
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -27,7 +27,9 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/title_activity_main">
-            android:theme="@style/AppTheme"</activity>
+            android:theme="@style/AppTheme"
+        </activity>
+        <activity android:name=".TripActivity"></activity>
     </application>
 
 </manifest>
