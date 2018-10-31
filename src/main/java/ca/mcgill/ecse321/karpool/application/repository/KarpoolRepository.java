@@ -18,8 +18,8 @@ public class KarpoolRepository
 	private EntityManager entityManager;
 
 	@Transactional
-	public EndUser createUser(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord){
-		EndUser user = new EndUser();
+	public Driver createDriver(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord){
+		Driver user = new Driver();
 		user.setName(name);
 		user.setEmail(email);
 		user.setPassword(password);
@@ -29,6 +29,20 @@ public class KarpoolRepository
 		entityManager.persist(user);
 		return user;
 	}
+	@Transactional
+	public Passenger createPassenger(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord){
+		Passenger user = new Passenger();
+		user.setName(name);
+		user.setEmail(email);
+		user.setPassword(password);
+		user.setPhoneNumber(phoneNumber);
+		user.setRating(rating);
+		user.setRecord(criminalRecord);
+		entityManager.persist(user);
+		return user;
+	}
+	
+	
 
 	@Transactional
 	public EndUser getUser(String name) {

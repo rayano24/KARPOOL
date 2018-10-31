@@ -62,11 +62,12 @@ public class KarpoolController {
 	 * @param rating
 	 * @return the users object if found, null if not
 	 */
+	
 	@PostMapping("/users/{name}/{email}/{password}/" + "{phone}/{rating}/{record}")
-	public EndUser createUser(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
+	public Driver createDriver(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
 			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
 	{
-		EndUser u=null;
+		Driver u=null;
 		
 		try 
 		{
@@ -87,7 +88,98 @@ public class KarpoolController {
 								{
 									if(name.length()>=3)
 									{
-										u = repository.createUser(name, email, password, phone, rating, criminalRecord);
+										u = repository.createDriver(name, email, password, phone, rating, criminalRecord);
+									}
+									else 
+									{
+										System.out.println("Your username must have 3 characters or over");
+										return null;
+									}
+								}
+								catch (NullPointerException e)
+								{
+									System.out.println("Please enter a name ");
+									return null;
+								}
+							}
+							else 
+							{
+								System.out.println("Your password must have over 8 characters");
+								return null;
+								
+							}
+							
+						}
+						catch (NullPointerException e)
+						{
+							System.out.print("Please enter a password");
+							return null;
+						}
+					
+					}
+					else
+					{
+						System.out.println("Oups , this is not a valid email");
+					}
+				}
+				
+				catch(NullPointerException e)
+				{
+					System.out.println("Oups, this is not a valid email");
+					return null;
+			}
+			}
+			else 
+			{
+				System.out.println("Oups, this is not a valid phone number");
+				return null;
+			}
+
+		}
+			
+		 
+		catch(NullPointerException e1) 
+		{
+			System.out.println("Exception - Null pointer");
+			return null;
+		}
+		catch(NumberFormatException e2)
+
+		{
+			System.out.println("Exception - Number format");
+			return null;
+		}
+		
+		
+		return u;
+		
+	}
+	@PostMapping("/users/{name}/{email}/{password}/" + "{phone}/{rating}/{record}")
+	public Passenger createPassenger(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
+			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
+	{
+		Passenger u=null;
+		
+		try 
+		{
+			if(phone.length() == 10) 
+			{
+
+				Long.parseLong(phone);
+				
+				try 
+				{
+					if(email.indexOf("@")>=0 && email.indexOf(".")>=0)
+					{
+						try
+						{
+							if(password.length() >= 8 ) 
+							{
+								try
+								{
+									if(name.length()>=3)
+									{
+										u = repository.createPassenger(name, email, password, phone, rating, criminalRecord);
 									}
 									else 
 									{
