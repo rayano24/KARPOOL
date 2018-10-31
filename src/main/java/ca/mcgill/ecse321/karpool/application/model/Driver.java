@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.karpool.application.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,8 +8,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import ca.mcgill.ecse321.karpool.application.model.UserRole;
 import ca.mcgill.ecse321.karpool.application.model.Car;
@@ -38,12 +35,11 @@ public class Driver extends UserRole
 	}
 
 	@ManyToOne
-	@JoinColumn //(name="trip")
+	@JoinColumn
 	public Trip getTrip() {
 		return this.trip;
 	}
 	
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	private int driverId;
 
 	public void setDriverId(int value) {
@@ -51,7 +47,7 @@ public class Driver extends UserRole
 	}
 
 	@Id
-//	@Column(name="driver_id")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	public int getDriverId() {
 		return this.driverId;
 	}

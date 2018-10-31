@@ -1,5 +1,4 @@
 package ca.mcgill.ecse321.karpool.application.model;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import javax.persistence.Id;
@@ -16,7 +15,6 @@ public class EndUser {
 	}
 
 	@Id
-//	@Column(name="name")
 	public String getName() {
 		return this.name;
 	}
@@ -27,7 +25,6 @@ public class EndUser {
 		this.email = value;
 	}
 
-//	@Column(name="email")
 	public String getEmail() {
 		return this.email;
 	}
@@ -38,7 +35,6 @@ public class EndUser {
 		this.phoneNumber = value;
 	}
 
-//	@Column(name="phone_number")
 	public String getPhoneNumber() {
 		return this.phoneNumber;
 	}
@@ -49,7 +45,6 @@ public class EndUser {
 		this.password = value;
 	}
 
-//	@Column(name="passord")
 	public String getPassword() {
 		return this.password;
 	}
@@ -61,14 +56,12 @@ public class EndUser {
 		this.rating = value;
 	}
 
-//	@Column(name="rating")
 	public Rating getRating() {
 		return this.rating;
 	}
 
 	private boolean criminalRecord;
 
-//	@Column(name="record")
 	public boolean getRecord() {
 		return this.criminalRecord;
 	}

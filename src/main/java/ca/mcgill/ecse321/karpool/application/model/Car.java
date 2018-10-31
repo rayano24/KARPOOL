@@ -1,9 +1,7 @@
 package ca.mcgill.ecse321.karpool.application.model;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -19,7 +17,6 @@ public class Car
 		this.make = value;
 	}
 
-//	@Column(name="make")
 	public String getMake() {
 		return this.make;
 	}
@@ -30,7 +27,6 @@ public class Car
 		this.seat = value;
 	}
 
-//	@Column(name="seat")
 	public int getSeat() {
 		return this.seat;
 	}
@@ -42,7 +38,6 @@ public class Car
 	}
 
 	@Id
-//	@Column(name="license_plate")
 	public String getLicensePlate() {
 		return this.licensePlate;
 	}
@@ -53,7 +48,6 @@ public class Car
 		this.fuelEfficiency = value;
 	}
 
-//	@Column(name="fuel_efficiency")
 	public String getFuelEfficiency() {
 		return this.fuelEfficiency;
 	}

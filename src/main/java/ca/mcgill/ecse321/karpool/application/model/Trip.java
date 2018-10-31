@@ -1,6 +1,5 @@
 package ca.mcgill.ecse321.karpool.application.model;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,7 +20,7 @@ import java.util.HashSet;
 @Table(name="trip")
 public class Trip {
 
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
+	
 	private int tripId;
 
 	public void setTripId(int value) {
@@ -29,7 +28,7 @@ public class Trip {
 	}
 
 	@Id
-//	@Column(name="trip_id")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE)
 	public int getTripId() {
 		return this.tripId;
 	}
@@ -40,7 +39,6 @@ public class Trip {
 		this.seatAvailable = value;
 	}
 
-//	@Column(name="seat_available")
 	public int getSeatAvailable() {
 		return this.seatAvailable;
 	}
@@ -51,7 +49,6 @@ public class Trip {
 		this.destination = value;
 	}
 
-//	@Column(name="destination")
 	public String getDestination() {
 		return this.destination;
 	}
@@ -62,7 +59,6 @@ public class Trip {
 		this.departureTime = value;
 	}
 
-//	@Column(name="departure_time")
 	public String getDepartureTime() {
 		return this.departureTime;
 	}
@@ -73,7 +69,6 @@ public class Trip {
 		this.departureLocation = value;
 	}
 
-//	@Column(name="departure_location")
 	public String getDepartureLocation() {
 		return this.departureLocation;
 	}
@@ -84,7 +79,6 @@ public class Trip {
 		this.distance = value;
 	}
 
-//	@Column(name="distance")
 	public int getDistance() {
 		return this.distance;
 	}
@@ -97,7 +91,7 @@ public class Trip {
 	}
 
 	@ManyToOne
-	@JoinColumn //(name="driver")
+	@JoinColumn
 	public Driver getDriver() {
 		return this.driver;
 	}
@@ -113,8 +107,8 @@ public class Trip {
 	private Set<Passenger> passenger;
 
 	@Transient
-	@JoinColumn //(name = "passenger")
-	@OneToMany //(targetEntity=Passenger.class, mappedBy="trip")
+	@JoinColumn 
+	@OneToMany 
 	public Set<Passenger> getPassenger() {
 		if (this.passenger == null) {
 			this.passenger = new HashSet<Passenger>();

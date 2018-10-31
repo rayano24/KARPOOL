@@ -3,26 +3,16 @@ package ca.mcgill.ecse321.karpool.application.controller;
 import java.util.*;
 import ca.mcgill.ecse321.karpool.application.model.*;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import org.apache.tomcat.jni.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ca.mcgill.ecse321.karpool.application.model.*;
 
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
@@ -136,25 +126,29 @@ public class KarpoolController {
 				{
 					System.out.println("Oups, this is not a valid email");
 					return null;
-				}
+			}
 			}
 			else 
 			{
 				System.out.println("Oups, this is not a valid phone number");
 				return null;
 			}
+
 		}
 			
+		 
 		catch(NullPointerException e1) 
 		{
-			System.out.println("Exception - Invalid phone number");
+			System.out.println("Exception - Null pointer");
 			return null;
 		}
 		catch(NumberFormatException e2)
+
 		{
-			System.out.println("Exception - Invalid phone number");
+			System.out.println("Exception - Number format");
 			return null;
 		}
+		
 		
 		return u;
 		
@@ -170,16 +164,17 @@ public class KarpoolController {
 	public boolean authenticateUser(@PathVariable("email")String email, @PathVariable("password")String password)
 
 	{
+		boolean authenticate = false;
 		try {
 			EndUser user = repository.getUser(email);
 			if(user.getPassword().equals(password))
-				return true;
+				authenticate = true;
 		}
 		catch(NullPointerException e) {
 			System.out.println("Error - Attempted to authenticate null user");
-			return false;
+			authenticate =  false;
 		}
-		return false;
+		return authenticate;
 	}
 
 	/**
@@ -200,6 +195,24 @@ public class KarpoolController {
 		}
 		return user;
 	}
+	
+	/**
+	 * lists all users in the database
+	 * 
+	 * @return list of users
+	 */
+	@GetMapping("/users/all")
+	public List<EndUser> listAllUsers()
+	{
+		List<String> users = repository.getAllUsers();
+		List<EndUser> fullUser = new ArrayList<EndUser>();
+		for(String u: users)
+		{
+			fullUser.add(repository.getUser(u));
+		}
+		
+		return fullUser;
+	}
 
 	/**
 	 * creates trip with given parameters
@@ -210,18 +223,14 @@ public class KarpoolController {
 	 * @param departureTime
 	 * @return the created trip
 	 */
-	@PostMapping("/trips/{location}/{destination}/{seats}/{time}")
+	@PostMapping("/trips/{location}/{destination}/{seats}/{time}/{date}")
 	public Trip createTrip (@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
 			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate)
-
 	{
-		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		LocalDate currDate = LocalDate.now();
 		LocalTime currTime = LocalTime.now();
 		destination = (destination.toUpperCase()).replaceAll("\\s+","");
-		
-		
 		
 		try 
 		{
@@ -269,17 +278,40 @@ public class KarpoolController {
 	 * @return queried trip
 	 */
 	@GetMapping("/trips/{location}/{destination}/{seats}")
-	public Trip queryTrip(@PathVariable("location") String departureLocation, 
+	public List<Trip> queryTrip(@PathVariable("location") String departureLocation, 
 			@PathVariable("destination") String destination, @PathVariable ("seats") int seatAvailable)
 	{
 		//should be querying trip from repository with matching departure and destination, with required number of seats
-		Trip Trip = driver.getTrip();
+		List<Integer> trips = repository.getTrips(destination);
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		for(int t: trips)
+		{
+			fullTrip.add(repository.getSpecificTrip(t));
+		}
 
-		return Trip;
+		return fullTrip;
+	}
+	
+	/**
+	 * lists all trips in the database
+	 * 
+	 * @return list of trips
+	 */
+	@GetMapping("/trips/all")
+	public List<Trip> listAllTrips()
+	{
+		List<Integer> trips = repository.getAllTrips();
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		for(int t: trips)
+		{
+			fullTrip.add(repository.getSpecificTrip(t));
+		}
+		
+		return fullTrip;
 	}
 
 
-	@PostMapping("/TRIPS/{trip}")
+	@PostMapping("/trips/{trip}")
 	public void closeTrip(@PathVariable ("trip") Trip trip)
 	{
 		repository.closeTrip(trip);
@@ -341,45 +373,40 @@ public class KarpoolController {
 	
 }
 
-/*
-	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
-	{
-
-        BufferedReader br = null;
-
-        try {
-
-            URL url = new URL("https://www.zipcodeapi.com/rest/GOhazMBKVJ2VDSEOrrkf0sswW4D5c4NYOjZi2mGTjf2wuvgvTkUj5L1KpR2GkRRI/distance.json/" + zipcode1 + "/" +zipcode2 +"/km");
-            br = new BufferedReader(new InputStreamReader(url.openStream()));
-
-            String line;
-
-            StringBuilder sb = new StringBuilder();
-
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-            }
-
-            String RoughDistance = sb.toString();
-            if (RoughDistance.charAt(2) == 'e') {
-            	return 0;
-            }
-            String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
-            float distance = Float.parseFloat(intValue);
-            return distance;
-
-        } finally {
-
-            if (br != null) {
-                br.close();
-            }
-        }
-    }
-*/
-
-
-
+//	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
+//	{
+//
+//        BufferedReader br = null;
+//
+//        try {
+//
+//            URL url = new URL("https://www.zipcodeapi.com/rest/GOhazMBKVJ2VDSEOrrkf0sswW4D5c4NYOjZi2mGTjf2wuvgvTkUj5L1KpR2GkRRI/distance.json/" + zipcode1 + "/" +zipcode2 +"/km");
+//            br = new BufferedReader(new InputStreamReader(url.openStream()));
+//
+//            String line;
+//
+//            StringBuilder sb = new StringBuilder();
+//
+//            while ((line = br.readLine()) != null) {
+//                sb.append(line);
+//                sb.append(System.lineSeparator());
+//            }
+//
+//            String RoughDistance = sb.toString();
+//            if (RoughDistance.charAt(2) == 'e') {
+//            	return 0;
+//            }
+//            String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
+//            float distance = Float.parseFloat(intValue);
+//            return distance;
+//
+//        } finally {
+//
+//            if (br != null) {
+//                br.close();
+//            }
+//        }
+//    }
 
 }
 
