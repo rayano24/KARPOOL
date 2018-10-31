@@ -56,12 +56,21 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
-	public List<String> getAllUsers() 
+	public List<String> getAllDrivers() 
 	{
-		Query q = entityManager.createNativeQuery("SELECT name FROM end_user");
+		Query q = entityManager.createNativeQuery("SELECT name FROM driver");
 		@SuppressWarnings("unchecked")
-		List<String> users = q.getResultList();
-		return users;
+		List<String> drivers = q.getResultList();
+		return drivers;
+	}
+	
+	@Transactional
+	public List<String> getAllPassengers() 
+	{
+		Query q = entityManager.createNativeQuery("SELECT name FROM passenger");
+		@SuppressWarnings("unchecked")
+		List<String> passengers = q.getResultList();
+		return passengers;
 	}
 
 	@Transactional
@@ -123,16 +132,6 @@ public class KarpoolRepository
 		trip.setDepartureLocation(null);
 		trip.setSeatAvailable(0);
 		entityManager.persist(trip);
-	}
-	
-	@Transactional
-	public Driver createDriver(Car car, Trip trip)
-	{
-		Driver d = new Driver();
-		d.setCar(car);
-		d.setTrip(trip);
-		entityManager.persist(d);
-		return d;
 	}
 	
 	@Transactional

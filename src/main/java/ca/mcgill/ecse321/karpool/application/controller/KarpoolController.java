@@ -5,8 +5,6 @@ import ca.mcgill.ecse321.karpool.application.model.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -256,7 +254,7 @@ public class KarpoolController {
 				authenticate = true;
 		}
 		catch(NullPointerException e) {
-			System.out.println("Error - Attempted to authenticate null user");
+			System.out.println("Error - Attempted to authenticate null driver ");
 			authenticate =  false;
 		}
 		return authenticate;
@@ -281,7 +279,7 @@ public class KarpoolController {
 				authenticate = true;
 		}
 		catch(NullPointerException e) {
-			System.out.println("Error - Attempted to authenticate null user");
+			System.out.println("Error - Attempted to authenticate null passenger");
 			authenticate =  false;
 		}
 		return authenticate;
@@ -325,26 +323,49 @@ public class KarpoolController {
 		}
 		return passenger;
 	}
+	
+	/**
+	 * lists all drivers in the database
+	 * 
+	 * @return list of drivers
+	 */
+	@GetMapping("/drivers/all")
+	public List<Driver> listAllDrivers()
+	{
+		List<String> drivers = repository.getAllDrivers();
+		List<Driver> fullDriver = new ArrayList<Driver>();
+		for(String d: drivers)
+		{
+			fullDriver.add(repository.getDriver(d));
+		}
+		if(fullDriver.isEmpty())
+		{
+			System.out.println("There are no drivers in the database");
+			return null;
+		}
+		return fullDriver;
+	}
+	
 	/**
 	 * lists all users in the database
 	 * 
 	 * @return list of users
 	 */
-	@GetMapping("/users/all")
-	public List<EndUser> listAllUsers()
+	@GetMapping("/passengers/all")
+	public List<Passenger> listAllPassengers()
 	{
-		List<String> users = repository.getAllUsers();
-		List<EndUser> fullUser = new ArrayList<EndUser>();
-		for(String u: users)
+		List<String> pass = repository.getAllPassengers();
+		List<Passenger> fullPass = new ArrayList<Passenger>();
+		for(String p: pass)
 		{
-			fullUser.add(repository.getUser(u));
+			fullPass.add(repository.getPassenger(p));
 		}
-		if(fullUser.isEmpty())
+		if(fullPass.isEmpty())
 		{
-			System.out.println("There are no users in the database");
+			System.out.println("There are no passengers in the database");
 			return null;
 		}
-		return fullUser;
+		return fullPass;
 	}
 	
 
@@ -512,21 +533,41 @@ public class KarpoolController {
 
 	}
 
-
 	/**
-	 * Add a  rating to the user
+	 * Rate the driver
 	 * 
 	 * @param name
 	 * @param rating
 	 */
-	@PostMapping("/users/rate/{name}/{rating}")
-	public void addRating(@PathVariable("name") String name,@PathVariable("rating") Rating rating)
+	@PostMapping("/drivers/rate/{name}/{rating}")
+	public void rateDriver(@PathVariable("name") String name,@PathVariable("rating") Rating rating)
 
 	{
 		//need to check if rating is a valid rating
 		try {
-			EndUser user = repository.getUser(name);
-			user.setRating(rating);
+			Driver d = repository.getDriver(name);
+			d.setRating(rating);
+
+		}
+		catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
+	}
+	
+	/**
+	 * Rate the passenger
+	 * 
+	 * @param name
+	 * @param rating
+	 */
+	@PostMapping("/passengers/rate/{name}/{rating}")
+	public void ratePassenger(@PathVariable("name") String name,@PathVariable("rating") Rating rating)
+
+	{
+		//need to check if rating is a valid rating
+		try {
+			Passenger p = repository.getPassenger(name);
+			p.setRating(rating);
 
 		}
 		catch (NullPointerException e) {
