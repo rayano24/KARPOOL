@@ -31,7 +31,6 @@ public class KarpoolController {
 	EndUser user;
 
 	//TODO: Password can't just be read as a regular String. NEEDS some form of encryption.
-	//FIXME: Why does createUser need to return the usersName?
 	
 	@RequestMapping("/")
 	public String greeting()
@@ -59,35 +58,32 @@ public class KarpoolController {
 	 * @param email
 	 * @param password
 	 * @param phone
-	 * @param rating
 	 * @return the users object if found, null if not
 	 */
-	@PostMapping("/users/{name}/{email}/{password}/" + "{phone}/{rating}/{record}")
-	public EndUser createUser(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
-			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
+	@PostMapping("/users/{name}/{email}/{password}/{phone}")
+	public EndUser createUser(@PathVariable("name") String name, @PathVariable("email") String email, 
+			@PathVariable("password") String password, @PathVariable("phone") String phone)
 	{
 		EndUser u=null;
-		
+
 		try 
 		{
 			if(phone.length() == 10) 
 			{
-
 				Long.parseLong(phone);
-				
 				try 
 				{
 					if(email.indexOf("@")>=0 && email.indexOf(".")>=0)
 					{
 						try
 						{
-							if(password.length() >= 8 ) 
+							if(password.length() >= 6) 
 							{
 								try
 								{
 									if(name.length()>=3)
 									{
-										u = repository.createUser(name, email, password, phone, rating, criminalRecord);
+										u = repository.createUser(name, email, password, phone, Rating.NONE, false);
 									}
 									else 
 									{
@@ -103,70 +99,60 @@ public class KarpoolController {
 							}
 							else 
 							{
-								System.out.println("Your password must have over 8 characters");
+								System.out.println("Your password must have over 6 characters");
 								return null;
-								
 							}
-							
 						}
 						catch (NullPointerException e)
 						{
 							System.out.print("Please enter a password");
 							return null;
 						}
-					
 					}
 					else
 					{
 						System.out.println("Oups , this is not a valid email");
 					}
 				}
-				
 				catch(NullPointerException e)
 				{
 					System.out.println("Oups, this is not a valid email");
 					return null;
-			}
+				}
 			}
 			else 
 			{
 				System.out.println("Oups, this is not a valid phone number");
 				return null;
 			}
-
 		}
-			
-		 
 		catch(NullPointerException e1) 
 		{
 			System.out.println("Exception - Null pointer");
 			return null;
 		}
 		catch(NumberFormatException e2)
-
 		{
 			System.out.println("Exception - Number format");
 			return null;
 		}
-		
-		
 		return u;
-		
 	}
 
 	/**
+	 * This method authenticates the user on login page
 	 *
-	 * @param email
+	 * @param username
 	 * @param password
 	 * @return TRUE if the account is authenticated
 	 */
-	@GetMapping("/users/auth/{email}/{password}")
-	public boolean authenticateUser(@PathVariable("email")String email, @PathVariable("password")String password)
+	@GetMapping("/users/auth/{username}/{password}")
+	public boolean authenticateUser(@PathVariable("username")String username, @PathVariable("password")String password)
 
 	{
 		boolean authenticate = false;
 		try {
-			EndUser user = repository.getUser(email);
+			EndUser user = repository.getUser(username);
 			if(user.getPassword().equals(password))
 				authenticate = true;
 		}
@@ -190,7 +176,7 @@ public class KarpoolController {
 		EndUser user = repository.getUser(name);
 		if(user == null)
 		{
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			System.out.println("No user with that name in the database");
 			return null;
 		}
 		return user;
@@ -290,7 +276,11 @@ public class KarpoolController {
 		List<Trip> fullTrip = new ArrayList<Trip>();
 		for(int t: trips)
 		{
-			fullTrip.add(repository.getSpecificTrip(t));
+			Trip tFull = repository.getSpecificTrip(t);
+			if(tFull.getSeatAvailable()>0)
+			{
+				fullTrip.add(tFull);
+			}
 		}
 		if(fullTrip.isEmpty())
 		{
@@ -301,18 +291,23 @@ public class KarpoolController {
 	}
 	
 	/**
-	 * lists all trips in the database in ascending order of times
+	 * lists all trips matching the query in ascending order of times
 	 * 
 	 * @return sorted list of trips
 	 */
-	@GetMapping("/trips/all/date")
-	public List<Trip> listAllTripsAscendingDate()
+	@GetMapping("/trips/{location}/{destination}/date")
+	public List<Trip> listTripsAscendingDate(@PathVariable("location") String departureLocation, 
+			@PathVariable("destination") String destination)
 	{
-		List<Integer> trips = repository.getAllSortedTripsTime();
+		List<Integer> trips = repository.getSortedTripsTime(departureLocation, destination);
 		List<Trip> fullTrip = new ArrayList<Trip>();
 		for(int t: trips)
 		{
-			fullTrip.add(repository.getSpecificTrip(t));
+			Trip tFull = repository.getSpecificTrip(t);
+			if(tFull.getSeatAvailable()>0)
+			{
+				fullTrip.add(tFull);
+			}
 		}
 		if(fullTrip.isEmpty())
 		{
@@ -337,16 +332,23 @@ public class KarpoolController {
 		{
 			fullTrip.add(repository.getSpecificTrip(t));
 		}
-		
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips in the databse");
+			return null;
+		}		
 		return fullTrip;
 	}
 
 
-
-	@PostMapping("/trips/{trip}")
-	public void closeTrip(@PathVariable ("trip") Trip trip)
+	/**
+	 * This method marks a trip as completed
+	 * @param trip
+	 */
+	@PostMapping("/trips/close/{trip}")
+	public void closeTrip(@PathVariable("trip")int tripID)
 	{
-		repository.closeTrip(trip);
+		repository.closeTrip(tripID);
 
 	}
 

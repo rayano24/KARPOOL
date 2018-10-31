@@ -84,17 +84,20 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
-	public List<Integer> getAllSortedTripsTime() 
+	public List<Integer> getSortedTripsTime(String start, String finish) 
 	{
-		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip ORDER BY departure_time");
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE departure_location= :departure AND destination= :destination ORDER BY departure_time");
+		q.setParameter("departure", start);
+		q.setParameter("destination", finish);
 		@SuppressWarnings("unchecked")
 		List<Integer> trips = q.getResultList();
 		return trips;
 	}
 	
 	@Transactional
-	public void closeTrip(Trip trip)
+	public void closeTrip(int tripID)
 	{
+		Trip trip = entityManager.find(Trip.class, tripID);
 		trip.setDestination(null);
 		trip.setDepartureTime(null);
 		trip.setDepartureLocation(null);
