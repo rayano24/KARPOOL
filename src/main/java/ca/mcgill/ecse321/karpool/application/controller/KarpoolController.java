@@ -53,19 +53,19 @@ public class KarpoolController {
 	}
 
 	/**
-	 * Creates a user via the createUser method from KarpoolRepository. Performs parameter validation
+	 * Creates a driver via the createDriver method from KarpoolRepository. Performs parameter validation
 	 * 
 	 * @param name
 	 * @param email
 	 * @param password
 	 * @param phone
-	 * @return the users object if found, null if not
+	 * @return the driver that is created, null if there was an error
 	 */
-	@PostMapping("/users/{name}/{email}/{password}/" + "{phone}/{rating}/{record}")
+	@PostMapping("/drivers/{name}/{email}/{password}/{phone}/{record}")
 	public Driver createDriver(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
-			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
+			@PathVariable("phone") String phone, @PathVariable("record") boolean criminalRecord)
 	{
-		Driver u=null;
+		Driver d = null;
 		try 
 		{
 			if(phone.length() == 10) 
@@ -83,7 +83,7 @@ public class KarpoolController {
 								{
 									if(name.length()>=3)
 									{
-										u = repository.createDriver(name, email, password, phone, rating, criminalRecord);
+										d = repository.createDriver(name, email, password, phone, criminalRecord);
 									}
 									else 
 									{
@@ -144,18 +144,24 @@ public class KarpoolController {
 			System.out.println("Exception - Number format");
 			return null;
 		}
-		
-		
-		return u;
-		
+		return d;
 	}
 	
-	
-	@PostMapping("/users/{name}/{email}/{password}/" + "{phone}/{rating}/{record}")
+	/**
+	 * Creates a passenger via the createPassenger method from KarpoolRepository. Performs parameter validation
+	 * 
+	 * @param name
+	 * @param email
+	 * @param password
+	 * @param phone
+	 * @param criminalRecord
+	 * @return the created passenger, or null if there was an error
+	 */
+	@PostMapping("/passengers/{name}/{email}/{password}/{phone}/{record}")
 	public Passenger createPassenger(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
-			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
+			@PathVariable("phone") String phone, @PathVariable("record") boolean criminalRecord)
 	{
-		Passenger u=null;
+		Passenger p = null;
 		
 		try 
 		{
@@ -176,7 +182,7 @@ public class KarpoolController {
 								{
 									if(name.length()>=3)
 									{
-										u = repository.createPassenger(name, email, password, phone, rating, criminalRecord);
+										p = repository.createPassenger(name, email, password, phone, criminalRecord);
 									}
 									else 
 									{
@@ -229,7 +235,7 @@ public class KarpoolController {
 			System.out.println("Exception - Number format");
 			return null;
 		}
-		return u;
+		return p;
 	}
 
 	/**

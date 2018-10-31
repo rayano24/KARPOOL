@@ -18,32 +18,31 @@ public class KarpoolRepository
 	private EntityManager entityManager;
 
 	@Transactional
-	public Driver createDriver(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord){
-		Driver user = new Driver();
-		user.setName(name);
-		user.setEmail(email);
-		user.setPassword(password);
-		user.setPhoneNumber(phoneNumber);
-		user.setRating(rating);
-		user.setRecord(criminalRecord);
-		entityManager.persist(user);
-		return user;
+	public Driver createDriver(String name, String email, String password, String phoneNumber, boolean criminalRecord){
+		Driver driver = new Driver();
+		driver.setName(name);
+		driver.setEmail(email);
+		driver.setPassword(password);
+		driver.setPhoneNumber(phoneNumber);
+		driver.setRating(Rating.NONE);
+		driver.setRecord(criminalRecord);
+		entityManager.persist(driver);
+		return driver;
 	}
+	
 	@Transactional
-	public Passenger createPassenger(String name, String email, String password, String phoneNumber, Rating rating, boolean criminalRecord){
-		Passenger user = new Passenger();
-		user.setName(name);
-		user.setEmail(email);
-		user.setPassword(password);
-		user.setPhoneNumber(phoneNumber);
-		user.setRating(rating);
-		user.setRecord(criminalRecord);
-		entityManager.persist(user);
-		return user;
+	public Passenger createPassenger(String name, String email, String password, String phoneNumber, boolean criminalRecord){
+		Passenger pass = new Passenger();
+		pass.setName(name);
+		pass.setEmail(email);
+		pass.setPassword(password);
+		pass.setPhoneNumber(phoneNumber);
+		pass.setRating(Rating.NONE);
+		pass.setRecord(criminalRecord);
+		entityManager.persist(pass);
+		return pass;
 	}
 	
-	
-
 	@Transactional
 	public EndUser getUser(String name) {
 		EndUser user = entityManager.find(EndUser.class, name);
