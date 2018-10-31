@@ -72,41 +72,92 @@ public class KarpoolController {
 	 * @param rating
 	 * @return the users object if found, null if not
 	 */
-	@PostMapping("/users/{name}/{email}/{password}/"
-			+ "{phone}/{rating}/{record}")
+	@PostMapping("/users/{name}/{email}/{password}/" + "{phone}/{rating}/{record}")
 	public EndUser createUser(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
 			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
 	{
+		EndUser u=null;
 		
 		try 
 		{
 			if(phone.length() == 10) 
 			{
 
-				Integer.parseInt(phone);
+				Long.parseLong(phone);
+				
+				try 
+				{
+					if(email.indexOf("@")>=0 && email.indexOf(".")>=0)
+					{
+						try
+						{
+							if(password.length() >= 8 ) 
+							{
+								try
+								{
+									if(name.length()>=3)
+									{
+										u = repository.createUser(name, email, password, phone, rating, criminalRecord);
+									}
+									else 
+									{
+										System.out.println("Your username must have 3 characters or over");
+										return null;
+									}
+								}
+								catch (NullPointerException e)
+								{
+									System.out.println("Please enter a name ");
+									return null;
+								}
+							}
+							else 
+							{
+								System.out.println("Your password must have over 8 characters");
+								return null;
+								
+							}
+							
+						}
+						catch (NullPointerException e)
+						{
+							System.out.print("Please enter a password");
+							return null;
+						}
+					
+					}
+					else
+					{
+						System.out.println("Oups , this is not a valid email");
+					}
+				}
+				
+				catch(NullPointerException e)
+				{
+					System.out.println("Oups, this is not a valid email");
+					return null;
+				}
 			}
 			else 
 			{
-				System.out.println("You entered an invalid phone number");
+				System.out.println("Oups, this is not a valid phone number");
 				return null;
 			}
-		} 
-		catch(NullPointerException |  NumberFormatException e) 
+		}
+			
+		catch(NullPointerException e1) 
 		{
 			System.out.println("Exception - Invalid phone number");
 			return null;
 		}
-		EndUser u;
-		
-		if(!criminalRecord) {
-			u = repository.createUser(name, email, password, phone, rating, criminalRecord);
-			return u;
-		}
-		else
+		catch(NumberFormatException e2)
 		{
-			System.out.println("Error - Criminal record");
+			System.out.println("Exception - Invalid phone number");
 			return null;
 		}
+		
+		return u;
+		
 	}
 
 	/**
