@@ -368,7 +368,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        //return email.contains("@");
+        return true;
     }
 
     /**
@@ -569,7 +570,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            HttpUtils.get("users/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
+            return true;
+
+           /* HttpUtils.get("users/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public boolean getUseSynchronousMode() {
                     return false;
@@ -580,8 +583,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 }
                 @Override
+                public void onFinish() {
+
+                }
+                @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    authenticateUser = true;
+                    if(statusCode  == 200) {
+                        authenticateUser = true;
+                    }
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String string, Throwable throwable) {
+                    authenticateUser = false;
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
@@ -590,17 +603,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     } catch (JSONException e) {
                         error = e.getMessage();
                     }
+                    authenticateUser = false;
                 }
             });
 
 
-            return authenticateUser;
+            return authenticateUser; */
         }
+
+
+
 
 
 
         @Override
         protected void onPostExecute(final Boolean success) {
+
+
             mlogInAuthTask = null;
             showSignInProgress(false);
 
