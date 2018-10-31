@@ -3,6 +3,7 @@ package ca.mcgill.ecse321.karpool.application.controller;
 import java.util.*;
 import ca.mcgill.ecse321.karpool.application.model.*;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -60,12 +61,11 @@ public class KarpoolController {
 	 * @param phone
 	 * @return the users object if found, null if not
 	 */
-	@PostMapping("/users/{name}/{email}/{password}/{phone}")
-	public EndUser createUser(@PathVariable("name") String name, @PathVariable("email") String email, 
-			@PathVariable("password") String password, @PathVariable("phone") String phone)
+	@PostMapping("/users/{name}/{email}/{password}/" + "{phone}/{rating}/{record}")
+	public Driver createDriver(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
+			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
 	{
-		EndUser u=null;
-
+		Driver u=null;
 		try 
 		{
 			if(phone.length() == 10) 
@@ -83,7 +83,100 @@ public class KarpoolController {
 								{
 									if(name.length()>=3)
 									{
-										u = repository.createUser(name, email, password, phone, Rating.NONE, false);
+										u = repository.createDriver(name, email, password, phone, rating, criminalRecord);
+									}
+									else 
+									{
+										System.out.println("Your username must have 3 characters or over");
+										return null;
+									}
+								}
+								catch (NullPointerException e)
+								{
+									System.out.println("Please enter a name ");
+									return null;
+								}
+							}
+							else 
+							{
+								System.out.println("Your password must have over 8 characters");
+								return null;
+								
+							}
+							
+						}
+						catch (NullPointerException e)
+						{
+							System.out.print("Please enter a password");
+							return null;
+						}
+					
+					}
+					else
+					{
+						System.out.println("Oups , this is not a valid email");
+					}
+				}
+				
+				catch(NullPointerException e)
+				{
+					System.out.println("Oups, this is not a valid email");
+					return null;
+			}
+			}
+			else 
+			{
+				System.out.println("Oups, this is not a valid phone number");
+				return null;
+			}
+
+		}
+			
+		 
+		catch(NullPointerException e1) 
+		{
+			System.out.println("Exception - Null pointer");
+			return null;
+		}
+		catch(NumberFormatException e2)
+
+		{
+			System.out.println("Exception - Number format");
+			return null;
+		}
+		
+		
+		return u;
+		
+	}
+	
+	
+	@PostMapping("/users/{name}/{email}/{password}/" + "{phone}/{rating}/{record}")
+	public Passenger createPassenger(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
+			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
+	{
+		Passenger u=null;
+		
+		try 
+		{
+			if(phone.length() == 10) 
+			{
+
+				Long.parseLong(phone);
+				
+				try 
+				{
+					if(email.indexOf("@")>=0 && email.indexOf(".")>=0)
+					{
+						try
+						{
+							if(password.length() >= 8 ) 
+							{
+								try
+								{
+									if(name.length()>=3)
+									{
+										u = repository.createPassenger(name, email, password, phone, rating, criminalRecord);
 									}
 									else 
 									{
@@ -213,15 +306,32 @@ public class KarpoolController {
 	 * @param seatAvailable
 	 * @param departureTime
 	 * @return the created trip
+	 * @throws ParseException 
 	 */
 	@PostMapping("/trips/{location}/{destination}/{seats}/{time}/{date}")
 	public Trip createTrip (@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
-			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate)
+			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate) throws ParseException
 	{
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-		LocalDate currDate = LocalDate.now();
-		LocalTime currTime = LocalTime.now();
-		destination = (destination.toUpperCase()).replaceAll("\\s+","");
+		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//		LocalDate currDate = LocalDate.now();
+//		LocalTime currTime = LocalTime.now();
+//		currDate = sdf.format(currDate);
+//		destination = (destination.toLowerCase()).replaceAll("\\s+","");
+		//Date tripDate = sdf.parse(departureDate);
+		
+		Date date = new Date();
+		Date time = new Date();
+		        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        Date dateInput = sdf.parse(departureDate);
+        String date1 = sdf.format(dateInput);        
+        String date2 = sdf.format(date);
+        
+        SimpleDateFormat sdf2 = new SimpleDateFormat("HHmm");
+        Date timeInput = sdf2.parse(departureTime);
+        String time1 = sdf2.format(timeInput);
+        String time2 = sdf2.format(time);
+		
 		
 		try 
 		{
@@ -232,13 +342,13 @@ public class KarpoolController {
 			} 
 			
 			//compares system date to departureDate
-			else if ((sdf.format(departureDate)).compareTo((sdf.format(currDate))) < 0) {
+			else if ((date1.compareTo(date2)) < 0) {
 				System.out.println("Cannot set a date that has already passed");
 				return null;
 			}
 			
 			//compares system time to departureTime
-			else if ((sdf.format(departureTime)).compareTo((sdf.format(currTime))) < 0) {
+			else if ((time1.compareTo(time2)) < 0) {
 				System.out.println("Cannot set a time that has already passed");
 				return null;
 			}
@@ -255,7 +365,7 @@ public class KarpoolController {
 		
 		
 		
-		Trip trip = repository.createTrip(destination,departureTime, departureLocation, seatAvailable);
+		Trip trip = repository.createTrip(destination,departureTime, departureDate, departureLocation, seatAvailable);
 		return trip;
 	}
 

@@ -40,15 +40,65 @@ public class Driver extends UserRole
 		return this.trip;
 	}
 	
-	private int driverId;
+	private String name;
 
-	public void setDriverId(int value) {
-		this.driverId = value;
+	public void setName(String value) {
+		this.name = value;
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	public int getDriverId() {
-		return this.driverId;
+	public String getName() {
+		return this.name;
+	}
+
+	private String email;
+
+	public void setEmail(String value) {
+		this.email = value;
+	}
+
+	public String getEmail() {
+		return this.email;
+	}
+
+	private String phoneNumber;
+
+	public void setPhoneNumber(String value) {
+		this.phoneNumber = value;
+	}
+
+	public String getPhoneNumber() {
+		return this.phoneNumber;
+	}
+
+	private String password;
+
+	public void setPassword(String value) {
+		this.password = value;
+	}
+
+	public String getPassword() {
+		return this.password;
+	}
+	
+	private Rating rating;
+
+
+	public void setRating(Rating value) {
+		this.rating = value;
+	}
+
+	public Rating getRating() {
+		return this.rating;
+	}
+
+	private boolean criminalRecord;
+
+	public boolean getRecord() {
+		return this.criminalRecord;
+	}
+
+	public void setRecord(boolean criminalRecord) {
+		this.criminalRecord = criminalRecord;
 	}
 }

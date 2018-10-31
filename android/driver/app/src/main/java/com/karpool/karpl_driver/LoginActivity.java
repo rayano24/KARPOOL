@@ -36,8 +36,16 @@ import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -45,6 +53,7 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -63,6 +72,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private UserLoginTask mlogInAuthTask = null;
     private UserRegisterTask mRegAuthTask = null;
+
+
+    private boolean authenticateUser;
+    private String error;
 
 
     // UI references.
@@ -355,7 +368,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private boolean isEmailValid(String email) {
         //TODO: Replace this with your own logic
-        return email.contains("@");
+        //return email.contains("@");
+        return true;
     }
 
     /**
@@ -393,7 +407,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             // added by me
-            // TODO: 8/2/2018 Check on meaning of show ? :
             logoImage.setVisibility(show ? View.GONE : View.VISIBLE);
             progressSpace.setVisibility(show ? View.VISIBLE : View.GONE);
             mLoginFormView.animate().setDuration(shortAnimTime).alpha(
@@ -537,13 +550,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         int IS_PRIMARY = 1;
     }
 
+
+
     /**
      * Represents an asynchronous login task used to authenticate
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mEmail; //change to username
         private final String mPassword;
 
         UserLoginTask(String email, String password) {
@@ -555,27 +570,66 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
+            return true;
 
-            // DUMMY VERIFICATION
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
+           /* HttpUtils.get("users/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public boolean getUseSynchronousMode() {
+                    return false;
                 }
-            }
 
-            return false;
+                @Override
+                public void setUseSynchronousMode(boolean useSynchronousMode) {
+
+                }
+                @Override
+                public void onFinish() {
+
+                }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                    if(statusCode  == 200) {
+                        authenticateUser = true;
+                    }
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String string, Throwable throwable) {
+                    authenticateUser = false;
+
+                    if(response.equals(true))
+                    {
+                        authenticateUser = true;
+                    }
+                    else
+                    {
+                        authenticateUser = false;
+                    }
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    try {
+                        error = errorResponse.get("message").toString();
+                    } catch (JSONException e) {
+                        error = e.getMessage();
+                    }
+                    authenticateUser = false;
+                }
+            });
+
+
+            return authenticateUser; */
         }
+
+
+
+
+
 
         @Override
         protected void onPostExecute(final Boolean success) {
+
+
             mlogInAuthTask = null;
             showSignInProgress(false);
 
@@ -584,7 +638,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 startActivity(I);
                 finish();
             } else {
-                signInPassword.setError(getString(R.string.error_incorrect_password));
+                signInPassword.setError(error);
                 signInPassword.requestFocus();
             }
         }
@@ -731,4 +785,3 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     }
 }
-

@@ -62,6 +62,16 @@ public class Trip {
 	public String getDepartureTime() {
 		return this.departureTime;
 	}
+	
+	private String departureDate;
+
+	public void setDepartureDate(String value) {
+		this.departureDate = value;
+	}
+
+	public String getDepartureDate() {
+		return this.departureDate;
+	}
 
 	private String departureLocation;
 
