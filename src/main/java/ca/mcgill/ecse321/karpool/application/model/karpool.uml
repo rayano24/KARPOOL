@@ -141,6 +141,10 @@
                 <ownedAttribute xmi:id="_ZD5l4MmzEeimZ4qV05YRpg" name="tripId" visibility="public">
                   <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/JavaPrimitiveTypes.library.uml#int"/>
                 </ownedAttribute>
+                <ownedAttribute xmi:id="_lZmccN0pEeiPq4JwHUBf4Q" name="var1" visibility="public"/>
+                <ownedAttribute xmi:id="_laLEMN0pEeiPq4JwHUBf4Q" name="departureDate" visibility="public">
+                  <type xmi:type="uml:PrimitiveType" href="pathmap://UML_LIBRARIES/UMLPrimitiveTypes.library.uml#String"/>
+                </ownedAttribute>
               </packagedElement>
               <packagedElement xmi:type="uml:Class" xmi:id="_QvArcMmbEeimZ4qV05YRpg" name="Car">
                 <ownedAttribute xmi:id="_J9MHcMmdEeimZ4qV05YRpg" name="make" visibility="public">

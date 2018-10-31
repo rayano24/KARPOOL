@@ -46,10 +46,11 @@ public class KarpoolRepository
 	}
 
 	@Transactional
-	public Trip createTrip(String destination, String departureTime, String departureLocation, int seatAvailable) {
+	public Trip createTrip(String destination, String departureTime, String departureDate, String departureLocation, int seatAvailable) {
 		Trip trip = new Trip();
 		trip.setDestination(destination);
 		trip.setDepartureTime(departureTime);
+		trip.setDepartureDate(departureDate);
 		trip.setDepartureLocation(departureLocation);
 		trip.setSeatAvailable(seatAvailable);
 		entityManager.persist(trip);
