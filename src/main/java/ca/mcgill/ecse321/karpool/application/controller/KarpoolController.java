@@ -233,20 +233,45 @@ public class KarpoolController {
 	}
 
 	/**
-	 * This method authenticates the user on login page
+	 * This method authenticates the driver user on login page
 	 *
 	 * @param username
 	 * @param password
 	 * @return TRUE if the account is authenticated
 	 */
-	@GetMapping("/users/auth/{username}/{password}")
-	public boolean authenticateUser(@PathVariable("username")String username, @PathVariable("password")String password)
+	@GetMapping("/drivers/auth/{username}/{password}")
+	public boolean authenticateDriver(@PathVariable("username")String username, @PathVariable("password")String password)
 
 	{
 		boolean authenticate = false;
 		try {
-			EndUser user = repository.getUser(username);
-			if(user.getPassword().equals(password))
+			Driver driver = repository.getDriver(username);
+			if(driver.getPassword().equals(password))
+				authenticate = true;
+		}
+		catch(NullPointerException e) {
+			System.out.println("Error - Attempted to authenticate null user");
+			authenticate =  false;
+		}
+		return authenticate;
+	}
+	
+	/**
+	 * This method authenticates the passenger user on login page
+	 *
+	 * @param username
+	 * @param password
+	 * @return TRUE if the account is authenticated
+	 */
+	
+	@GetMapping("/passengers/auth/{username}/{password}")
+	public boolean authenticatePassenger(@PathVariable("username")String username, @PathVariable("password")String password)
+
+	{
+		boolean authenticate = false;
+		try {
+			Passenger passenger = repository.getPassenger(username);
+			if(passenger.getPassword().equals(password))
 				authenticate = true;
 		}
 		catch(NullPointerException e) {
@@ -257,24 +282,43 @@ public class KarpoolController {
 	}
 
 	/**
-	 * searches for a user with given name
+	 * searches for a driver with given name
 	 *
 	 * @param name
-	 * @return the queried user
+	 * @return the queried driver
 	 */
-	@GetMapping("/users/{name}")
-	public EndUser queryUser(@PathVariable("name")String name)
+	@GetMapping("/drivers/{name}")
+	public Driver queryDriver(@PathVariable("name")String name)
 
 	{
-		EndUser user = repository.getUser(name);
-		if(user == null)
+		Driver driver = repository.getDriver(name);
+		if(driver == null)
 		{
-			System.out.println("No user with that name in the database");
+			System.out.println("No driver with that name in the database");
 			return null;
 		}
-		return user;
+		return driver;
 	}
 	
+	
+	/**
+	 * searches for a passenger with given name
+	 *
+	 * @param name
+	 * @return the queried passenger
+	 */
+	@GetMapping("/passengers/{name}")
+	public Passenger queryPassenger(@PathVariable("name")String name)
+
+	{
+		Passenger passenger = repository.getPassenger(name);
+		if(passenger == null)
+		{
+			System.out.println("No passenger with that name in the database");
+			return null;
+		}
+		return passenger;
+	}
 	/**
 	 * lists all users in the database
 	 * 
