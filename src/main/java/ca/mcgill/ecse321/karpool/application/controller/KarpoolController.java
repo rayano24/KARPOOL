@@ -160,9 +160,14 @@ public class KarpoolController {
 		{
 			fullUser.add(repository.getUser(u));
 		}
-		
+		if(fullUser.isEmpty())
+		{
+			System.out.println("There are no users in the database");
+			return null;
+		}
 		return fullUser;
 	}
+	
 
 	/**
 	 * creates trip with given parameters
@@ -227,20 +232,46 @@ public class KarpoolController {
 	 * @param seatAvailable
 	 * @return queried trip
 	 */
-	@GetMapping("/trips/{location}/{destination}/{seats}")
+	@GetMapping("/trips/{location}/{destination}")
 	public List<Trip> queryTrip(@PathVariable("location") String departureLocation, 
-			@PathVariable("destination") String destination, @PathVariable ("seats") int seatAvailable)
+			@PathVariable("destination") String destination)
 	{
-		//should be querying trip from repository with matching departure and destination, with required number of seats
-		List<Integer> trips = repository.getTrips(destination);
+		List<Integer> trips = repository.getTrips(departureLocation, destination);
 		List<Trip> fullTrip = new ArrayList<Trip>();
 		for(int t: trips)
 		{
 			fullTrip.add(repository.getSpecificTrip(t));
 		}
-
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
 		return fullTrip;
 	}
+	
+	/**
+	 * lists all trips in the database in ascending order of times
+	 * 
+	 * @return sorted list of trips
+	 */
+	@GetMapping("/trips/all/date")
+	public List<Trip> listAllTripsAscendingDate()
+	{
+		List<Integer> trips = repository.getAllSortedTripsTime();
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		for(int t: trips)
+		{
+			fullTrip.add(repository.getSpecificTrip(t));
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
+		return fullTrip;
+	}
+	
 	
 	/**
 	 * lists all trips in the database
@@ -259,6 +290,7 @@ public class KarpoolController {
 		
 		return fullTrip;
 	}
+
 
 
 	@PostMapping("/trips/{trip}")
