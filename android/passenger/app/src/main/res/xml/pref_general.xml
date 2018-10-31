@@ -1,0 +1,30 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="General">
+
+
+        <EditTextPreference
+            android:key="userLocation"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="text"
+            android:title="Your Location"
+            android:summary=" "/>
+    </PreferenceCategory>
+
+
+
+
+    <PreferenceCategory android:title="Other">
+
+
+
+    </PreferenceCategory>
+
+    <Preference android:title="@string/action_sign_out"
+        android:key="signOut"/>
+
+
+
+
+</PreferenceScreen>

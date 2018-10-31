@@ -63,11 +63,11 @@ public class KarpoolController {
 	 * @param rating
 	 * @return the users object if found, null if not
 	 */
-	@PostMapping("/users/{name}/{email}/{password}/"
-			+ "{phone}/{rating}/{record}")
+	@PostMapping("/users/{name}/{email}/{password}/" + "{phone}/{rating}/{record}")
 	public EndUser createUser(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
 			@PathVariable("phone") String phone, @PathVariable("rating") Rating rating, @PathVariable("record") boolean criminalRecord)
 	{
+		EndUser u=null;
 		
 		try 
 		{
@@ -75,34 +75,84 @@ public class KarpoolController {
 			{
 
 				Long.parseLong(phone);
+				
+				try 
+				{
+					if(email.indexOf("@")>=0 && email.indexOf(".")>=0)
+					{
+						try
+						{
+							if(password.length() >= 8 ) 
+							{
+								try
+								{
+									if(name.length()>=3)
+									{
+										u = repository.createUser(name, email, password, phone, rating, criminalRecord);
+									}
+									else 
+									{
+										System.out.println("Your username must have 3 characters or over");
+										return null;
+									}
+								}
+								catch (NullPointerException e)
+								{
+									System.out.println("Please enter a name ");
+									return null;
+								}
+							}
+							else 
+							{
+								System.out.println("Your password must have over 8 characters");
+								return null;
+								
+							}
+							
+						}
+						catch (NullPointerException e)
+						{
+							System.out.print("Please enter a password");
+							return null;
+						}
+					
+					}
+					else
+					{
+						System.out.println("Oups , this is not a valid email");
+					}
+				}
+				
+				catch(NullPointerException e)
+				{
+					System.out.println("Oups, this is not a valid email");
+					return null;
+			}
 			}
 			else 
 			{
-				System.out.println("You entered an invalid phone number");
+				System.out.println("Oups, this is not a valid phone number");
 				return null;
 			}
-		} 
+
+		}
+			
+		 
 		catch(NullPointerException e1) 
 		{
 			System.out.println("Exception - Null pointer");
 			return null;
 		}
 		catch(NumberFormatException e2)
+
 		{
 			System.out.println("Exception - Number format");
 			return null;
 		}
-		EndUser u;
 		
-		if(!criminalRecord) {
-			u = repository.createUser(name, email, password, phone, rating, criminalRecord);
-			return u;
-		}
-		else
-		{
-			System.out.println("Error - Criminal record");
-			return null;
-		}
+		
+		return u;
+		
 	}
 
 	/**
@@ -161,9 +211,14 @@ public class KarpoolController {
 		{
 			fullUser.add(repository.getUser(u));
 		}
-		
+		if(fullUser.isEmpty())
+		{
+			System.out.println("There are no users in the database");
+			return null;
+		}
 		return fullUser;
 	}
+	
 
 	/**
 	 * creates trip with given parameters
@@ -245,20 +300,46 @@ public class KarpoolController {
 	 * @param seatAvailable
 	 * @return queried trip
 	 */
-	@GetMapping("/trips/{location}/{destination}/{seats}")
+	@GetMapping("/trips/{location}/{destination}")
 	public List<Trip> queryTrip(@PathVariable("location") String departureLocation, 
-			@PathVariable("destination") String destination, @PathVariable ("seats") int seatAvailable)
+			@PathVariable("destination") String destination)
 	{
-		//should be querying trip from repository with matching departure and destination, with required number of seats
-		List<Integer> trips = repository.getTrips(destination);
+		List<Integer> trips = repository.getTrips(departureLocation, destination);
 		List<Trip> fullTrip = new ArrayList<Trip>();
 		for(int t: trips)
 		{
 			fullTrip.add(repository.getSpecificTrip(t));
 		}
-
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
 		return fullTrip;
 	}
+	
+	/**
+	 * lists all trips in the database in ascending order of times
+	 * 
+	 * @return sorted list of trips
+	 */
+	@GetMapping("/trips/all/date")
+	public List<Trip> listAllTripsAscendingDate()
+	{
+		List<Integer> trips = repository.getAllSortedTripsTime();
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		for(int t: trips)
+		{
+			fullTrip.add(repository.getSpecificTrip(t));
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
+		return fullTrip;
+	}
+	
 	
 	/**
 	 * lists all trips in the database
@@ -277,6 +358,7 @@ public class KarpoolController {
 		
 		return fullTrip;
 	}
+
 
 
 	@PostMapping("/trips/{trip}")

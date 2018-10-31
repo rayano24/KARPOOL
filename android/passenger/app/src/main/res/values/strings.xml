@@ -32,6 +32,25 @@
 
     <string name="search_hint">City</string>
     <string name="search_text">Where are we going?</string>
+    <string name="invalid_city_text">You\'ve entered an invalid city!</string>
+    <string name="sort_time">Time (Ascending)</string>
+    <string name="sort_price">Lowest Price</string>
+
+
+    <!-- Strings for my trips page -->
+    You have no upcoming trips
+    <string name="trips_none">You have no upcoming trips</string>
+
+
+    <!-- Trip activity -->
+    <string name="trip_join">JOIN TRIP</string>
+
+
+    <!-- preference screen -->
+
+    <string name="action_sign_out">Sign out</string>
+
+
 
 
 
