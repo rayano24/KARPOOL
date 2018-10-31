@@ -558,7 +558,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail;
+        private final String mEmail; //change to username
         private final String mPassword;
 
         UserLoginTask(String email, String password) {
@@ -588,6 +588,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+<<<<<<< HEAD
                     if(statusCode  == 200) {
                         authenticateUser = true;
                     }
@@ -595,6 +596,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void onFailure(int statusCode, Header[] headers, String string, Throwable throwable) {
                     authenticateUser = false;
+=======
+                    if(response.equals(true))
+                    {
+                        authenticateUser = true;
+                    }
+                    else
+                    {
+                        authenticateUser = false;
+                    }
+>>>>>>> cbe1120901ea14ab96f07f998344d770bbbe6fcd
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
