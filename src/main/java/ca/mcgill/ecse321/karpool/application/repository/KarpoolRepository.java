@@ -44,9 +44,15 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
-	public EndUser getUser(String name) {
-		EndUser user = entityManager.find(EndUser.class, name);
-		return user;
+	public Driver getDriver(String name) {
+		Driver driver = entityManager.find(Driver.class, name);
+		return driver;
+	}
+	
+	@Transactional
+	public Passenger getPassenger(String name) {
+		Passenger passenger = entityManager.find(Passenger.class, name);
+		return passenger;
 	}
 	
 	@Transactional
