@@ -5,18 +5,46 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.os.Bundle;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
 
-public class FragmentThree extends Fragment {
+
+
+public class FragmentThree extends PreferenceFragmentCompat {
+
+
+    private final static String KEY_LOCATION = "userLocation";
+    private final static String KEY_BUTTON = "signOut";
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_three, container, false);
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        // Load the preferences from an XML resource
+        setPreferencesFromResource(R.xml.pref_general, rootKey);
 
 
 
-        return rootView;
+        Preference button = findPreference(KEY_BUTTON);
+        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                // TODO I will implement please fix database...
+                return true;
+            }
+        });
+
+        final Preference pref = getPreferenceManager().findPreference(KEY_LOCATION);
+        pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object location) {
+                pref.setSummary(location.toString());
+                return true;
+            }
+        });
     }
+
+
 
 }

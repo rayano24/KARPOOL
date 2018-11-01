@@ -28,5 +28,14 @@
     <!-- Strings for my trips page -->
 <string name="trips_none">You have no upcoming trips</string>
 
+
+
+
+    <!-- preference screen -->
+
+    <string name="action_sign_out">Sign out</string>
+
+
+
 </resources>
 

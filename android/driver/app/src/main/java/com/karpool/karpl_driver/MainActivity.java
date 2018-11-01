@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String error = null; //error handling
 
 
+
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
