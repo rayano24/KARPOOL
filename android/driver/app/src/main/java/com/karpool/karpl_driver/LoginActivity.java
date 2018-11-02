@@ -99,12 +99,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if(prefs.getString("userID", " ") != null) {
+        if(prefs.getString("userID", null) != null) {
             Intent I = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(I);
             finish();
         }
-
 
         // TODO If user is signed in, skip this activity and launch main
         // I'll fix this when database or mock is set up..

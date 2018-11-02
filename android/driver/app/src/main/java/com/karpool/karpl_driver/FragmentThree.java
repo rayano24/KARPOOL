@@ -1,17 +1,17 @@
 package com.karpool.karpl_driver;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-
+import android.util.Log;
 
 
 public class FragmentThree extends PreferenceFragmentCompat {
+
 
 
     private final static String KEY_LOCATION = "userLocation";
@@ -29,7 +29,10 @@ public class FragmentThree extends PreferenceFragmentCompat {
         button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                // TODO I will implement please fix database...
+                logOut();
+                Intent I = new Intent(getActivity(), LoginActivity.class);
+                startActivity(I);
+                getActivity().finish();
                 return true;
             }
         });
@@ -43,6 +46,13 @@ public class FragmentThree extends PreferenceFragmentCompat {
                 return true;
             }
         });
+    }
+
+
+    protected void logOut() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefs.edit().remove("userID").commit();
+
     }
 
 
