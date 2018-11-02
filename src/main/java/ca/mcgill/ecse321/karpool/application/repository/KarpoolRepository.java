@@ -187,7 +187,11 @@ public class KarpoolRepository
 	public Trip getTripForPassenger(String name)
 	{
 		Passenger p = entityManager.find(Passenger.class, name);
-		Trip t = p.getTrip();
+//		Trip t = p.getTrip();
+//		return t;
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE :pass IN(SELECT passenger FROM trip)");
+		q.setParameter("pass", p);
+		Trip t = (Trip) q.getResultList().get(0);
 		return t;
 	}
 	
@@ -204,15 +208,15 @@ public class KarpoolRepository
 	{
 		Trip trip = entityManager.find(Trip.class, tripID);
 		trip.setTripComplete(true);
+		entityManager.merge(trip);
 	}
 	
 	@Transactional
 	public Trip addPassenger(Passenger p, Trip t)
 	{
-		t.addPassenger(p);;
+		t.addPassenger(p);
 		t.setSeatAvailable(t.getSeatAvailable()-1);
-//		entityManager.merge(t);
-//		entityManager.merge(p);
+		entityManager.merge(t);
 		return t;
 	}
 
