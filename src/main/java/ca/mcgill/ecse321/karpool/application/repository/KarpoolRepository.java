@@ -16,6 +16,18 @@ public class KarpoolRepository
 {
 	@PersistenceContext
 	private EntityManager entityManager;
+	
+	@Transactional
+	public Trip createTrip(String destination, String departureTime, String departureDate, String departureLocation, int seatAvailable) {
+		Trip trip = new Trip();
+		trip.setDestination(destination);
+		trip.setDepartureTime(departureTime);
+		trip.setDepartureDate(departureDate);
+		trip.setDepartureLocation(departureLocation);
+		trip.setSeatAvailable(seatAvailable);
+		entityManager.persist(trip);
+		return trip;
+	}
 
 	@Transactional
 	public Driver createDriver(String name, String email, String password, String phoneNumber, boolean criminalRecord){
@@ -41,6 +53,15 @@ public class KarpoolRepository
 		pass.setRecord(criminalRecord);
 		entityManager.persist(pass);
 		return pass;
+	}
+	
+	@Transactional
+	public void modifyTripLocation(Trip trip, String location) {
+		
+		trip.setDepartureLocation(location);
+		entityManager.merge(trip);
+		
+		
 	}
 	
 	@Transactional
@@ -73,17 +94,7 @@ public class KarpoolRepository
 		return passengers;
 	}
 
-	@Transactional
-	public Trip createTrip(String destination, String departureTime, String departureDate, String departureLocation, int seatAvailable) {
-		Trip trip = new Trip();
-		trip.setDestination(destination);
-		trip.setDepartureTime(departureTime);
-		trip.setDepartureDate(departureDate);
-		trip.setDepartureLocation(departureLocation);
-		trip.setSeatAvailable(seatAvailable);
-		entityManager.persist(trip);
-		return trip;
-	}
+
 	
 	@Transactional
 	public List<Integer> getTrips(String depart, String dest)
