@@ -7,16 +7,17 @@
     tools:layout_editor_absoluteY="25dp">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/createButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="7dp"
         android:text="@string/title_create"
         app:layout_constraintStart_toEndOf="@+id/timeLabel"
         app:layout_constraintTop_toBottomOf="@+id/dateLabel" />
 
     <EditText
-        android:id="@+id/modifyDestinationLabel"
+        android:id="@+id/newDestination"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="242dp"
@@ -27,46 +28,67 @@
         app:layout_constraintEnd_toEndOf="@+id/createLogo"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/tripTimeButton"
+    <EditText
+        android:id="@+id/newSeats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:text="@string/trip_time"
-        app:layout_constraintStart_toStartOf="@+id/modifyDestinationLabel"
-        app:layout_constraintTop_toBottomOf="@+id/modifyDestinationLabel" />
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="Seats"
+        android:inputType="text|textPersonName"
+        app:layout_constraintStart_toStartOf="@+id/newDestination"
+        app:layout_constraintTop_toBottomOf="@+id/newDestination" />
+
+    <EditText
+        android:id="@+id/newPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="9dp"
+        android:ems="10"
+        android:hint="Price"
+        android:inputType="text|textPersonName"
+        app:layout_constraintStart_toStartOf="@+id/newSeats"
+        app:layout_constraintTop_toBottomOf="@+id/newSeats" />
 
     <Button
-        android:id="@+id/tripDateButton"
+        android:id="@+id/newTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="6dp"
+        android:text="@string/trip_time"
+        app:layout_constraintStart_toStartOf="@+id/newPrice"
+        app:layout_constraintTop_toBottomOf="@+id/newPrice" />
+
+    <Button
+        android:id="@+id/newDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
         android:text="@string/trip_date"
-        app:layout_constraintEnd_toEndOf="@+id/modifyDestinationLabel"
-        app:layout_constraintTop_toBottomOf="@+id/modifyDestinationLabel" />
+        app:layout_constraintEnd_toEndOf="@+id/newPrice"
+        app:layout_constraintTop_toBottomOf="@+id/newPrice" />
 
     <TextView
         android:id="@+id/timeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginEnd="26dp"
+        android:layout_marginBottom="7dp"
         android:text="TextView"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/tripTimeButton"
-        app:layout_constraintTop_toBottomOf="@+id/tripTimeButton"
+        app:layout_constraintBottom_toTopOf="@+id/createButton"
+        app:layout_constraintEnd_toEndOf="@+id/newTime"
         tools:text="14:15" />
 
     <TextView
         android:id="@+id/dateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="7dp"
+        android:layout_marginTop="13dp"
         android:text="TextView"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/tripDateButton"
-        app:layout_constraintTop_toBottomOf="@+id/tripDateButton"
+        app:layout_constraintEnd_toEndOf="@+id/newDate"
+        app:layout_constraintTop_toBottomOf="@+id/newDate"
         tools:text="2018-10-30" />
 
     <ImageView
@@ -75,7 +97,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="12dp"
-        app:layout_constraintBottom_toTopOf="@+id/modifyDestinationLabel"
+        app:layout_constraintBottom_toTopOf="@+id/newDestination"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

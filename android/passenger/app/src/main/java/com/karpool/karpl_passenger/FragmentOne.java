@@ -197,9 +197,12 @@ public class FragmentOne extends Fragment {
                             String year = date.substring(0, 4);
                             String remainder = date.substring(4,8);
                             String time = obj.getString("departureTime");
+                            JSONObject driver = obj.getJSONObject("driver");
+                            String driverName = driver.getString("name");
+
 
                             tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2), obj.getString("driver"), obj.getString("seatAvailable"), obj.getString("tripId")));
+                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("tripId"))));
 
 
                         }
@@ -242,7 +245,8 @@ public class FragmentOne extends Fragment {
                             String time = obj.getString("departureTime");
 
                             tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2), obj.getString("driver"), obj.getString("seatAvailable"), obj.getString("tripId")));
+                                    formatter(time, ":", 2), obj.getJSONObject("driver").getString("name"), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("tripId"))));
+
 
                         }
                         updateVisibility(true, false);
