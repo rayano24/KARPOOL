@@ -17,6 +17,11 @@ public class TripActivity extends AppCompatActivity {
     static private Button tripButton;
     private final static String KEY_PAST_FRAGMENT = "pastFrag";
 
+    private final static String KEY_TRIP_DESTINATION = "tripDestination";
+    private final static String KEY_TRIP_TIME= "tripTime";
+    private final static String KEY_TRIP_DATE = "tripDate";
+    private final static String KEY_TRIP_ORIGIN = "tripOrigin";
+    private final static String KEY_TRIP_DRIVER = "searchDriver";
 
 
     @Override
@@ -24,6 +29,7 @@ public class TripActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
 
 
 
@@ -42,11 +48,24 @@ public class TripActivity extends AppCompatActivity {
         driverRating5 = (ImageView) findViewById(R.id.driverRating5);
 
         updateButton(prefs.getString(KEY_PAST_FRAGMENT, null));
+        tripDate.setText(prefs.getString(KEY_TRIP_DATE, null));
+        tripTime.setText(prefs.getString(KEY_TRIP_TIME, null));
+        tripDestination.setText(prefs.getString(KEY_TRIP_DESTINATION, null));
+        tripOrigin.setText(prefs.getString(KEY_TRIP_ORIGIN, null));
+        tripDriver.setText(prefs.getString(KEY_TRIP_DRIVER, null));
+        //tripSeats.setText(prefs.getString(KEY_TRIP_ORIGIN, null));
+
+
+
 
 
 
     }
 
+
+    private static void updateRating(int rating) {
+
+    }
 
     public static void updateButton(String currentFrag) {
         if(currentFrag.equals("JOIN")) {
