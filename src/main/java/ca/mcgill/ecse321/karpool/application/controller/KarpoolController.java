@@ -435,9 +435,15 @@ public class KarpoolController {
 			}
 			
 			//compares system time to departureTime
-			else if ((time1.compareTo(time2)) < 0) {
-				System.out.println("Cannot set a time that has already passed");
-				return null;
+			else if ((date1.compareTo(date2)) == 0) {
+				
+				if ((time1.compareTo(time2)) < 0) {
+					System.out.println(time1);
+					System.out.println(time2);
+					System.out.println("Cannot set a time that has already passed");
+					return null;
+				}
+				
 			}
 			
 		
