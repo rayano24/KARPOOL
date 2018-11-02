@@ -28,6 +28,9 @@
             android:label="@string/title_activity_main">
             android:theme="@style/AppTheme"</activity>
     <activity android:name=".TripActivity"></activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCtxPYabBAtyc-UeIypzWzueluES8KOQGY"/>
     </application>
 
 </manifest>

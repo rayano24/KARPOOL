@@ -19,7 +19,7 @@ public class KarpoolRepository
 	private EntityManager entityManager;
 	
 	@Transactional
-	public Trip createTrip(Driver driver, String destination, String departureTime, String departureDate, String departureLocation, int seatAvailable) {
+	public Trip createTrip(Driver driver, String destination, String departureTime, String departureDate, String departureLocation, int seatAvailable, int price) {
 		Trip trip = new Trip();
 		trip.setDriver(driver);
 		trip.setDestination(destination);
@@ -28,6 +28,7 @@ public class KarpoolRepository
 		trip.setDepartureLocation(departureLocation);
 		trip.setSeatAvailable(seatAvailable);
 		trip.setTripComplete(false);
+		trip.setPrice(price);
 		entityManager.persist(trip);
 		return trip;
 	}
@@ -187,6 +188,14 @@ public class KarpoolRepository
 	{
 		Passenger p = entityManager.find(Passenger.class, name);
 		Trip t = p.getTrip();
+		return t;
+	}
+	
+	@Transactional
+	public Set<Trip> getTripForDriver(String name)
+	{
+		Driver d = entityManager.find(Driver.class, name);
+		Set <Trip> t = d.getTrip();
 		return t;
 	}
 	

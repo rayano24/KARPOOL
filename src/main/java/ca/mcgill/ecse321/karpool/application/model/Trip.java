@@ -45,10 +45,21 @@ public class Trip
 	}
 
 	private int seatAvailable;
-
+	
+	private int price;
+	
+	public void setPrice(int price) {
+		this.price = price;
+	}
+	
+	public float getPrice() {
+		return this.price;
+	}
+	
 	public void setSeatAvailable(int value) {
 		this.seatAvailable = value;
 	}
+
 
 	public int getSeatAvailable() {
 		return this.seatAvailable;
