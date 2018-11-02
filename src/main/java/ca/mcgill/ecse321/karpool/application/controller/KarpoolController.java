@@ -396,7 +396,7 @@ public class KarpoolController {
 	 * @throws ParseException 
 	 */
 	@PostMapping("/trips/{location}/{destination}/{seats}/{time}/{date}")
-	public Trip createTrip (@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
+	public Trip createTrip(@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
 			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate) throws ParseException
 	{
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -585,7 +585,7 @@ public class KarpoolController {
 		//need to check if rating is a valid rating
 		try {
 			Driver d = repository.getDriver(name);
-			d.setRating(rating);
+			repository.setDriverRating(d, rating);
 
 		}
 		catch (NullPointerException e) {
@@ -606,7 +606,7 @@ public class KarpoolController {
 		//need to check if rating is a valid rating
 		try {
 			Passenger p = repository.getPassenger(name);
-			p.setRating(rating);
+			repository.setPassengerRating(p, rating);
 
 		}
 		catch (NullPointerException e) {
@@ -614,6 +614,80 @@ public class KarpoolController {
 		}
 
 	}
+	
+	//modification methods start
+	@PostMapping("/trips/{tripID}/date/{date}")
+	public void modifyTripDate(@PathVariable("trip")int tripID, @PathVariable("date")String departureDate) {
+	
+		try {
+			Trip t = repository.getSpecificTrip(tripID);
+			Trip t1 = repository.getSpecificTrip(tripID);
+			repository.modifyDepartureDate(t, departureDate);
+			
+			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			}
+			
+	}
+	@PostMapping("/trips/{tripID}/time/{time}")
+	public void modifyTripTime(@PathVariable("trip")int tripID, @PathVariable("time")String departureTime) {
+	
+		try {
+			Trip t = repository.getSpecificTrip(tripID);
+			Trip t1 = repository.getSpecificTrip(tripID);
+			repository.modifyDepartureTime(t, departureTime);
+			
+			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			}
+			
+	}
+
+	@PostMapping("/trips/{tripID}/triplocation/{location}")
+	public void modifyTripLocation(@PathVariable("tripID")int tripID, @PathVariable("location")String departureLocation) {
+	
+		try {
+		Trip t = repository.getSpecificTrip(tripID);
+		Trip t1 = repository.getSpecificTrip(tripID);
+		repository.modifyTripLocation(t, departureLocation);
+		
+		System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
+		} catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
+			
+	}
+	@PostMapping("/trips/{tripID}/tripdestination/{destination}")
+	public void modifyTripDestination(@PathVariable("trip")int tripID, @PathVariable("destination")String destination) {
+	
+		try {
+			Trip t = repository.getSpecificTrip(tripID);
+			Trip t1 = repository.getSpecificTrip(tripID);
+			repository.modifyTripDestination(t, destination);
+			
+			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			}
+			
+	}
+	@PostMapping("/trips/{tripID}/seats/{seats}")
+	public void modifyTripSeats(@PathVariable("trip")int tripID, @PathVariable("seats")int seatAvailable) {
+	
+		try {
+			Trip t = repository.getSpecificTrip(tripID);
+			Trip t1 = repository.getSpecificTrip(tripID);
+			repository.modifySeatAvailable(t, seatAvailable);
+			
+			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			}
+			
+	}
+	//modificaiton methods end
 
 	
 	/**
