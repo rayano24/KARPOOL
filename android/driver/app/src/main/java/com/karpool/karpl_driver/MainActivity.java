@@ -1,6 +1,10 @@
 package com.karpool.karpl_driver;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -29,6 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private List<String> eventNames = new ArrayList<>();
     private ArrayAdapter<String> eventAdapter;
     private static final String error = null; //error handling
+
+
+
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -63,6 +70,36 @@ public class MainActivity extends AppCompatActivity {
 
 
         switchFragment(0, TAG_FRAGMENT_CREATE);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean previouslyStarted = prefs.getBoolean("prevStarted", false);
+        if(!previouslyStarted)
+
+        {
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putBoolean("prevStarted", Boolean.TRUE);
+            edit.commit();
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+
+            alert.setTitle("Notice");
+            alert.setMessage("Don't forget to set your location in the settings menu");
+
+
+
+
+            alert.setNegativeButton("Got it", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    // Canceled.
+                }
+            });
+
+            alert.show();
+        }
+
+
+
 
 
 

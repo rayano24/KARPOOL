@@ -5,7 +5,9 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -21,14 +23,30 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Text;
 
 import java.util.Calendar;
 
+import cz.msebera.android.httpclient.Header;
+
 public class TripActivity extends AppCompatActivity {
 
+    private final static String KEY_TRIP_DESTINATION = "tripDestination";
+    private final static String KEY_TRIP_TIME = "tripTime";
+    private final static String KEY_TRIP_DATE = "tripDate";
+    private final static String KEY_TRIP_ORIGIN = "tripOrigin";
+    private final static String KEY_TRIP_DRIVER = "searchDriver";
+    private final static String KEY_TRIP_SEATS = "searchSeats";
+    private final static String KEY_TRIP_ID = "tripID";
+    private final static String KEY_USER_ID = "userID";
+    private final static String KEY_USER_LOCATION = "userLocation";
+    private static String userID, tripID, userLocation;
 
-    // TODO I think i will need to implement this myself once you guys figure out other database stuff since it involves sharedPreferences
 
     private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats;
     private static TextView modifyDate, modifyTime;
@@ -38,6 +56,7 @@ public class TripActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 
         modifyOrigin = (TextView) findViewById(R.id.modifyTripOrigin);
@@ -48,6 +67,23 @@ public class TripActivity extends AppCompatActivity {
         modifySeats = (TextView) findViewById(R.id.modifyTripSeats);
 
 
+        tripID = prefs.getString(KEY_TRIP_ID, null);
+        userID = prefs.getString(KEY_USER_ID, null);
+
+
+        String date = (prefs.getString(KEY_TRIP_DATE, null));
+
+        String year = date.substring(0, 4);
+        String remainder = date.substring(4, 8);
+        String time = prefs.getString(KEY_TRIP_TIME, null);
+
+        modifyTime.setText(formatter(time, ":", 2));
+        modifyDate.setText(year + "-" + formatter(remainder, "-", 2)
+        );
+        modifyDestination.setText(prefs.getString(KEY_TRIP_DESTINATION, null));
+        modifyOrigin.setText(prefs.getString(KEY_TRIP_ORIGIN, null));
+        modifySeats.setText(prefs.getString(KEY_TRIP_SEATS, null));
+
 
         modifyOrigin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -57,11 +93,10 @@ public class TripActivity extends AppCompatActivity {
 
         modifyDestination.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                modifyPopUp("destination", modifyDestination);
+                updateDestination( modifyDestination);
 
             }
         });
-
 
 
         modifyDate.setOnClickListener(new View.OnClickListener() {
@@ -81,7 +116,7 @@ public class TripActivity extends AppCompatActivity {
 
         modifyPrice.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                modifyPopUp("price", modifyPrice);
+                updatePrice( modifyPrice);
 
 
             }
@@ -89,21 +124,47 @@ public class TripActivity extends AppCompatActivity {
 
         modifySeats.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                modifyPopUp("seats", modifySeats);
+                updateSeats(modifySeats);
 
 
             }
         });
 
 
+    }
 
+    /**
+     * Used for date and time formatting
+     *
+     * @param text   the string you want to format
+     * @param insert the character to insert
+     * @param n      insert every n characters
+     * @return
+     */
+    public static String formatter(
+            String text, String insert, int n) {
+        StringBuilder builder = new StringBuilder(
+                text.length() + insert.length() * (text.length() / n) + 1);
 
+        int index = 0;
+        String prefix = "";
+        while (index < text.length()) {
 
+            builder.append(prefix);
+            prefix = insert;
+            builder.append(text.substring(index,
+                    Math.min(index + n, text.length())));
+            index += n;
+        }
+        return builder.toString();
     }
 
 
-
-    private void modifyPopUp(String type, TextView text) {
+    /**
+     * Updates the price
+     * @param text
+     */
+    private void updatePrice(TextView text) {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
@@ -111,24 +172,115 @@ public class TripActivity extends AppCompatActivity {
         final TextView updateInput = text;
 
 
-        switch(type) {
-            case "price":
-                alert.setTitle("Price");
-                alert.setMessage("Update your trip's price");
-                input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                break;
-            case "seats":
-                alert.setTitle("Seats");
-                alert.setMessage("Update your vehicle's capacity");
-                input.setInputType(InputType.TYPE_CLASS_NUMBER);
-                break;
-            case "destination":
-                alert.setTitle("Destination");
-                alert.setMessage("Update your trip's destination");
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                break;
+        alert.setTitle("Price");
+        alert.setMessage("Update your trip's price");
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
 
-        }
+
+        alert.setView(input);
+
+        alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                updateInput.setText(input.getText());
+                // TODO
+
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+
+
+    }
+
+    /**
+     * Updates seats
+     * @param text
+     */
+    private void updateSeats(TextView text) {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        final EditText input = new EditText(this);
+        final TextView updateInput = text;
+
+
+        alert.setTitle("Seats");
+        alert.setMessage("Update your vehicle's capacity");
+        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+
+        alert.setView(input);
+
+
+
+                alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                updateInput.setText(input.getText());
+             /*  HttpUtils.post("trips/" + tripID + "/" + "seats" + "/" + Integer.parseInt(input.getText().toString()), new RequestParams(), new JsonHttpResponseHandler() {
+                    @Override
+                    public void onFinish() {
+                    }
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+
+
+                            }
+                            else {
+
+                            }
+
+
+
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+
+                    }
+                }); */
+
+
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // Canceled.
+            }
+        });
+
+        alert.show();
+
+
+    }
+
+    /**
+     * Updates destination
+     * @param text
+     */
+    private void updateDestination(TextView text) {
+
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        final EditText input = new EditText(this);
+        final TextView updateInput = text;
+
+        alert.setTitle("Destination");
+        alert.setMessage("Update your trip's destination");
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+
 
         alert.setView(input);
 
@@ -146,7 +298,6 @@ public class TripActivity extends AppCompatActivity {
         });
 
         alert.show();
-
 
 
     }
@@ -172,7 +323,8 @@ public class TripActivity extends AppCompatActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             time = convertDate(hourOfDay) + convertDate(minute);
             modifyTime.setText(convertDate(hourOfDay) + ":" + convertDate(minute));
-            modifyTime.setVisibility(View.VISIBLE);        }
+            modifyTime.setVisibility(View.VISIBLE);
+        }
 
 
     }
@@ -200,7 +352,7 @@ public class TripActivity extends AppCompatActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             date = Integer.toString(year) + convertDate(month) + convertDate(day);
-            modifyDate.setText(Integer.toString(year) + "-" +  convertDate(month) + "-" +  convertDate(day));
+            modifyDate.setText(Integer.toString(year) + "-" + convertDate(month) + "-" + convertDate(day));
             modifyDate.setVisibility(View.VISIBLE);
         }
     }
@@ -212,8 +364,6 @@ public class TripActivity extends AppCompatActivity {
             return "0" + String.valueOf(input);
         }
     }
-
-
 
 
 }

@@ -115,18 +115,18 @@ public class FragmentOne extends Fragment {
     }
 
 
-    private void createTrip(String userID, String userLocation, String destination, String seats, String time, String Date, String price) {
+    private void createTrip(String userID, String userLocation, String destination, String seats, String Time, String Date, String price) {
 
 
 
-                HttpUtils.get("trips/" + userID + "/" + userLocation + "/" + destination + "/" + seats + "/" + time + "/" + date + "/" + price, new RequestParams(), new JsonHttpResponseHandler() {
+                HttpUtils.post("trips/" + userID + "/" + userLocation + "/" + destination + "/" + Integer.parseInt(seats) + "/" + Time + "/" + Date + "/" + Integer.parseInt(price), new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onFinish() {
             }
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    if (response.getBoolean("response") == true) {
+                    if (!response.getString("trips").equals(null)) {
                         clearFields();
                         Toast.makeText(getActivity(), "The trip was successfully created", Toast.LENGTH_SHORT).show();
 

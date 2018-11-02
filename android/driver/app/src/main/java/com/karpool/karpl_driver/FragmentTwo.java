@@ -1,7 +1,9 @@
 package com.karpool.karpl_driver;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -36,13 +38,27 @@ public class FragmentTwo extends Fragment {
     private TextView noTrips;
 
     private String userID = "hey";
-    // TODO The logic I am going for here: When the user logs in, their account ID will be saved through sharedPreferences (will add this when you guys figure out databases). This will be used for loading their trips.
+    private final static String KEY_LOCATION = "userLocation";
+    private final static String KEY_TRIP_DESTINATION = "tripDestination";
+    private final static String KEY_TRIP_TIME= "tripTime";
+    private final static String KEY_TRIP_DATE = "tripDate";
+    private final static String KEY_TRIP_ORIGIN = "tripOrigin";
+    private final static String KEY_TRIP_SEATS = "searchSeats";
+    private final static String KEY_TRIP_ID = "tripID";
+    private final static String KEY_USER = "userID";
+
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_two, container, false);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        userID = prefs.getString(KEY_USER, null);
+
+
+
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.myTripsRecyclerView);
@@ -57,14 +73,22 @@ public class FragmentTwo extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
 
+
         // Click listener for trip selection
         // TODO open and populate the trip activity when this is selected
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), mRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
                 Trip trip = tripsList.get(position);
+                prefs.edit().putString(KEY_TRIP_DATE, trip.getDate()).commit();
+                prefs.edit().putString(KEY_TRIP_DESTINATION, trip.getDestination()).commit();
+                prefs.edit().putString(KEY_TRIP_ORIGIN, trip.getOrigin()).commit();
+                prefs.edit().putString(KEY_TRIP_TIME, trip.getTime()).commit();
+                prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
+                prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
                 startActivity(I);
+
 
             }
 
@@ -78,13 +102,17 @@ public class FragmentTwo extends Fragment {
         prepareTripData(userID);
 
 
+
+        prepareTripData(userID);
+
+
         return rootView;
     }
 
     /**
      * Updates the trip information
      */
-    private void prepareTripData(String destination) {
+    private void prepareTripData(String userID) {
 
         tripsList.clear();
 
@@ -106,12 +134,12 @@ public class FragmentTwo extends Fragment {
 
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject obj = response.getJSONObject(i);
-                            String date = obj.getString("departureDate");
-                            String year = date.substring(0, 4);
-                            String remainder = date.substring(4,8);
-                            String time = obj.getString("departureTime");
-                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2)));
+                             String date = response.getString("departureDate");
+                        String year = date.substring(0, 4);
+                        String remainder = date.substring(4,8);
+                        String time = response.getString("departureTime");
+                        tripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                formatter(time, ":", 2), response.getString("driver"), response.getString("seatAvailable"), response.getString("tripId")));
                         }
                         updateVisibility(true, false);
                     } catch (JSONException e) {
