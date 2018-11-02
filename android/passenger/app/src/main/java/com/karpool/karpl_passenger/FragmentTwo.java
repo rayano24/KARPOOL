@@ -59,7 +59,6 @@ public class FragmentTwo extends Fragment {
 
 
     private String userID;
-    // TODO The logic I am going for here: When the user logs in, their account ID will be saved through sharedPreferences (will add this when you guys figure out databases). This will be used for loading their trips.
 
 
 

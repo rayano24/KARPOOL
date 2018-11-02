@@ -28,11 +28,11 @@
         android:key="signOut"/>
 
 
-    <Preference android:title="@string/action_help"
+    <!-- <Preference android:title="@string/action_help"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:key="help"/>
+        android:key="help"/> -->
 
 
 

@@ -66,7 +66,7 @@ public class FragmentOne extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        userLocation = prefs.getString(KEY_LOCATION, null).trim();
+        userLocation = prefs.getString(KEY_LOCATION, null);
         prefs.edit().putString(KEY_PAST_FRAGMENT, "JOIN").commit();
 
 

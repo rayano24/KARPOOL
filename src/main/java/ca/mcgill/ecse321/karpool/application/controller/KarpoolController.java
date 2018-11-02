@@ -686,6 +686,20 @@ public class KarpoolController {
 			}
 			
 	}
+	@PostMapping("/trips/{tripID}/tripprice/{price}")
+	public void modifyTripPrice(@PathVariable("trip")int tripID, @PathVariable("price")int price) {
+	
+		try {
+			Trip t = repository.getSpecificTrip(tripID);
+			Trip t1 = repository.getSpecificTrip(tripID);
+			repository.modifyTripPrice(t, price);
+			
+			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			}
+			
+	}
 	@PostMapping("/trips/{tripID}/seats/{seats}")
 	public void modifyTripSeats(@PathVariable("trip")int tripID, @PathVariable("seats")int seatAvailable) {
 	

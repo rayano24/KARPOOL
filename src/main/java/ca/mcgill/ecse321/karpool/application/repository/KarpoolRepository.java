@@ -75,6 +75,13 @@ public class KarpoolRepository
 		
 	}
 	@Transactional
+	public void modifyTripPrice(Trip trip, int price) {
+		
+		trip.setPrice(price);
+		entityManager.merge(trip);
+		
+	}
+	@Transactional
 	public void modifyDepartureTime(Trip trip, String departureTime) {
 		
 		trip.setDepartureTime(departureTime);
