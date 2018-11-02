@@ -172,7 +172,7 @@ public class KarpoolRepository
 	@Transactional
 	public List<Integer> getSortedTripsTime(String start, String finish) 
 	{
-		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE departure_location= :departure AND destination= :destination ORDER BY departure_time");
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE departure_location= :departure AND destination= :destination ORDER BY departure_date");
 		q.setParameter("departure", start);
 		q.setParameter("destination", finish);
 		@SuppressWarnings("unchecked")

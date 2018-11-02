@@ -156,20 +156,75 @@ public class FragmentOne extends Fragment {
 
         final String mLocation = userLocation;
         final String mDestination = destination;
-        
 
+        if(searchSpinner.getSelectedItem().toString().contentEquals("Time (Ascending)")) {
+            HttpUtils.get("trips/" + userLocation + "/" + destination, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public void onFinish() {
 
-        if (destination.equals("Compton")) {
-            tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "15:00"));
-            tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "18:00"));
-            tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "22:00"));
+                }
 
-            updateVisibility(true, false);
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    try {
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject obj = response.getJSONObject(i);
+                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), obj.getString("departureDate"),
+                                    obj.getString("departureTime")));
+                        }
+                        updateVisibility(true, false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
 
-        } else {
-            updateVisibility(false, true);
-
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    updateVisibility(false, true);
+                }
+            });
         }
+
+        else {
+            HttpUtils.get("trips/" + userLocation + "/" + destination + "/date", new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public void onFinish() {
+
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    try {
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject obj = response.getJSONObject(i);
+                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), obj.getString("departureDate"),
+                                    obj.getString("departureTime")));
+                        }
+                        updateVisibility(true, false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    updateVisibility(false, true);
+                }
+            });
+        }
+
+
+//        if (destination.equals("Compton")) {
+//            tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "15:00"));
+//            tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "18:00"));
+//            tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "22:00"));
+//
+//            updateVisibility(true, false);
+//
+//        } else {
+//            updateVisibility(false, true);
+//
+//        }
 
 
         mAdapter.notifyDataSetChanged();

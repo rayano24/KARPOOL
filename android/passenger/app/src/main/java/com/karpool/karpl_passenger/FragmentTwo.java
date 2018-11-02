@@ -98,7 +98,7 @@ public class FragmentTwo extends Fragment {
     private void prepareUserTripData(String user) {
         // TODO Same logic as fragment 1 but we are just adding trips based on UserID
         tripsList.clear();
-        
+
         HttpUtils.get("trips/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onFinish() {
@@ -108,7 +108,8 @@ public class FragmentTwo extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    tripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"), response.getString("departureDate"), response.getString("departureTime")));
+                    tripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"),
+                            response.getString("departureDate"), response.getString("departureTime")));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
