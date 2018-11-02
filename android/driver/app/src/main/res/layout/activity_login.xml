@@ -62,12 +62,12 @@
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/signInEmail"
+                    android:id="@+id/signInName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
-                    android:hint="@string/prompt_email"
-                    android:inputType="textEmailAddress"
+                    android:hint="@string/prompt_name"
+                    android:inputType="textPersonName"
                     android:visibility="gone" />
             </android.support.design.widget.TextInputLayout>
 
@@ -161,6 +161,14 @@
                     android:ems="10"
                     android:hint="@string/prompt_password"
                     android:inputType="textPassword"
+                    android:visibility="gone" />
+
+                <CheckBox
+                    android:id="@+id/criminalRecord"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/disclaimer_record"
                     android:visibility="gone" />
             </android.support.design.widget.TextInputLayout>
 

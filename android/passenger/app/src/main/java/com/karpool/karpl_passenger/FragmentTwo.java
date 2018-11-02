@@ -1,6 +1,8 @@
 package com.karpool.karpl_passenger;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -37,7 +39,10 @@ public class FragmentTwo extends Fragment {
 
     private TextView noTrips;
 
-    private String userID = "hey";
+    private final static String KEY_USER = "userID";
+
+
+    private String userID;
     // TODO The logic I am going for here: When the user logs in, their account ID will be saved through sharedPreferences (will add this when you guys figure out databases). This will be used for loading their trips.
 
 
@@ -46,6 +51,9 @@ public class FragmentTwo extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_two, container, false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        userID = prefs.getString(KEY_USER, null);
+
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.myTripsRecyclerView);
@@ -91,7 +99,7 @@ public class FragmentTwo extends Fragment {
         // TODO Same logic as fragment 1 but we are just adding trips based on UserID
         tripsList.clear();
 
-        
+
 
         // trips
         tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "18:00"));
