@@ -570,28 +570,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
-            HttpUtils.get("passengers/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, Boolean response) {
-                    if(response == true)
-                    {
-
-                    }
-                    else
-                    {
-                        
-                    }
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    try {
-                        error += errorResponse.get("message").toString();
-                    } catch (JSONException e) {
-                        error += e.getMessage();
-                    }
-                    refreshErrorMessage();
-                }
-            });
 
             return true;
 

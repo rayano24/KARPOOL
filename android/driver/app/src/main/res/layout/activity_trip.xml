@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    tools:layout_editor_absoluteY="25dp">
+    tools:context=".TripActivity">
+
+
+    <TextView
+        android:id="@+id/modifyOriginLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="133dp"
+        android:text="@string/trip_origin"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintEnd_toStartOf="@+id/modifyTripOrigin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider7" />
+
+    <TextView
+        android:id="@+id/modifyDestinationLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="60dp"
+        android:text="@string/trip_destination"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toStartOf="@+id/modifyTripDestination"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <TextView
+        android:id="@+id/modifyPriceLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="202dp"
+        android:text="@string/trip_price"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider3"
+        app:layout_constraintEnd_toStartOf="@+id/modifyTripPrice"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+    <TextView
+        android:id="@+id/modifySeatsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="213dp"
+        android:layout_marginBottom="1dp"
+        android:text="@string/trip_seats"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider4"
+        app:layout_constraintEnd_toStartOf="@+id/modifyTripSeats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider3" />
+
+    <TextView
+        android:id="@+id/modifyTripOrigin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="Montreal"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/modifyOriginLabel" />
+
+    <TextView
+        android:id="@+id/modifyTripDestination"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="Compton"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/modifyDestinationLabel"
+        app:layout_constraintTop_toBottomOf="@+id/divider" />
+
+    <TextView
+        android:id="@+id/modifyTripPrice"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="55dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="$100"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/modifyPriceLabel"
+        app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+    <TextView
+        android:id="@+id/modifyTripSeats"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="66dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="6"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/modifySeatsLabel" />
+
+    <TextView
+        android:id="@+id/modifyTripDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="15-10-2018"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/modifyDateLabel"
+        app:layout_constraintTop_toBottomOf="@+id/divider4" />
+
+    <TextView
+        android:id="@+id/modifyTripTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:gravity="center"
+        android:text="20:00"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/modifyTimeLabel"
+        app:layout_constraintTop_toBottomOf="@+id/modifyTripDate" />
+
+    <TextView
+        android:id="@+id/modifyDateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="166dp"
+        android:text="@string/trip_date"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider5"
+        app:layout_constraintEnd_toStartOf="@+id/modifyTripDate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider4" />
+
+    <TextView
+        android:id="@+id/modifyTimeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="203dp"
+        android:text="@string/trip_time"
+        android:textColor="@color/colorAccent"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/divider6"
+        app:layout_constraintEnd_toStartOf="@+id/modifyTripTime"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider5" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/modifyTripDestination"
+        app:layout_constraintEnd_toEndOf="@+id/divider2"
+        app:layout_constraintStart_toStartOf="@+id/modifyOriginLabel"
+        app:layout_constraintTop_toBottomOf="@+id/modifyOriginLabel" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/modifyPriceLabel"
+        app:layout_constraintEnd_toEndOf="@+id/divider3"
+        app:layout_constraintStart_toStartOf="@+id/modifyDestinationLabel"
+        app:layout_constraintTop_toBottomOf="@+id/modifyTripDestination" />
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/modifySeatsLabel"
+        app:layout_constraintEnd_toEndOf="@+id/divider4"
+        app:layout_constraintStart_toStartOf="@+id/modifyPriceLabel"
+        app:layout_constraintTop_toBottomOf="@+id/modifyPriceLabel" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/modifyDateLabel"
+        app:layout_constraintEnd_toEndOf="@+id/divider5"
+        app:layout_constraintStart_toStartOf="@+id/modifyDateLabel"
+        app:layout_constraintTop_toBottomOf="@+id/modifySeatsLabel" />
+
+    <View
+        android:id="@+id/divider5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/modifyTimeLabel"
+        app:layout_constraintStart_toStartOf="@+id/modifyDateLabel"
+        app:layout_constraintTop_toBottomOf="@+id/modifyDateLabel" />
+
+    <View
+        android:id="@+id/divider6"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="23dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/deleteButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/modifyTimeLabel" />
+
+    <View
+        android:id="@+id/divider7"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="125dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintBottom_toTopOf="@+id/modifyOriginLabel"
+        app:layout_constraintEnd_toEndOf="@+id/divider"
+        app:layout_constraintStart_toStartOf="@+id/modifyOriginLabel"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="27dp"
+        android:layout_marginBottom="308dp"
+        android:text="@string/trip_delete"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/modifyTripTime"
+        app:layout_constraintTop_toBottomOf="@+id/divider6" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="55dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/modifyTripOrigin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_transparent" />
+
+</android.support.constraint.ConstraintLayout>
