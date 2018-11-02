@@ -49,8 +49,6 @@ public class FragmentOne extends Fragment {
     String userLocation;
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,9 +57,6 @@ public class FragmentOne extends Fragment {
 
         userLocation = prefs.getString(KEY_LOCATION, null);
         prefs.edit().putString(KEY_PAST_FRAGMENT, "JOIN").commit();
-
-
-
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
@@ -91,7 +86,7 @@ public class FragmentOne extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 sortSelection = searchSpinner.getSelectedItem().toString();
-                if(!citySearch.getQuery().toString().isEmpty()) {
+                if (!citySearch.getQuery().toString().isEmpty()) {
                     prepareTripData(citySearch.getQuery().toString());
                 }
             }
@@ -156,26 +151,34 @@ public class FragmentOne extends Fragment {
 
         // TODO Regarding sorting, you use the spinner, to get the spinner selection do, searchSpinner.getSelectedItem().toString(); (output is the string). I already handled this though. Just do if sortSelection is equal to the specific category
         // An external method could be needed
+
         tripsList.clear();
 
 
-        final String mLocation = userLocation;
-        final String mDestination = destination;
 
-        if(searchSpinner.getSelectedItem().toString().contentEquals("Time (Ascending)")) {
+        if (searchSpinner.getSelectedItem().toString().contentEquals("Time (Ascending)")) {
+
+
             HttpUtils.get("trips/" + userLocation + "/" + destination, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public void onFinish() {
-
+                    updateVisibility(false, true);
                 }
-
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     try {
+
+                        tripsList.clear();
+
+
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject obj = response.getJSONObject(i);
-                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), obj.getString("departureDate"),
-                                    obj.getString("departureTime")));
+                            String date = obj.getString("departureDate");
+                            String year = date.substring(0, 4);
+                            String remainder = date.substring(4,8);
+                            String time = obj.getString("departureTime");
+                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                    formatter(time, ":", 2)));
                         }
                         updateVisibility(true, false);
                     } catch (JSONException e) {
@@ -186,24 +189,38 @@ public class FragmentOne extends Fragment {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     updateVisibility(false, true);
+                    tripsList.clear();
+
                 }
             });
-        }
+        } else  {
 
-        else {
+
+
             HttpUtils.get("trips/" + userLocation + "/" + destination + "/date", new RequestParams(), new JsonHttpResponseHandler() {
+
                 @Override
                 public void onFinish() {
-
+                    updateVisibility(false, true);
                 }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     try {
+
+                        tripsList.clear();
+
                         for (int i = 0; i < response.length(); i++) {
+
                             JSONObject obj = response.getJSONObject(i);
-                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), obj.getString("departureDate"),
-                                    obj.getString("departureTime")));
+                            String date = obj.getString("departureDate");
+                            String year = date.substring(0, 4);
+                            String remainder = date.substring(4,8);
+                            String time = obj.getString("departureTime");
+
+                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                    formatter(time, ":", 2)));
+
                         }
                         updateVisibility(true, false);
                     } catch (JSONException e) {
@@ -214,31 +231,18 @@ public class FragmentOne extends Fragment {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     updateVisibility(false, true);
+                    tripsList.clear();
                 }
             });
         }
-
-
-//        if (destination.equals("Compton")) {
-//            tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "15:00"));
-//            tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "18:00"));
-//            tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "22:00"));
-//
-//            updateVisibility(true, false);
-//
-//        } else {
-//            updateVisibility(false, true);
-//
-//        }
 
 
         mAdapter.notifyDataSetChanged();
     }
 
     /**
-     *
      * @param displayTrips if true, display recycler view
-     * @param isError if true, display invalid city error
+     * @param isError      if true, display invalid city error
      */
     private void updateVisibility(boolean displayTrips, boolean isError) {
         if (displayTrips) {
@@ -252,6 +256,32 @@ public class FragmentOne extends Fragment {
             }
         }
 
+    }
+
+    /**
+     * Used for date and time formatting
+     *
+     * @param text   the string you want to format
+     * @param insert the character to insert
+     * @param n      insert every n characters
+     * @return
+     */
+    public static String formatter(
+            String text, String insert, int n) {
+        StringBuilder builder = new StringBuilder(
+                text.length() + insert.length() * (text.length() / n) + 1);
+
+        int index = 0;
+        String prefix = "";
+        while (index < text.length()) {
+
+            builder.append(prefix);
+            prefix = insert;
+            builder.append(text.substring(index,
+                    Math.min(index + n, text.length())));
+            index += n;
+        }
+        return builder.toString();
     }
 
 }

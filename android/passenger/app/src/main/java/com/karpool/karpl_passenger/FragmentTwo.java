@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -64,6 +65,7 @@ public class FragmentTwo extends Fragment {
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.myTripsRecyclerView);
         noTrips = (TextView) rootView.findViewById(R.id.noTrips);
+
 
 
 
@@ -131,15 +133,6 @@ public class FragmentTwo extends Fragment {
                 }
             }
         });
-
-        // trips
-//        tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "18:00"));
-
-
-        // if user has no trips
-        noTrips.setVisibility(View.VISIBLE);
-
-
 
 
 

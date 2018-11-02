@@ -11,7 +11,6 @@ import android.widget.TextView;
 public class TripActivity extends AppCompatActivity {
 
 
-    // TODO I think i will need to implement this myself once you guys figure out other database stuff since it involves sharedPreferences
 
     private ImageView driverRating1, driverRating2, driverRating3, driverRating4, driverRating5;
     private TextView tripOrigin, tripDestination, tripDriver, tripDate, tripTime, tripPrice;
