@@ -12,46 +12,77 @@
 
     <TextView
         android:id="@+id/tripOrigin"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="3dp"
         android:layout_marginTop="47dp"
+        android:layout_marginEnd="4dp"
+        android:gravity="center"
         android:text="Montreal"
         android:textSize="30sp"
+        app:layout_constraintEnd_toStartOf="@+id/tripArrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tripDestination"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="47dp"
-        android:layout_marginEnd="28dp"
+        android:gravity="center"
         android:text="Compton"
         android:textSize="30sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tripArrow"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/tripArrow" />
 
     <TextView
         android:id="@+id/tripDriver"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:layout_marginEnd="28dp"
+        android:gravity="center"
         android:text="Ajay Patel"
-        android:textSize="25sp"
+        android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/driverLabel"
         app:layout_constraintTop_toBottomOf="@+id/tripDestination" />
 
     <TextView
-        android:id="@+id/tripPrice"
-        android:layout_width="wrap_content"
+        android:id="@+id/tripSeats"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="66dp"
+        android:gravity="center"
+        android:text="10"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/seatsLabel"
+        app:layout_constraintTop_toBottomOf="@+id/tripRating" />
+
+    <TextView
+        android:id="@+id/tripRating"
+        android:layout_width="60dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="4.98/5"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="@+id/tripDriver"
+        app:layout_constraintStart_toStartOf="@+id/tripDriver"
+        app:layout_constraintTop_toBottomOf="@+id/tripDriver" />
+
+    <TextView
+        android:id="@+id/tripPrice"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="17dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center"
         android:text="$50"
         android:textColor="@color/colorAccent"
         android:textSize="25sp"
         app:layout_constraintBottom_toTopOf="@+id/tripDate"
+        app:layout_constraintEnd_toEndOf="@+id/joinButton"
         app:layout_constraintStart_toStartOf="@+id/tripDate" />
 
     <TextView
@@ -59,7 +90,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="6dp"
-        android:layout_marginBottom="43dp"
+        android:layout_marginBottom="38dp"
         android:text="10-31-2018"
         android:textColor="@color/colorAccent"
         android:textSize="15sp"
@@ -70,99 +101,59 @@
         android:id="@+id/tripTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="19dp"
+        android:layout_marginEnd="19dp"
         android:text="15:00"
         android:textColor="@color/colorAccent"
         android:textSize="15sp"
-        app:layout_constraintStart_toStartOf="@+id/tripDate"
+        app:layout_constraintEnd_toEndOf="@+id/tripDate"
         app:layout_constraintTop_toBottomOf="@+id/tripDate" />
 
     <Button
         android:id="@+id/joinButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="316dp"
+        android:layout_marginStart="32dp"
         android:text="@string/trip_join"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/seatsLabel"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tripArrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="35dp"
+        android:layout_marginEnd="5dp"
         android:text="→	"
         android:textColor="@color/colorAccent"
         android:textSize="35sp"
-        app:layout_constraintBaseline_toBaselineOf="@+id/tripDestination"
-        app:layout_constraintEnd_toStartOf="@+id/tripDestination" />
+        app:layout_constraintBaseline_toBaselineOf="@+id/tripOrigin"
+        app:layout_constraintEnd_toStartOf="@+id/tripDestination"
+        app:layout_constraintStart_toEndOf="@+id/tripOrigin" />
 
     <TextView
         android:id="@+id/driverLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="53dp"
         android:layout_marginTop="32dp"
+        android:layout_marginEnd="101dp"
         android:text="Driver"
-        android:textSize="25sp"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toStartOf="@+id/tripDriver"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tripOrigin" />
 
-    <ImageView
-        android:id="@+id/driverRating5"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/driverRating4"
-        app:layout_constraintEnd_toEndOf="@+id/tripDriver"
-        app:layout_constraintStart_toEndOf="@+id/driverRating4"
-        app:layout_constraintTop_toBottomOf="@+id/tripDriver"
-        app:srcCompat="@android:drawable/btn_star" />
+    <TextView
+        android:id="@+id/seatsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="53dp"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="176dp"
+        android:text="Seats"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toStartOf="@+id/tripSeats"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/driverLabel" />
 
-    <ImageView
-        android:id="@+id/driverRating4"
-        android:layout_width="22dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="22dp"
-        android:layout_marginEnd="22dp"
-        app:layout_constraintBottom_toBottomOf="@+id/driverRating3"
-        app:layout_constraintEnd_toEndOf="@+id/tripDriver"
-        app:layout_constraintStart_toStartOf="@+id/driverRating3"
-        app:layout_constraintTop_toBottomOf="@+id/tripDriver"
-        app:srcCompat="@android:drawable/btn_star" />
-
-    <ImageView
-        android:id="@+id/driverRating3"
-        android:layout_width="22dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/driverRating2"
-        app:layout_constraintEnd_toEndOf="@+id/tripDriver"
-        app:layout_constraintStart_toStartOf="@+id/tripDriver"
-        app:layout_constraintTop_toBottomOf="@+id/tripDriver"
-        app:srcCompat="@android:drawable/btn_star" />
-
-    <ImageView
-        android:id="@+id/driverRating1"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="34dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="47dp"
-        app:layout_constraintBottom_toTopOf="@+id/tripPrice"
-        app:layout_constraintEnd_toStartOf="@+id/driverRating2"
-        app:layout_constraintStart_toStartOf="@+id/tripDriver"
-        app:layout_constraintTop_toTopOf="@+id/tripDriver"
-        app:srcCompat="@android:drawable/btn_star" />
-
-    <ImageView
-        android:id="@+id/driverRating2"
-        android:layout_width="22dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="23dp"
-        android:layout_marginEnd="22dp"
-        app:layout_constraintBottom_toBottomOf="@+id/driverRating1"
-        app:layout_constraintEnd_toEndOf="@+id/driverRating3"
-        app:layout_constraintStart_toStartOf="@+id/tripDriver"
-        app:layout_constraintTop_toBottomOf="@+id/tripDriver"
-        app:srcCompat="@android:drawable/btn_star" />
 </android.support.constraint.ConstraintLayout>

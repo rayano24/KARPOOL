@@ -8,6 +8,7 @@
             android:selectAllOnFocus="true"
             android:singleLine="true"
             android:inputType="text"
+            android:maxLines="1"
             android:title="Your Location"
             android:summary=" "/>
     </PreferenceCategory>

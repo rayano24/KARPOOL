@@ -51,6 +51,9 @@ public class FragmentOne extends Fragment {
     private final static String KEY_TRIP_ORIGIN = "tripOrigin";
     private final static String KEY_TRIP_DRIVER = "searchDriver";
     private final static String KEY_TRIP_SEATS = "searchSeats";
+    private final static String KEY_TRIP_ID = "tripID";
+
+
 
 
 
@@ -63,7 +66,7 @@ public class FragmentOne extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        userLocation = prefs.getString(KEY_LOCATION, null);
+        userLocation = prefs.getString(KEY_LOCATION, null).trim();
         prefs.edit().putString(KEY_PAST_FRAGMENT, "JOIN").commit();
 
 
@@ -141,6 +144,10 @@ public class FragmentOne extends Fragment {
                 prefs.edit().putString(KEY_TRIP_DESTINATION, trip.getDestination()).commit();
                 prefs.edit().putString(KEY_TRIP_ORIGIN, trip.getOrigin()).commit();
                 prefs.edit().putString(KEY_TRIP_TIME, trip.getTime()).commit();
+                prefs.edit().putString(KEY_TRIP_DRIVER, trip.getDriver()).commit();
+                prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
+                prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
+
 
                 Intent I = new Intent(getActivity(), TripActivity.class);
                 startActivity(I);
@@ -169,7 +176,7 @@ public class FragmentOne extends Fragment {
 
 
 
-        if (searchSpinner.getSelectedItem().toString().contentEquals("Time (Ascending)")) {
+        if (searchSpinner.getSelectedItem().toString().equals("Time (Ascending)")) {
 
 
             HttpUtils.get("trips/" + userLocation + "/" + destination, new RequestParams(), new JsonHttpResponseHandler() {
@@ -190,11 +197,10 @@ public class FragmentOne extends Fragment {
                             String year = date.substring(0, 4);
                             String remainder = date.substring(4,8);
                             String time = obj.getString("departureTime");
+
                             tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2)));
-                            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                            prefs.edit().putString(KEY_TRIP_DRIVER ,                 obj.getString("driver"));
-                            //prefs.edit().putString(KEY_TRIP_SEATS ,                             obj.getString("seatAvailable"));
+                                    formatter(time, ":", 2), obj.getString("driver"), obj.getString("seatAvailable"), obj.getString("tripId")));
+
 
                         }
                         updateVisibility(true, false);
@@ -236,11 +242,7 @@ public class FragmentOne extends Fragment {
                             String time = obj.getString("departureTime");
 
                             tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2)));
-                            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                            prefs.edit().putString(KEY_TRIP_DRIVER ,                 obj.getString("driver"));
-                            prefs.edit().putString(KEY_TRIP_SEATS ,                             obj.getString("seatAvailable"));
-
+                                    formatter(time, ":", 2), obj.getString("driver"), obj.getString("seatAvailable"), obj.getString("tripId")));
 
                         }
                         updateVisibility(true, false);

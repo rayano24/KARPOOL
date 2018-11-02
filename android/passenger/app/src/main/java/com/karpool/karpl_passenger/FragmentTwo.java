@@ -45,6 +45,18 @@ public class FragmentTwo extends Fragment {
     private final static String KEY_PAST_FRAGMENT = "pastFrag";
 
 
+    private final static String KEY_LOCATION = "userLocation";
+    private final static String KEY_TRIP_DESTINATION = "tripDestination";
+    private final static String KEY_TRIP_TIME= "tripTime";
+    private final static String KEY_TRIP_DATE = "tripDate";
+    private final static String KEY_TRIP_ORIGIN = "tripOrigin";
+    private final static String KEY_TRIP_DRIVER = "searchDriver";
+    private final static String KEY_TRIP_SEATS = "searchSeats";
+    private final static String KEY_TRIP_ID = "tripID";
+
+
+
+
 
     private String userID;
     // TODO The logic I am going for here: When the user logs in, their account ID will be saved through sharedPreferences (will add this when you guys figure out databases). This will be used for loading their trips.
@@ -55,9 +67,8 @@ public class FragmentTwo extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_two, container, false);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         userID = prefs.getString(KEY_USER, null);
-
         prefs.edit().putString(KEY_PAST_FRAGMENT, "JOIN").commit();
 
 
@@ -84,6 +95,13 @@ public class FragmentTwo extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Trip trip = tripsList.get(position);
+                prefs.edit().putString(KEY_TRIP_DATE, trip.getDate()).commit();
+                prefs.edit().putString(KEY_TRIP_DESTINATION, trip.getDestination()).commit();
+                prefs.edit().putString(KEY_TRIP_ORIGIN, trip.getOrigin()).commit();
+                prefs.edit().putString(KEY_TRIP_TIME, trip.getTime()).commit();
+                prefs.edit().putString(KEY_TRIP_DRIVER, trip.getDriver()).commit();
+                prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
+                prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
                 startActivity(I);
 
@@ -123,8 +141,12 @@ public class FragmentTwo extends Fragment {
                         noTrips.setVisibility(View.VISIBLE);
                     }
                     else {
-                        tripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"),
-                                response.getString("departureDate"), response.getString("departureTime")));
+                        String date = response.getString("departureDate");
+                        String year = date.substring(0, 4);
+                        String remainder = date.substring(4,8);
+                        String time = response.getString("departureTime");
+                        tripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                formatter(time, ":", 2), response.getString("driver"), response.getString("seatAvailable"), response.getString("tripId")));
                         noTrips.setVisibility(View.GONE);
                     }
 
@@ -138,6 +160,32 @@ public class FragmentTwo extends Fragment {
 
 
         mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Used for date and time formatting
+     *
+     * @param text   the string you want to format
+     * @param insert the character to insert
+     * @param n      insert every n characters
+     * @return
+     */
+    public static String formatter(
+            String text, String insert, int n) {
+        StringBuilder builder = new StringBuilder(
+                text.length() + insert.length() * (text.length() / n) + 1);
+
+        int index = 0;
+        String prefix = "";
+        while (index < text.length()) {
+
+            builder.append(prefix);
+            prefix = insert;
+            builder.append(text.substring(index,
+                    Math.min(index + n, text.length())));
+            index += n;
+        }
+        return builder.toString();
     }
 
 
