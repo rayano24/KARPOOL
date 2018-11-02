@@ -11,9 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="9dp"
-        android:text="CREATE TRIP"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/title_create"
+        app:layout_constraintStart_toEndOf="@+id/timeLabel"
         app:layout_constraintTop_toBottomOf="@+id/dateLabel" />
 
     <EditText
@@ -23,7 +22,7 @@
         android:layout_marginTop="242dp"
         android:layout_marginEnd="15dp"
         android:ems="10"
-        android:hint="Destination"
+        android:hint="@string/trip_destination"
         android:inputType="text|textPersonName"
         app:layout_constraintEnd_toEndOf="@+id/createLogo"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
-        android:text="Time"
+        android:text="@string/trip_time"
         app:layout_constraintStart_toStartOf="@+id/modifyDestinationLabel"
         app:layout_constraintTop_toBottomOf="@+id/modifyDestinationLabel" />
 
@@ -42,7 +41,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="13dp"
-        android:text="DATE"
+        android:text="@string/trip_date"
         app:layout_constraintEnd_toEndOf="@+id/modifyDestinationLabel"
         app:layout_constraintTop_toBottomOf="@+id/modifyDestinationLabel" />
 
@@ -51,10 +50,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="9dp"
+        android:layout_marginEnd="25dp"
         android:text="TextView"
         android:visibility="invisible"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintStart_toStartOf="@+id/button"
+        app:layout_constraintEnd_toEndOf="@+id/tripTimeButton"
         app:layout_constraintTop_toBottomOf="@+id/tripTimeButton"
         tools:text="14:15" />
 

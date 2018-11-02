@@ -5,8 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -75,7 +77,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     private boolean authenticateUser;
+    private boolean registerUser;
     private String error;
+
+
+    private static String userID;
 
 
     // UI references.
@@ -93,6 +99,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if(prefs.getString("userID", " ") != null) {
+            Intent I = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(I);
+            finish();
+        }
+
 
         // TODO If user is signed in, skip this activity and launch main
         // I'll fix this when database or mock is set up..
@@ -249,13 +262,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Check for a valid password, if the user entered one.
 
-        // @todo remvoe length limitation
+        /*
         if (!isPasswordValid(password)) {
             signInPassword.setError(getString(R.string.error_invalid_password));
             focusView = signInPassword;
             cancel = true;
         }
-        else if (TextUtils.isEmpty(password)) {
+        */
+        if (TextUtils.isEmpty(password)) {
             signInPassword.setError(getString(R.string.error_field_required));
             focusView = signInPassword;
             cancel = true;
@@ -266,11 +280,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             signInEmail.setError(getString(R.string.error_field_required));
             focusView = signInEmail;
             cancel = true;
-        } else if (!isEmailValid(email)) {
+        } /* else if (!isEmailValid(email)) {
             signInEmail.setError(getString(R.string.error_invalid_email));
             focusView = signInEmail;
             cancel = true;
-        }
+        } */
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -312,25 +326,31 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
+     /*   // Check for a valid password, if the user entered one.
         if (!isPasswordValid(password)) {
             registerPassword.setError(getString(R.string.error_invalid_password));
             focusView = registerPassword;
             cancel = true;
+
+
         }
-        else if (TextUtils.isEmpty(password)) {
+        */
+
+         if (TextUtils.isEmpty(password)) {
             registerPassword.setError(getString(R.string.error_field_required));
             focusView = registerEmail;
             cancel = true;
         }
 
+        /*
         // Checks for valid phone number
         if (!isPhoneValid(phoneNumber)) {
             registerPhone.setError(getString(R.string.error_invalid_phone));
             focusView = registerPhone;
             cancel = true;
         }
-        else if (TextUtils.isEmpty(phoneNumber)) {
+         */
+         if (TextUtils.isEmpty(phoneNumber)) {
             registerPhone.setError(getString(R.string.error_field_required));
             focusView = registerPhone;
             cancel = true;
@@ -447,6 +467,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
+    /**
+     * Shows the progress UI and hides the registration form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showRegistrationProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
@@ -456,8 +480,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             mRegisterFormView.setVisibility(show ? View.GONE : View.VISIBLE);
             // added by me
-            progressSpace.setVisibility(show ? View.VISIBLE : View.GONE);
             logoImage.setVisibility(show ? View.GONE : View.VISIBLE);
+            progressSpace.setVisibility(show ? View.VISIBLE : View.GONE);
             mRegisterFormView.animate().setDuration(shortAnimTime).alpha(
                     show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
                 @Override
@@ -476,12 +500,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             int height = size.y;
             progressSpace.getLayoutParams().height = (int) (height / 2.5);
             progressSpace.setVisibility(show ? View.VISIBLE : View.GONE);
-            mRegisterFormView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mRegisterFormView.animate().setDuration(shortAnimTime).alpha(
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+
                 }
             });
         } else {
@@ -568,7 +593,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
             HttpUtils.get("passengers/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public boolean getUseSynchronousMode() {
@@ -589,6 +613,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
                         if (response.getBoolean("response") == true) {
+                            userID = mEmail;
                             authenticateUser = true;
                         } else {
                             authenticateUser = false;
@@ -601,44 +626,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return authenticateUser;
         }
 
-           /* HttpUtils.get("users/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public boolean getUseSynchronousMode() {
-                    return false;
-                }
-
-                @Override
-                public void setUseSynchronousMode(boolean useSynchronousMode) {
-
-                }
-                @Override
-                public void onFinish() {
-
-                }
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    if(response.equals(true))
-                    {
-                        authenticateUser = true;
-                    }
-                    else
-                    {
-                        authenticateUser = false;
-                    }
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    try {
-                        error = errorResponse.get("message").toString();
-                    } catch (JSONException e) {
-                        error = e.getMessage();
-                    }
-                    authenticateUser = false;
-                }
-            });
-
-
-            return authenticateUser; */
 
         @Override
         protected void onPostExecute(final Boolean success) {
@@ -648,12 +635,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showSignInProgress(false);
 
             if (success) {
+                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                prefs.edit().putString("userID", userID).commit();
                 Intent I = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(I);
                 finish();
             } else {
-                signInPassword.setError(error);
-                signInPassword.requestFocus();
+
             }
         }
 
@@ -687,18 +675,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
 
-            /**
-             * TODO IMPLEMENT REGISTRATION SYSTEM
-             */
             HttpUtils.post("passengers/" + mName + "/" + mEmail + "/" + mPassword + "/" + mPhone + "/false", new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public boolean getUseSynchronousMode() {
@@ -714,14 +692,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 public void onFinish() {
 
                 }
-
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
                         if (!response.getString("name").isEmpty()) {
-                            authenticateUser = true;
+                            registerUser = true;
                         } else {
-                            authenticateUser = false;
+                            registerUser = false;
                         }
                     }
                     catch(JSONException e)
@@ -731,7 +708,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
             });
 
-            return authenticateUser;
+            return registerUser;
         }
 
         @Override
@@ -742,8 +719,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             if (success) {
                 setElementVisbility("register", true);
             } else {
-                registerPassword.setError(getString(R.string.error_invalid_password));
-                registerPassword.requestFocus();
+
+
             }
         }
 

@@ -22,6 +22,9 @@
     </PreferenceCategory>
 
     <Preference android:title="@string/action_sign_out"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?attr/selectableItemBackground"
         android:key="signOut"/>
 
 
