@@ -715,7 +715,7 @@ public class KarpoolController {
 			return null;
 		}
 		else {
-			newTrip = repository.addPassenger(name, tripID);
+			newTrip = repository.addPassenger(p, t);
 		}	
 		return newTrip;
 	}

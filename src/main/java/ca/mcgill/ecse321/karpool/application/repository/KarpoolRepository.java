@@ -200,15 +200,13 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
-	public Trip addPassenger(String name, int tripID)
+	public Trip addPassenger(Passenger p, Trip t)
 	{
-		Passenger p = entityManager.find(Passenger.class, name);
-		Trip t = entityManager.find(Trip.class, tripID);
 		t.getPassenger().add(p);
 		t.setSeatAvailable(t.getSeatAvailable()-1);
 		p.setTrip(t);
-//		entityManager.merge(t);
-//		entityManager.merge(p);
+		entityManager.merge(t);
+		entityManager.merge(p);
 		return t;
 	}
 
