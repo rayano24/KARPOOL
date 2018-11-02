@@ -380,7 +380,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return true;//password.length() > 4;
     }
 
     /**
@@ -391,7 +391,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private boolean isPhoneValid(String phoneNumber) {
         //TODO: Replace this with your own logic
-        return false;
+        return true;
     }
 
     /**
@@ -569,9 +569,37 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            HttpUtils.get("passengers/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public boolean getUseSynchronousMode() {
+                    return false;
+                }
 
+                @Override
+                public void setUseSynchronousMode(boolean useSynchronousMode) {
 
-            return true;
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        if (response.getBoolean("response") == true) {
+                            authenticateUser = true;
+                        } else {
+                            authenticateUser = false;
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return authenticateUser;
+        }
 
            /* HttpUtils.get("users/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
@@ -611,12 +639,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
             return authenticateUser; */
-        }
-
-
-
-
-
 
         @Override
         protected void onPostExecute(final Boolean success) {
@@ -677,8 +699,39 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             /**
              * TODO IMPLEMENT REGISTRATION SYSTEM
              */
+            HttpUtils.post("passengers/" + mName + "/" + mEmail + "/" + mPassword + "/" + mPhone + "/false", new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public boolean getUseSynchronousMode() {
+                    return false;
+                }
 
-            return true;
+                @Override
+                public void setUseSynchronousMode(boolean useSynchronousMode) {
+
+                }
+
+                @Override
+                public void onFinish() {
+
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        if (!response.getString("name").isEmpty()) {
+                            authenticateUser = true;
+                        } else {
+                            authenticateUser = false;
+                        }
+                    }
+                    catch(JSONException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            return authenticateUser;
         }
 
         @Override
