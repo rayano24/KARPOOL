@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -152,6 +153,10 @@ public class FragmentOne extends Fragment {
         // An external method could be needed
         tripsList.clear();
 
+
+        final String mLocation = userLocation;
+        final String mDestination = destination;
+        
 
 
         if (destination.equals("Compton")) {

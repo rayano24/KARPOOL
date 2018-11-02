@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private Space progressSpace;
     private ImageView logoImage;
     private Button signInPrompt, registerPrompt, signInButton, registerButton;
-    private AutoCompleteTextView signInEmail, registerEmail, registerPhone;
+    private AutoCompleteTextView signInName, registerEmail, registerPhone;
     private EditText signInPassword, registerName, registerPassword;
 
     @Override
@@ -107,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         signInPrompt = findViewById(R.id.signInPrompt);
         registerPrompt = findViewById(R.id.registerPrompt);
-        signInEmail = findViewById(R.id.signInEmail);
+        signInName = findViewById(R.id.signInName);
         signInPassword = findViewById(R.id.signInPassword);
         signInButton = findViewById(R.id.signInButton);
         registerPrompt = findViewById(R.id.registerPrompt);
@@ -205,7 +205,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(signInEmail, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(signInName, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -244,11 +244,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Reset errors.
-        signInEmail.setError(null);
+        signInName.setError(null);
         signInPassword.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = signInEmail.getText().toString();
+        String username = signInName.getText().toString();
         String password = signInPassword.getText().toString();
 
         boolean cancel = false;
@@ -270,9 +270,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
 
         // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            signInEmail.setError(getString(R.string.error_field_required));
-            focusView = signInEmail;
+        if (TextUtils.isEmpty(username)) {
+            signInName.setError(getString(R.string.error_field_required));
+            focusView = signInName;
             cancel = true;
         } /* else if (!isEmailValid(email)) {
             signInEmail.setError(getString(R.string.error_invalid_email));
@@ -288,7 +288,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showSignInProgress(true);
-            mlogInAuthTask = new UserLoginTask(email, password);
+            mlogInAuthTask = new UserLoginTask(username, password);
             mlogInAuthTask.execute((Void) null);
         }
     }
@@ -554,7 +554,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 new ArrayAdapter<>(LoginActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        signInEmail.setAdapter(adapter);
+        signInName.setAdapter(adapter);
         // TODO HERE
     }
 
@@ -577,17 +577,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mEmail; //change to username
+        private final String mName; //change to username
         private final String mPassword;
 
-        UserLoginTask(String email, String password) {
-            mEmail = email;
+        UserLoginTask(String username, String password) {
+            mName = username;
             mPassword = password;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            HttpUtils.get("passengers/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
+            HttpUtils.get("passengers/auth/" + mName + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public boolean getUseSynchronousMode() {
                     return false;
@@ -607,7 +607,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
                         if (response.getBoolean("response") == true) {
-                            userID = mEmail;
+                            userID = mName;
                             authenticateUser = true;
                         } else {
                             authenticateUser = false;
@@ -751,7 +751,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 signInPrompt.setVisibility(View.GONE);
                 mRegisterFormView.setVisibility(View.GONE);
                 mLoginFormView.setVisibility(View.VISIBLE);
-                signInEmail.setVisibility(View.VISIBLE);
+                signInName.setVisibility(View.VISIBLE);
                 signInPassword.setVisibility(View.VISIBLE);
                 signInButton.setVisibility(View.VISIBLE);
             } else {
@@ -759,9 +759,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 signInPrompt.setVisibility(View.VISIBLE);
                 mLoginFormView.setVisibility(View.GONE);
                 mRegisterFormView.setVisibility(View.GONE);
-                signInEmail.setVisibility(View.GONE);
-                signInEmail.setText("");
-                signInEmail.setError(null);
+                signInName.setVisibility(View.GONE);
+                signInName.setText("");
+                signInName.setError(null);
                 signInPassword.setVisibility(View.GONE);
                 signInPassword.setText("");
                 signInPassword.setError(null);
