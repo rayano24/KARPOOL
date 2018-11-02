@@ -44,6 +44,8 @@ public class FragmentOne extends Fragment {
     private TextView invalidCity;
 
     private final static String KEY_LOCATION = "userLocation";
+    private final static String KEY_PAST_FRAGMENT = "pastFrag";
+
     String userLocation;
 
 
@@ -54,7 +56,10 @@ public class FragmentOne extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
         userLocation = prefs.getString(KEY_LOCATION, null);
+        prefs.edit().putString(KEY_PAST_FRAGMENT, "JOIN").commit();
+
 
 
 

@@ -1,5 +1,6 @@
 package com.karpool.karpl_passenger;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -40,6 +41,8 @@ public class FragmentTwo extends Fragment {
     private TextView noTrips;
 
     private final static String KEY_USER = "userID";
+    private final static String KEY_PAST_FRAGMENT = "pastFrag";
+
 
 
     private String userID;
@@ -53,6 +56,9 @@ public class FragmentTwo extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_two, container, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         userID = prefs.getString(KEY_USER, null);
+
+        prefs.edit().putString(KEY_PAST_FRAGMENT, "JOIN").commit();
+
 
 
 
@@ -76,6 +82,9 @@ public class FragmentTwo extends Fragment {
             @Override
             public void onClick(View view, int position) {
                 Trip trip = tripsList.get(position);
+                Intent I = new Intent(getActivity(), TripActivity.class);
+                startActivity(I);
+
 
             }
 
@@ -108,8 +117,14 @@ public class FragmentTwo extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    tripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"),
-                            response.getString("departureDate"), response.getString("departureTime")));
+                    if(response.getString("departureLocation").isEmpty()) {
+                        noTrips.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        tripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"),
+                                response.getString("departureDate"), response.getString("departureTime")));
+                        noTrips.setVisibility(View.GONE);
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
