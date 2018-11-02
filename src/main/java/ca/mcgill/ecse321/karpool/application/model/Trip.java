@@ -23,7 +23,7 @@ import java.util.HashSet;
 public class Trip 
 {
 	private boolean tripComplete;
-	
+
 	public boolean isTripComplete() {
 		return tripComplete;
 	}
@@ -45,17 +45,17 @@ public class Trip
 	}
 
 	private int seatAvailable;
-	
+
 	private int price;
-	
+
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	
-	public float getPrice() {
+
+	public int getPrice() {
 		return this.price;
 	}
-	
+
 	public void setSeatAvailable(int value) {
 		this.seatAvailable = value;
 	}
@@ -84,7 +84,7 @@ public class Trip
 	public String getDepartureTime() {
 		return this.departureTime;
 	}
-	
+
 	private String departureDate;
 
 	public void setDepartureDate(String value) {
@@ -127,7 +127,7 @@ public class Trip
 	public Driver getDriver() {
 		return this.driver;
 	}
-	
+
 	/**
 	 * <pre>
 	 *           1..1     0..*
@@ -142,11 +142,11 @@ public class Trip
 		this.passenger.add(passenger);
 		passenger.setTrip(this);
 	}
-	
+
 	public void removePassenger(Passenger passenger) {
-        this.passenger.remove(passenger);
-        passenger.setTrip(null);;
-    }
+		this.passenger.remove(passenger);
+		passenger.setTrip(null);;
+	}
 
 	@Transient
 	@OneToMany(mappedBy = "trip", cascade = CascadeType.ALL) 
