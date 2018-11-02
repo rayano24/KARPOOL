@@ -55,14 +55,59 @@ public class KarpoolRepository
 		return pass;
 	}
 	
+	//Modification methods start
 	@Transactional
 	public void modifyTripLocation(Trip trip, String location) {
 		
 		trip.setDepartureLocation(location);
 		entityManager.merge(trip);
 		
+	}
+	@Transactional
+	public void modifyTripDestination(Trip trip, String destination) {
+		
+		trip.setDestination(destination);
+		entityManager.merge(trip);
 		
 	}
+	@Transactional
+	public void modifyDepartureTime(Trip trip, String departureTime) {
+		
+		trip.setDepartureTime(departureTime);
+		entityManager.merge(trip);
+		
+	}
+	@Transactional
+	public void modifyDepartureDate(Trip trip, String departureDate) {
+		
+		trip.setDepartureDate(departureDate);
+		entityManager.merge(trip);
+		
+	}
+	@Transactional
+	public void modifySeatAvailable(Trip trip, int seatAvailable) {
+		
+		trip.setSeatAvailable(seatAvailable);
+		entityManager.merge(trip);
+		
+	}
+	//modification methods end
+	
+	@Transactional
+	public void setPassengerRating(Passenger passenger, Rating rating) {
+		
+		passenger.setRating(rating);
+		entityManager.merge(passenger);
+		
+	}
+	@Transactional
+	public void setDriverRating(Driver driver, Rating rating) {
+		
+		driver.setRating(rating);
+		entityManager.merge(driver);
+		
+	}
+	
 	
 	@Transactional
 	public Driver getDriver(String name) {
