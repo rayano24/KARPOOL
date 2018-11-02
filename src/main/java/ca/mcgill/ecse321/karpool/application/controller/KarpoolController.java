@@ -395,9 +395,9 @@ public class KarpoolController {
 	 * @return the created trip
 	 * @throws ParseException 
 	 */
-	@PostMapping("/trips/{driver}/{location}/{destination}/{seats}/{time}/{date}")
+	@PostMapping("/trips/{driver}/{location}/{destination}/{seats}/{time}/{date}/{price}")
 	public Trip createTrip(@PathVariable("driver") String name, @PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
-			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate) throws ParseException
+			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate, @PathVariable("price") int price) throws ParseException
 	{
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 //		LocalDate currDate = LocalDate.now();
@@ -458,7 +458,7 @@ public class KarpoolController {
 		
 		Driver d = repository.getDriver(name);
 		
-		Trip trip = repository.createTrip(d, destination, departureTime, departureDate, departureLocation, seatAvailable);
+		Trip trip = repository.createTrip(d, destination, departureTime, departureDate, departureLocation, seatAvailable, price);
 		return trip;
 	}
 
