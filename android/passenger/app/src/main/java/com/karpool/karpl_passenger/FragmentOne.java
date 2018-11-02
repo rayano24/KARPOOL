@@ -1,7 +1,9 @@
 package com.karpool.karpl_passenger;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -29,62 +31,31 @@ import cz.msebera.android.httpclient.Header;
 
 public class FragmentOne extends Fragment {
 
-    private String error = null;
-
-//    private void refreshErrorMessage() {
-//        // set the error message
-//        TextView tvError = (TextView) findViewById(R.id.error);
-//        tvError.setText(error);
-//
-//        if (error == null || error.length() == 0) {
-//            tvError.setVisibility(View.GONE);
-//        } else {
-//            tvError.setVisibility(View.VISIBLE);
-//        }
-//
-//    }
-//
-//    public void addParticipant(View v) {
-//        error = "";
-//        final TextView tv = (TextView) findViewById(R.id.newparticipant_name);
-//        HttpUtils.post("participants/" + tv.getText().toString(), new RequestParams(), new JsonHttpResponseHandler() {
-//            @Override
-//            public void onFinish() {
-//                refreshErrorMessage();
-//                tv.setText("");
-//            }
-//            @Override
-//            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-//                try {
-//                    error += errorResponse.get("message").toString();
-//                } catch (JSONException e) {
-//                    error += e.getMessage();
-//                }
-//                refreshErrorMessage();
-//            }
-//        });
-//    }
-
 
     private RecyclerView.LayoutManager mLayoutManager;
 
     private List<Trip> tripsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private searchAdapter mAdapter;
-
     private SearchView citySearch;
     private Spinner searchSpinner;
-
     private String sortSelection;
-
-
     private TextView invalidCity;
+
+    private final static String KEY_LOCATION = "userLocation";
+    String userLocation;
+
+
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        userLocation = prefs.getString(KEY_LOCATION, null);
+
+
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);

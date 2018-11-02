@@ -3,7 +3,10 @@ package com.karpool.karpl_driver;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
@@ -14,6 +17,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.util.Calendar;
 
@@ -23,19 +27,40 @@ public class FragmentOne extends Fragment {
     protected static TextView dateLabel, timeLabel;
     private static String date, time; // FOR DATABASE
 
+    private final static String KEY_LOCATION = "userLocation";
 
+    private String userLocation;
+
+
+
+
+
+    private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            // listener implementation
+            if (key.equals(KEY_LOCATION)) {
+                userLocation = prefs.getString(KEY_LOCATION, " ");
+            }
+
+        }
+    };
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        prefs.registerOnSharedPreferenceChangeListener(listener);
+
+        userLocation = prefs.getString(KEY_LOCATION,  null);
 
 
         tripTimeButton = (Button) rootView.findViewById(R.id.tripTimeButton);
         tripDateButton = (Button) rootView.findViewById(R.id.tripDateButton);
         dateLabel = (TextView) rootView.findViewById(R.id.dateLabel);
         timeLabel = (TextView) rootView.findViewById(R.id.timeLabel);
+
 
 
 
@@ -73,9 +98,8 @@ public class FragmentOne extends Fragment {
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
 
-            // Create a new instance of TimePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, hour, minute,
-                    DateFormat.is24HourFormat(getActivity()));
+            return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));
+
         }
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -97,8 +121,14 @@ public class FragmentOne extends Fragment {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            // Create a new instance of DatePickerDialog and return it
-            return new DatePickerDialog(getActivity(), this, year, month, day);
+
+            // new instance of datePickerDialog
+            Dialog datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
+
+            //setting minimum time
+            ((DatePickerDialog) datePickerDialog).getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+
+            return datePickerDialog;
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {

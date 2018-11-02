@@ -28,5 +28,27 @@
     <!-- Strings for my trips page -->
 <string name="trips_none">You have no upcoming trips</string>
 
+
+
+    <!-- Trip activity -->
+    <string name="trip_origin">Origin</string>
+    <string name="trip_destination">Destination</string>
+    <string name="trip_price">Price</string>
+    <string name="trip_date">Date</string>
+    <string name="trip_time">Time</string>
+    <string name="trip_seats">Seats</string>
+    <string name="trip_delete">DELETE TRIP</string>
+
+
+
+
+    <!-- preference screen -->
+
+    <string name="action_sign_out">Sign out</string>
+    <string name="action_help">Help</string>
+
+
+
+
 </resources>
 
