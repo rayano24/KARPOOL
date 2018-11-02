@@ -326,22 +326,23 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             View focusView = null;
 
             // Check for a valid password, if the user entered one.
-            if (!isPasswordValid(password)) {
+            /* if (!isPasswordValid(password)) {
                 registerPassword.setError(getString(R.string.error_invalid_password));
                 focusView = registerPassword;
                 cancel = true;
-            } else if (TextUtils.isEmpty(password)) {
+            }  */
+            if (TextUtils.isEmpty(password)) {
                 registerPassword.setError(getString(R.string.error_field_required));
                 focusView = registerEmail;
                 cancel = true;
             }
 
             // Checks for valid phone number
-            if (!isPhoneValid(phoneNumber)) {
+           /* if (!isPhoneValid(phoneNumber)) {
                 registerPhone.setError(getString(R.string.error_invalid_phone));
                 focusView = registerPhone;
-                cancel = true;
-            } else if (TextUtils.isEmpty(phoneNumber)) {
+                cancel = true; */
+             if (TextUtils.isEmpty(phoneNumber)) {
                 registerPhone.setError(getString(R.string.error_field_required));
                 focusView = registerPhone;
                 cancel = true;
@@ -352,11 +353,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 registerEmail.setError(getString(R.string.error_field_required));
                 focusView = registerEmail;
                 cancel = true;
-            } else if (!isEmailValid(email)) {
+            } /* else if (!isEmailValid(email)) {
                 registerEmail.setError(getString(R.string.error_invalid_email));
                 focusView = registerEmail;
                 cancel = true;
-            }
+            } */
 
             if (cancel) {
                 // There was an error; don't attempt login and focus the first
@@ -583,7 +584,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             @Override
             protected Boolean doInBackground(Void... params) {
-                HttpUtils.get("passengers/auth/" + mName + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
+                HttpUtils.get("drivers/auth/" + mName + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
                     @Override
                     public boolean getUseSynchronousMode() {
                         return false;

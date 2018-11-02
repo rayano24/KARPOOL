@@ -92,7 +92,7 @@ public class FragmentTwo extends Fragment {
         // TODO THIS SHOULD BE BASED ON THE DRIVERS TRIPS
 
 
-            HttpUtils.get("trips/" + userLocation + "/" + destination, new RequestParams(), new JsonHttpResponseHandler() {
+           /* HttpUtils.get("trips/" + userLocation + "/" + destination, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public void onFinish() {
                     updateVisibility(false, true);
@@ -125,7 +125,7 @@ public class FragmentTwo extends Fragment {
                     tripsList.clear();
 
                 }
-            });
+            }); */
 
 
 
