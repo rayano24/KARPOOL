@@ -116,6 +116,10 @@ public class Trip {
 
 	private Set<Passenger> passenger;
 
+	public void setPassenger(Set<Passenger> passenger) {
+		this.passenger = passenger;
+	}
+
 	@Transient
 	@JoinColumn 
 	@OneToMany 

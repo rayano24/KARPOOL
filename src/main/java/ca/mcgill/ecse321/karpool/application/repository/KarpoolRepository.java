@@ -1,6 +1,7 @@
 package ca.mcgill.ecse321.karpool.application.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -124,6 +125,14 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
+	public Trip getTripForPassenger(String name)
+	{
+		Passenger p = entityManager.find(Passenger.class, name);
+		Trip t = p.getTrip();
+		return t;
+	}
+	
+	@Transactional
 	public void closeTrip(int tripID)
 	{
 		Trip trip = entityManager.find(Trip.class, tripID);
@@ -135,12 +144,16 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
-	public Trip addPassenger(Passenger passenger, Trip trip)
+	public Trip addPassenger(String name, int tripID)
 	{
-		trip.getPassenger().add(passenger);
-		trip.setSeatAvailable(trip.getSeatAvailable()-1);
-		entityManager.persist(trip);
-		return trip;
+		Passenger p = entityManager.find(Passenger.class, name);
+		Trip t = entityManager.find(Trip.class, tripID);
+		t.getPassenger().add(p);
+		t.setSeatAvailable(t.getSeatAvailable()-1);
+		p.setTrip(t);
+//		entityManager.merge(t);
+//		entityManager.merge(p);
+		return t;
 	}
 
 }

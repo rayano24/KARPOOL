@@ -542,7 +542,24 @@ public class KarpoolController {
 		}		
 		return fullTrip;
 	}
-
+	
+	/**
+	 * lists all trips associated to particular passenger
+	 * 
+	 * @return list of trips for passenger
+	 */
+	@GetMapping("/trips/{name}")
+	public Trip tripsForPassenger(@PathVariable("name") String name)
+	{
+		Trip t = repository.getTripForPassenger(name);
+		
+		if(t == null)
+		{
+			System.out.println("There are no trips for this passenger");
+			return null;
+		}		
+		return t;
+	}
 
 	/**
 	 * This method marks a trip as completed
@@ -607,29 +624,26 @@ public class KarpoolController {
 	 * @param trip
 	 * @return
 	 */
-	@GetMapping
-	public Response addPassenger(Passenger passenger, Trip trip) 
+	@PostMapping("/trips/{trip}/add/{name}")
+	public Trip addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
 	{
-		Response r = new Response();
-		/*check this because its a mess */
-		if (trip.getSeatAvailable() <= 0) {
-			r.setResponse(false);
-			r.setError("No seats available");
+		Trip newTrip = null;
+		Trip t = repository.getSpecificTrip(tripID);
+		Passenger p = repository.getPassenger(name);
+		if (t.getSeatAvailable() <= 0) {
+			System.out.println("No seats available");
+			return null;
 		}
 
-		else if (passengers.contains(passenger)) 
+		else if (t.getPassenger().contains(p)) 
 		{
-			r.setResponse(false);
-			r.setError("You are already on this trip");
+			System.out.println("You are already on this trip");
+			return null;
 		}
-
 		else {
-			passenger.setTrip(trip);
-			trip.getPassenger().add(passenger);
-			r.setResponse(true);
-			r.setError(null);
+			newTrip = repository.addPassenger(name, tripID);
 		}	
-		return r;
+		return newTrip;
 	}
 
 //	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
