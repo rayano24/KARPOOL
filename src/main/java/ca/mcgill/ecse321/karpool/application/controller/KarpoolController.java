@@ -548,7 +548,7 @@ public class KarpoolController {
 	 * 
 	 * @return list of trips for passenger
 	 */
-	@GetMapping("/trips/{name}")
+	@GetMapping("/trips/passengers/{name}")
 	public Trip tripsForPassenger(@PathVariable("name") String name)
 	{
 		Trip t = repository.getTripForPassenger(name);
@@ -556,6 +556,19 @@ public class KarpoolController {
 		if(t == null)
 		{
 			System.out.println("There are no trips for this passenger");
+			return null;
+		}		
+		return t;
+	}
+	
+	@GetMapping("/trips/drivers/{name}")
+	public Trip tripsForDriver(@PathVariable("name") String name)
+	{
+		Trip t = repository.getTripForPassenger(name);
+		
+		if(t == null)
+		{
+			System.out.println("There are no trips for this driver");
 			return null;
 		}		
 		return t;
