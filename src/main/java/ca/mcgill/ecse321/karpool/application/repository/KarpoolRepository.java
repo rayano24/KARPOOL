@@ -27,6 +27,7 @@ public class KarpoolRepository
 		trip.setDepartureDate(departureDate);
 		trip.setDepartureLocation(departureLocation);
 		trip.setSeatAvailable(seatAvailable);
+		trip.setTripComplete(false);
 		entityManager.persist(trip);
 		return trip;
 	}
@@ -193,11 +194,7 @@ public class KarpoolRepository
 	public void closeTrip(int tripID)
 	{
 		Trip trip = entityManager.find(Trip.class, tripID);
-		trip.setDestination(null);
-		trip.setDepartureTime(null);
-		trip.setDepartureLocation(null);
-		trip.setSeatAvailable(0);
-		entityManager.persist(trip);
+		trip.setTripComplete(true);
 	}
 	
 	@Transactional

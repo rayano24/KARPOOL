@@ -480,7 +480,7 @@ public class KarpoolController {
 		for(int t: trips)
 		{
 			Trip tFull = repository.getSpecificTrip(t);
-			if(tFull.getSeatAvailable()>0)
+			if(tFull.getSeatAvailable()>0 && !tFull.isTripComplete())
 			{
 				fullTrip.add(tFull);
 			}
@@ -507,7 +507,7 @@ public class KarpoolController {
 		for(int t: trips)
 		{
 			Trip tFull = repository.getSpecificTrip(t);
-			if(tFull.getSeatAvailable()>0)
+			if(tFull.getSeatAvailable()>0 && !tFull.isTripComplete())
 			{
 				fullTrip.add(tFull);
 			}

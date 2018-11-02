@@ -20,9 +20,18 @@ import java.util.HashSet;
 
 @Entity
 @Table(name="trip")
-public class Trip {
-
+public class Trip 
+{
+	private boolean tripComplete;
 	
+	public boolean isTripComplete() {
+		return tripComplete;
+	}
+
+	public void setTripComplete(boolean tripComplete) {
+		this.tripComplete = tripComplete;
+	}
+
 	private int tripId;
 
 	public void setTripId(int value) {
