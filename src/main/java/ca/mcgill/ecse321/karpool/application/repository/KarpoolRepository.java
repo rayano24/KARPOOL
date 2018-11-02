@@ -191,6 +191,14 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
+	public Set<Trip> getTripForDriver(String name)
+	{
+		Driver d = entityManager.find(Driver.class, name);
+		Set <Trip> t = d.getTrip();
+		return t;
+	}
+	
+	@Transactional
 	public void closeTrip(int tripID)
 	{
 		Trip trip = entityManager.find(Trip.class, tripID);
