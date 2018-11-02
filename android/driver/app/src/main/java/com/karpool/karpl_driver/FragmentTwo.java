@@ -12,8 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class FragmentTwo extends Fragment {
 
@@ -66,7 +75,7 @@ public class FragmentTwo extends Fragment {
         }));
 
 
-        prepareUserTripData(userID);
+        prepareTripData(userID);
 
 
         return rootView;
@@ -75,19 +84,95 @@ public class FragmentTwo extends Fragment {
     /**
      * Updates the trip information
      */
-    private void prepareUserTripData(String user) {
-        // TODO Same logic as fragment 1 but we are just adding trips based on UserID
+    private void prepareTripData(String destination) {
+
         tripsList.clear();
 
 
-        // trips
-        tripsList.add(new Trip("MONTREAL", "COMPTON", "2018-10-31", "18:00"));
+        // TODO THIS SHOULD BE BASED ON THE DRIVERS TRIPS
 
 
-        // if user has no trips
-        noTrips.setVisibility(View.VISIBLE);
+            HttpUtils.get("trips/" + userLocation + "/" + destination, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public void onFinish() {
+                    updateVisibility(false, true);
+                }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                    try {
+
+                        tripsList.clear();
+
+
+                        for (int i = 0; i < response.length(); i++) {
+                            JSONObject obj = response.getJSONObject(i);
+                            String date = obj.getString("departureDate");
+                            String year = date.substring(0, 4);
+                            String remainder = date.substring(4,8);
+                            String time = obj.getString("departureTime");
+                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                    formatter(time, ":", 2)));
+                        }
+                        updateVisibility(true, false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    updateVisibility(false, true);
+                    tripsList.clear();
+
+                }
+            });
+
 
 
         mAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * @param displayTrips if true, display recycler view
+     * @param isError      if true, display invalid city error
+     */
+    private void updateVisibility(boolean displayTrips, boolean isError) {
+        if (displayTrips) {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            noTrips.setVisibility(View.GONE);
+        } else {
+            noTrips.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.GONE);
+            if (isError) {
+                noTrips.setVisibility(View.VISIBLE);
+            }
+        }
+
+    }
+
+    /**
+     * Used for date and time formatting
+     *
+     * @param text   the string you want to format
+     * @param insert the character to insert
+     * @param n      insert every n characters
+     * @return
+     */
+    public static String formatter(
+            String text, String insert, int n) {
+        StringBuilder builder = new StringBuilder(
+                text.length() + insert.length() * (text.length() / n) + 1);
+
+        int index = 0;
+        String prefix = "";
+        while (index < text.length()) {
+
+            builder.append(prefix);
+            prefix = insert;
+            builder.append(text.substring(index,
+                    Math.min(index + n, text.length())));
+            index += n;
+        }
+        return builder.toString();
     }
 }
