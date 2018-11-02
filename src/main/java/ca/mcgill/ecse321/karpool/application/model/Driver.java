@@ -1,11 +1,16 @@
 package ca.mcgill.ecse321.karpool.application.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import ca.mcgill.ecse321.karpool.application.model.UserRole;
 import ca.mcgill.ecse321.karpool.application.model.Car;
@@ -26,16 +31,25 @@ public class Driver extends UserRole
 		return this.car;
 	}
 
-	private Trip trip;
+	private Set<Trip> trips;
 
-	public void setTrip(Trip value) {
-		this.trip = value;
+	public void addTrip(Trip trip) {
+		this.trips.add(trip);
+		trip.setDriver(this);
 	}
+	
+	public void removeTrip(Trip trip) {
+        this.trips.remove(trip);
+        trip.setDriver(null);
+    }
 
-	@ManyToOne
-	@JoinColumn
-	public Trip getTrip() {
-		return this.trip;
+	@Transient
+	@OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
+	public Set<Trip> getTrip() {
+		if (this.trips == null) {
+			this.trips = new HashSet<Trip>();
+		}
+		return this.trips;
 	}
 	
 	private String name;

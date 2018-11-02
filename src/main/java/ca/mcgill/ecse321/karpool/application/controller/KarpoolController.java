@@ -395,8 +395,8 @@ public class KarpoolController {
 	 * @return the created trip
 	 * @throws ParseException 
 	 */
-	@PostMapping("/trips/{location}/{destination}/{seats}/{time}/{date}")
-	public Trip createTrip(@PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
+	@PostMapping("/trips/{driver}/{location}/{destination}/{seats}/{time}/{date}")
+	public Trip createTrip(@PathVariable("driver") String name, @PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
 			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate) throws ParseException
 	{
 		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -456,9 +456,9 @@ public class KarpoolController {
 			
 		}
 		
+		Driver d = repository.getDriver(name);
 		
-		
-		Trip trip = repository.createTrip(destination,departureTime, departureDate, departureLocation, seatAvailable);
+		Trip trip = repository.createTrip(d, destination, departureTime, departureDate, departureLocation, seatAvailable);
 		return trip;
 	}
 
@@ -548,7 +548,7 @@ public class KarpoolController {
 	 * 
 	 * @return list of trips for passenger
 	 */
-	@GetMapping("/trips/{name}")
+	@GetMapping("/trips/passengers/{name}")
 	public Trip tripsForPassenger(@PathVariable("name") String name)
 	{
 		Trip t = repository.getTripForPassenger(name);
@@ -556,6 +556,19 @@ public class KarpoolController {
 		if(t == null)
 		{
 			System.out.println("There are no trips for this passenger");
+			return null;
+		}		
+		return t;
+	}
+	
+	@GetMapping("/trips/drivers/{name}")
+	public Trip tripsForDriver(@PathVariable("name") String name)
+	{
+		Trip t = repository.getTripForPassenger(name);
+		
+		if(t == null)
+		{
+			System.out.println("There are no trips for this driver");
 			return null;
 		}		
 		return t;
