@@ -25,7 +25,6 @@ import cz.msebera.android.httpclient.Header;
 public class TripActivity extends AppCompatActivity {
 
 
-    private ImageView driverRating1, driverRating2, driverRating3, driverRating4, driverRating5;
     private TextView tripOrigin, tripDestination, tripDriver, tripDate, tripTime, tripPrice, tripSeats, tripRating;
     static private Button tripButton;
     private final static String KEY_PAST_FRAGMENT = "pastFrag";
@@ -84,7 +83,7 @@ public class TripActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 tripAction(currentFrag, userID, tripID);
-
+                finish();
             }
         });
 
@@ -129,10 +128,33 @@ public class TripActivity extends AppCompatActivity {
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
 
                 }
+                Toast toast;
             });
 
 
         } else
+            HttpUtils.get("trips/" +  "/" +"close" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public void onFinish() {
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        if (response.getBoolean("response") == true) {
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+
+                }
+            });
+
 
         {
 
