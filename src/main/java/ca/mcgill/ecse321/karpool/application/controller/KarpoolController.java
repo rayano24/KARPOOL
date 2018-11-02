@@ -244,20 +244,28 @@ public class KarpoolController {
 	 * @return TRUE if the account is authenticated
 	 */
 	@GetMapping("/drivers/auth/{username}/{password}")
-	public boolean authenticateDriver(@PathVariable("username")String username, @PathVariable("password")String password)
+	public Response authenticateDriver(@PathVariable("username")String username, @PathVariable("password")String password)
 
 	{
-		boolean authenticate = false;
+		Response r = new Response();
 		try {
 			Driver driver = repository.getDriver(username);
 			if(driver.getPassword().equals(password))
-				authenticate = true;
+			{
+				r.setResponse(true);
+				r.setError(null);
+			}
+			else
+			{
+				r.setResponse(false);
+				r.setError("Wrong username or password");
+			}	
 		}
 		catch(NullPointerException e) {
-			System.out.println("Error - Attempted to authenticate null driver ");
-			authenticate =  false;
+			r.setResponse(false);
+			r.setError("Error - Attempted to authenticate null driver");
 		}
-		return authenticate;
+		return r;
 	}
 	
 	/**
@@ -269,20 +277,28 @@ public class KarpoolController {
 	 */
 	
 	@GetMapping("/passengers/auth/{username}/{password}")
-	public boolean authenticatePassenger(@PathVariable("username")String username, @PathVariable("password")String password)
+	public Response authenticatePassenger(@PathVariable("username")String username, @PathVariable("password")String password)
 
 	{
-		boolean authenticate = false;
+		Response r = new Response();
 		try {
 			Passenger passenger = repository.getPassenger(username);
 			if(passenger.getPassword().equals(password))
-				authenticate = true;
+			{
+				r.setResponse(true);
+				r.setError(null);
+			}
+			else
+			{
+				r.setResponse(false);
+				r.setError("Wrong username or password");
+			}	
 		}
 		catch(NullPointerException e) {
-			System.out.println("Error - Attempted to authenticate null passenger");
-			authenticate =  false;
+			r.setResponse(false);
+			r.setError("Error - Attempted to authenticate null passenger");
 		}
-		return authenticate;
+		return r;
 	}
 
 	/**
@@ -586,27 +602,29 @@ public class KarpoolController {
 	 * @return
 	 */
 	@GetMapping
-	public boolean addPassenger(Passenger passenger, Trip trip) {
-
+	public Response addPassenger(Passenger passenger, Trip trip) 
+	{
+		Response r = new Response();
 		/*check this because its a mess */
 		if (trip.getSeatAvailable() <= 0) {
-			return false;
+			r.setResponse(false);
+			r.setError("No seats available");
 		}
-	
-		else if (passengers.contains(passenger)) {
-			return false;
+
+		else if (passengers.contains(passenger)) 
+		{
+			r.setResponse(false);
+			r.setError("You are already on this trip");
 		}
 
 		else {
 			passenger.setTrip(trip);
 			trip.getPassenger().add(passenger);
-			return true;
+			r.setResponse(true);
+			r.setError(null);
 		}	
-
-	//wasAdded = true;
-	//return wasAdded;
-	
-}
+		return r;
+	}
 
 //	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
 //	{

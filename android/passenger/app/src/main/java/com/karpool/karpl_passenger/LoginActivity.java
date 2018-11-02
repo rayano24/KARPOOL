@@ -570,6 +570,29 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
 
+            HttpUtils.get("passengers/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, Boolean response) {
+                    if(response == true)
+                    {
+
+                    }
+                    else
+                    {
+                        
+                    }
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    try {
+                        error += errorResponse.get("message").toString();
+                    } catch (JSONException e) {
+                        error += e.getMessage();
+                    }
+                    refreshErrorMessage();
+                }
+            });
+
             return true;
 
            /* HttpUtils.get("users/auth/" + mEmail + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
@@ -588,15 +611,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 }
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-<<<<<<< HEAD
-                    if(statusCode  == 200) {
-                        authenticateUser = true;
-                    }
-                }
-                @Override
-                public void onFailure(int statusCode, Header[] headers, String string, Throwable throwable) {
-                    authenticateUser = false;
-=======
                     if(response.equals(true))
                     {
                         authenticateUser = true;
@@ -605,7 +619,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     {
                         authenticateUser = false;
                     }
->>>>>>> cbe1120901ea14ab96f07f998344d770bbbe6fcd
                 }
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
