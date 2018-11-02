@@ -53,7 +53,7 @@ public class FragmentOne extends Fragment {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         prefs.registerOnSharedPreferenceChangeListener(listener);
 
-        userLocation = prefs.getString(KEY_LOCATION, " ");
+        userLocation = prefs.getString(KEY_LOCATION,  null);
 
 
         tripTimeButton = (Button) rootView.findViewById(R.id.tripTimeButton);
