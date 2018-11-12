@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_FRAGMENT_CREATE = "tag_frag_create";
     private static final String TAG_FRAGMENT_TRIPS = "tag_frag_trips";
-    private static final String TAG_FRAGMENT_SETTINGS = "tag_frag_settings";
+    private static final String TAG_FRAGMENT_OTHER = "tag_frag_other";
 
     private List<String> participantNames = new ArrayList<>();
     private ArrayAdapter<String> participantAdapter;
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_trips:
                     switchFragment(1, TAG_FRAGMENT_TRIPS);
                     return true;
-                case R.id.navigation_settings:
-                    switchFragment(2, TAG_FRAGMENT_SETTINGS);
+                case R.id.navigation_other:
+                    switchFragment(2, TAG_FRAGMENT_OTHER);
                     return true;
             }
             return false;
@@ -72,32 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
         switchFragment(0, TAG_FRAGMENT_CREATE);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        boolean previouslyStarted = prefs.getBoolean("prevStarted", false);
-        if(!previouslyStarted)
-
-        {
-            SharedPreferences.Editor edit = prefs.edit();
-            edit.putBoolean("prevStarted", Boolean.TRUE);
-            edit.commit();
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-
-            alert.setTitle("Notice");
-            alert.setMessage("Don't forget to set your location in the settings menu");
-
-
-
-
-            alert.setNegativeButton("Got it", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // Canceled.
-                }
-            });
-
-            alert.show();
-        }
 
 
 
@@ -119,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
     private void buildFragmentsList() {
         FragmentOne homeFragment = buildFragmentOne("Create");
         FragmentTwo dashboardFragment = buildFragmentTwo("My Trips");
-        FragmentThree notificationsFragment = buildFragmentThree("Settings");
+        FragmentThree notificationsFragment = buildFragmentThree("Other");
 
         fragments.add(homeFragment);
         fragments.add(dashboardFragment);

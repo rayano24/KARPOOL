@@ -5,56 +5,61 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 
-public class FragmentThree extends PreferenceFragmentCompat {
+public class FragmentThree extends Fragment {
 
 
-
-    private final static String KEY_LOCATION = "userLocation";
-    private final static String KEY_BUTTON = "signOut";
-    private final static String KEY_USER_FIELD = "userNote";
     private final static String KEY_USER_ID = "userID";
 
+    private TextView signOut, help, userNote;
 
 
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-        // Load the preferences from an XML resource
-        setPreferencesFromResource(R.xml.pref_general, rootKey);
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_three, container, false);
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 
 
-        Preference button = findPreference(KEY_BUTTON);
-        button.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        signOut = rootView.findViewById(R.id.signOutButton);
+        help = rootView.findViewById(R.id.helpButton);
+        userNote = rootView.findViewById(R.id.userNote);
+
+
+        signOut.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onPreferenceClick(Preference preference) {
-                logOut();
+            public void onClick(View v) {
+                prefs.edit().remove("userID").commit();
                 Intent I = new Intent(getActivity(), LoginActivity.class);
                 startActivity(I);
                 getActivity().finish();
-                return true;
             }
         });
 
 
-
-        final Preference userInfoPref = getPreferenceManager().findPreference(KEY_USER_FIELD);
-        userInfoPref.setTitle("Welcome "+ prefs.getString(KEY_USER_ID, null));
-
-    }
+        userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null));
 
 
-    protected void logOut() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        prefs.edit().remove("userID").commit();
 
+
+
+
+
+        return rootView;
     }
 
 
 
 }
+
+
