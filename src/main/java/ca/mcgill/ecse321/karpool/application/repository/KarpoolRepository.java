@@ -194,20 +194,23 @@ public class KarpoolRepository
 	public Trip getTripForPassenger(String name)
 	{
 		Passenger p = entityManager.find(Passenger.class, name);
-//		Trip t = p.getTrip();
-//		return t;
-		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE :pass IN(SELECT passenger FROM trip)");
-		q.setParameter("pass", p);
-		Trip t = (Trip) q.getResultList().get(0);
+		Trip t = p.getTrip();
 		return t;
+//		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE :pass IN(SELECT passenger FROM trip)");
+//		q.setParameter("pass", p);
+//		Trip t = (Trip) q.getResultList().get(0);
+//		return t;
 	}
 	
 	@Transactional
-	public Set<Trip> getTripForDriver(String name)
+	public List<Integer> getTripForDriver(String name)
 	{
 		Driver d = entityManager.find(Driver.class, name);
-		Set <Trip> t = d.getTrip();
-		return t;
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE driver= :driver");
+		q.setParameter("driver", d);
+		@SuppressWarnings("unchecked")
+		List<Integer> trips = q.getResultList();
+		return trips;
 	}
 	
 	@Transactional
@@ -219,12 +222,31 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
-	public Trip addPassenger(Passenger p, Trip t)
+	public Passenger addPassenger(Passenger p, Trip t)
 	{
-		t.addPassenger(p);
+//		t.addPassenger(p);
+//		t.setSeatAvailable(t.getSeatAvailable()-1);
+		p.setTrip(t);
 		t.setSeatAvailable(t.getSeatAvailable()-1);
-		entityManager.merge(t);
-		return t;
+		entityManager.merge(p);
+		return p;
+	}
+
+	@Transactional
+	public boolean checkPassengerInTrip(Trip t, String name) 
+	{
+		Query q = entityManager.createNativeQuery("SELECT name FROM passenger WHERE trip= :trip");
+		q.setParameter("trip", t);
+		@SuppressWarnings("unchecked")
+		List<String> names = q.getResultList();
+		if(names.contains(name))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 }
