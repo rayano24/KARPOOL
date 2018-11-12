@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class tripAdapter extends RecyclerView.Adapter<tripAdapter.MyViewHolder> {
+public class TripAdapter extends RecyclerView.Adapter<TripAdapter.MyViewHolder> {
 
     private List<Trip> tripList;
 
@@ -28,7 +28,7 @@ public class tripAdapter extends RecyclerView.Adapter<tripAdapter.MyViewHolder> 
     }
 
 
-    public tripAdapter(List<Trip> tripList) {
+    public TripAdapter(List<Trip> tripList) {
         this.tripList = tripList;
     }
 

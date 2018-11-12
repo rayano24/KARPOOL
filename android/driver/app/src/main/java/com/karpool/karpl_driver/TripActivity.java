@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -52,6 +53,11 @@ public class TripActivity extends AppCompatActivity {
     private static TextView modifyDate, modifyTime;
     private static String date, time; // FOR DATABASE
 
+
+    private ModifyTripTask mModifyTripTask = null;
+    private boolean valueModified;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,22 +84,41 @@ public class TripActivity extends AppCompatActivity {
         String time = prefs.getString(KEY_TRIP_TIME, null);
 
         modifyTime.setText(formatter(time, ":", 2));
-        modifyDate.setText(year + "-" + formatter(remainder, "-", 2)
-        );
+        modifyDate.setText(year + "-" + formatter(remainder, "-", 2));
         modifyDestination.setText(prefs.getString(KEY_TRIP_DESTINATION, null));
         modifyOrigin.setText(prefs.getString(KEY_TRIP_ORIGIN, null));
         modifySeats.setText(prefs.getString(KEY_TRIP_SEATS, null));
 
 
+
+
         modifyOrigin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(TripActivity.this, "To modify your origin, you must delete all trips and modify it in the settings menu", Toast.LENGTH_LONG).show();
+                openDialog(modifyOrigin, "Origin", "Update your trip's starting position" );
+
             }
         });
 
         modifyDestination.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                updateDestination( modifyDestination);
+                openDialog(modifyDestination, "Destination", "Update your trip's destination" );
+            }
+        });
+
+
+
+        modifyPrice.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openDialog(modifyPrice, "Price", "Update your trip's price" );
+
+
+
+            }
+        });
+
+        modifySeats.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                openDialog(modifySeats, "Seats", "Update your vehicle's capacity " );
 
             }
         });
@@ -114,67 +139,104 @@ public class TripActivity extends AppCompatActivity {
             }
         });
 
-        modifyPrice.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                updatePrice( modifyPrice);
-
-
-            }
-        });
-
-        modifySeats.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                updateSeats(modifySeats);
-
-
-            }
-        });
-
-
     }
 
+
     /**
-     * Used for date and time formatting
-     *
-     * @param text   the string you want to format
-     * @param insert the character to insert
-     * @param n      insert every n characters
-     * @return
+     * Represents an asynchronous modify trip task
+     * Takes the new value of what you are modifying as well as the string to modify to indicate what you are changing
      */
-    public static String formatter(
-            String text, String insert, int n) {
-        StringBuilder builder = new StringBuilder(
-                text.length() + insert.length() * (text.length() / n) + 1);
+    public class ModifyTripTask extends AsyncTask<Void, Void, Boolean> {
 
-        int index = 0;
-        String prefix = "";
-        while (index < text.length()) {
+        private final String mNewValue;
+        private final String mToModify;
 
-            builder.append(prefix);
-            prefix = insert;
-            builder.append(text.substring(index,
-                    Math.min(index + n, text.length())));
-            index += n;
+
+        ModifyTripTask(String value, String toModify) {
+            mNewValue = value;
+            mToModify = toModify;
+
         }
-        return builder.toString();
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            HttpUtils.post("trips/" + tripID + "/" + mToModify + "/" + mNewValue, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public boolean getUseSynchronousMode() {
+                    return false;
+                }
+
+                @Override
+                public void setUseSynchronousMode(boolean useSynchronousMode) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                   // TODO
+
+                    /* try {
+                        //
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    */
+                }
+
+            });
+            return valueModified;
+        }
+
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+
+
+            mModifyTripTask = null;
+
+
+            if (success) {
+
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mModifyTripTask = null;
+        }
     }
 
 
     /**
-     * Updates the price
-     * @param text
+     * Opens the dialog for modifying a textEdit
+     * @param text the text to modify
+     * @param title the title of the alert
+     * @param description the description of the alert
      */
-    private void updatePrice(TextView text) {
+    private void openDialog(TextView text, String title, String description) {
 
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
 
         final EditText input = new EditText(this);
         final TextView updateInput = text;
+        final String category = title;
 
 
-        alert.setTitle("Price");
-        alert.setMessage("Update your trip's price");
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        alert.setTitle(title);
+        alert.setMessage(description);
+
+        if(title.equals("Price") || title.equals("Seats")) {
+            input.setInputType(InputType.TYPE_CLASS_NUMBER);
+        }
+        else {
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+        }
 
 
         alert.setView(input);
@@ -182,7 +244,26 @@ public class TripActivity extends AppCompatActivity {
         alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 updateInput.setText(input.getText());
-                // TODO
+                switch(category) {
+                    case("Origin"):
+                        mModifyTripTask = new ModifyTripTask(input.getText().toString(), KEY_TRIP_ORIGIN);
+                        mModifyTripTask.execute((Void) null);
+                        break;
+                    case("Destination"):
+                        mModifyTripTask = new ModifyTripTask(input.getText().toString(), KEY_TRIP_DESTINATION);
+                        mModifyTripTask.execute((Void) null);
+                        break;
+                    case("seats"):
+                        mModifyTripTask = new ModifyTripTask(input.getText().toString(), KEY_TRIP_SEATS);
+                        mModifyTripTask.execute((Void) null);
+                        break;
+                    case("price"):
+                        // todo
+                        break;
+
+
+
+                }
 
             }
         });
@@ -195,114 +276,7 @@ public class TripActivity extends AppCompatActivity {
 
         alert.show();
 
-
     }
-
-    /**
-     * Updates seats
-     * @param text
-     */
-    private void updateSeats(TextView text) {
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-        final EditText input = new EditText(this);
-        final TextView updateInput = text;
-
-
-        alert.setTitle("Seats");
-        alert.setMessage("Update your vehicle's capacity");
-        input.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-
-        alert.setView(input);
-
-
-
-                alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                updateInput.setText(input.getText());
-             /*  HttpUtils.post("trips/" + tripID + "/" + "seats" + "/" + Integer.parseInt(input.getText().toString()), new RequestParams(), new JsonHttpResponseHandler() {
-                    @Override
-                    public void onFinish() {
-                    }
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        try {
-
-
-                            }
-                            else {
-
-                            }
-
-
-
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-
-                    }
-                }); */
-
-
-            }
-        });
-
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-            }
-        });
-
-        alert.show();
-
-
-    }
-
-    /**
-     * Updates destination
-     * @param text
-     */
-    private void updateDestination(TextView text) {
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-        final EditText input = new EditText(this);
-        final TextView updateInput = text;
-
-        alert.setTitle("Destination");
-        alert.setMessage("Update your trip's destination");
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-
-
-        alert.setView(input);
-
-        alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                updateInput.setText(input.getText());
-
-            }
-        });
-
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                // Canceled.
-            }
-        });
-
-        alert.show();
-
-
-    }
-
-
 
 
 
@@ -329,6 +303,7 @@ public class TripActivity extends AppCompatActivity {
 
     }
 
+
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
 
@@ -351,10 +326,11 @@ public class TripActivity extends AppCompatActivity {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            date = Integer.toString(year) + convertDate(month) + convertDate(day);
-            modifyDate.setText(Integer.toString(year) + "-" + convertDate(month) + "-" + convertDate(day));
+            date = Integer.toString(year) + convertDate(day) + convertDate(month);
+            modifyDate.setText(Integer.toString(year) + "-" + convertDate(day) + "-" + convertDate(month));
             modifyDate.setVisibility(View.VISIBLE);
         }
+
     }
 
     protected static String convertDate(int input) {
@@ -363,6 +339,32 @@ public class TripActivity extends AppCompatActivity {
         } else {
             return "0" + String.valueOf(input);
         }
+    }
+
+    /**
+     * Used for date and time formatting
+     *
+     * @param text   the string you want to format
+     * @param insert the character to insert
+     * @param n      insert every n characters
+     * @return
+     */
+    public static String formatter(
+            String text, String insert, int n) {
+        StringBuilder builder = new StringBuilder(
+                text.length() + insert.length() * (text.length() / n) + 1);
+
+        int index = 0;
+        String prefix = "";
+        while (index < text.length()) {
+
+            builder.append(prefix);
+            prefix = insert;
+            builder.append(text.substring(index,
+                    Math.min(index + n, text.length())));
+            index += n;
+        }
+        return builder.toString();
     }
 
 

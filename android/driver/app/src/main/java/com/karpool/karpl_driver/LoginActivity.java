@@ -38,6 +38,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Space;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -613,6 +614,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                             e.printStackTrace();
                         }
                     }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        super.onFailure(statusCode, headers, throwable, errorResponse);
+                        Toast.makeText(LoginActivity.this, "There was a network error signing in", Toast.LENGTH_LONG).show();
+                    }
                 });
                 return authenticateUser;
             }
@@ -708,9 +715,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                 if (success) {
                     setElementVisbility("register", true);
-                } else {
-
-
                 }
             }
 
@@ -794,6 +798,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     registerPhone.setError(null);
                     registerButton.setVisibility(View.GONE);
                     record.setVisibility(View.GONE);
+                    record.setChecked(false);
 
                 }
             }

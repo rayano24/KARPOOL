@@ -16,12 +16,16 @@ public class FragmentThree extends PreferenceFragmentCompat {
 
     private final static String KEY_LOCATION = "userLocation";
     private final static String KEY_BUTTON = "signOut";
+    private final static String KEY_USER_FIELD = "userNote";
+    private final static String KEY_USER_ID = "userID";
+
 
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         // Load the preferences from an XML resource
         setPreferencesFromResource(R.xml.pref_general, rootKey);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 
 
@@ -37,15 +41,11 @@ public class FragmentThree extends PreferenceFragmentCompat {
             }
         });
 
-        final Preference pref = getPreferenceManager().findPreference(KEY_LOCATION);
-        pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
 
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object location) {
-                pref.setSummary(location.toString());
-                return true;
-            }
-        });
+
+        final Preference userInfoPref = getPreferenceManager().findPreference(KEY_USER_FIELD);
+        userInfoPref.setTitle("Welcome "+ prefs.getString(KEY_USER_ID, null));
+
     }
 
 

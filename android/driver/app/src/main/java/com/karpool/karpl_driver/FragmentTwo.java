@@ -2,6 +2,7 @@ package com.karpool.karpl_driver;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -33,21 +34,21 @@ public class FragmentTwo extends Fragment {
 
     private List<Trip> tripsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    private tripAdapter mAdapter;
+    private TripAdapter mAdapter;
 
     private TextView noTrips;
 
-    private String userID = "hey";
-    private final static String KEY_LOCATION = "userLocation";
+    private String userID;
     private final static String KEY_TRIP_DESTINATION = "tripDestination";
-    private final static String KEY_TRIP_TIME= "tripTime";
+    private final static String KEY_TRIP_TIME = "tripTime";
     private final static String KEY_TRIP_DATE = "tripDate";
     private final static String KEY_TRIP_ORIGIN = "tripOrigin";
     private final static String KEY_TRIP_SEATS = "searchSeats";
     private final static String KEY_TRIP_ID = "tripID";
     private final static String KEY_USER = "userID";
 
-
+    private DisplayTripTask mDisplayTripTask = null;
+    private boolean retrievalSuccess;
 
 
     @Override
@@ -58,20 +59,16 @@ public class FragmentTwo extends Fragment {
         userID = prefs.getString(KEY_USER, null);
 
 
-
-
-
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.myTripsRecyclerView);
         noTrips = (TextView) rootView.findViewById(R.id.noTrips);
 
 
-        mAdapter = new tripAdapter(tripsList);
+        mAdapter = new TripAdapter(tripsList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
         mRecyclerView.setAdapter(mAdapter);
-
 
 
         // Click listener for trip selection
@@ -88,8 +85,6 @@ public class FragmentTwo extends Fragment {
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
                 startActivity(I);
-
-
             }
 
             @Override
@@ -99,66 +94,99 @@ public class FragmentTwo extends Fragment {
         }));
 
 
-        prepareTripData(userID);
-
-
-
-        prepareTripData(userID);
+        mDisplayTripTask = new DisplayTripTask(userID);
+        mDisplayTripTask.execute((Void) null);
 
 
         return rootView;
     }
 
+
     /**
-     * Updates the trip information
+     * Represents an asynchronous task to get the trip info
      */
-    private void prepareTripData(String userID) {
+    public class DisplayTripTask extends AsyncTask<Void, Void, Boolean> {
 
-        tripsList.clear();
-
-
-        // TODO THIS SHOULD BE BASED ON THE DRIVERS TRIPS
+        private final String mUser; //change to username
 
 
-           /* HttpUtils.get("trips/" + userLocation + "/" + destination, new RequestParams(), new JsonHttpResponseHandler() {
+        DisplayTripTask(String userID) {
+            mUser = userID;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            HttpUtils.get("trips/drivers/" + mUser, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public boolean getUseSynchronousMode() {
+                    return false;
+                }
+
+                @Override
+                public void setUseSynchronousMode(boolean useSynchronousMode) {
+
+                }
+
                 @Override
                 public void onFinish() {
-                    updateVisibility(false, true);
                 }
+
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     try {
 
                         tripsList.clear();
 
-
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject obj = response.getJSONObject(i);
-                             String date = response.getString("departureDate");
-                        String year = date.substring(0, 4);
-                        String remainder = date.substring(4,8);
-                        String time = response.getString("departureTime");
-                        tripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                formatter(time, ":", 2), response.getString("driver"), response.getString("seatAvailable"), response.getString("tripId")));
+                            String date = obj.getString("departureDate");
+                            String year = date.substring(0, 4);
+                            String remainder = date.substring(4, 8);
+                            String time = obj.getString("departureTime");
+                            JSONObject driver = obj.getJSONObject("driver");
+                            String driverName = driver.getString("name");
+
+
+                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("tripId"))));
+
+                            retrievalSuccess = true;
+
                         }
-                        updateVisibility(true, false);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    updateVisibility(false, true);
-                    tripsList.clear();
 
                 }
-            }); */
 
 
+            });
+            return retrievalSuccess;
 
-        mAdapter.notifyDataSetChanged();
+        }
+
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+
+
+            mDisplayTripTask = null;
+            //showSignInProgress(false);
+
+            if (success) {
+
+                updateVisibility(true, false);
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mDisplayTripTask = null;
+            //showSignInProgress(false);
+        }
     }
+
+
 
     /**
      * @param displayTrips if true, display recycler view
@@ -177,6 +205,7 @@ public class FragmentTwo extends Fragment {
         }
 
     }
+
 
     /**
      * Used for date and time formatting

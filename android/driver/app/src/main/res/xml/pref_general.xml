@@ -1,25 +1,28 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <PreferenceCategory android:title="General">
 
-
-        <EditTextPreference
-            android:key="userLocation"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:inputType="text"
-            android:title="Your Location"
-            android:summary=" "/>
-    </PreferenceCategory>
-
-
-
-
-    <PreferenceCategory android:title="Other">
+    <PreferenceCategory android:title="User">
 
 
 
     </PreferenceCategory>
+
+
+    <Preference android:title=""
+        android:selectable="false"
+        android:enabled="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:key="userNote"/>
+
+
+    <PreferenceCategory android:title="App">
+
+
+
+    </PreferenceCategory>
+
+
+
 
     <Preference android:title="@string/action_sign_out"
         android:clickable="true"
@@ -28,11 +31,11 @@
         android:key="signOut"/>
 
 
-    <!-- <Preference android:title="@string/action_help"
+    <Preference android:title="@string/action_help"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?attr/selectableItemBackground"
-        android:key="help"/> -->
+        android:key="help"/>
 
 
 

@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
@@ -17,12 +18,8 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
-
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,27 +32,18 @@ public class FragmentOne extends Fragment {
     private Button tripTimeButton, tripDateButton, createButton;
     protected static TextView dateLabel, timeLabel;
     private static String date, time; // FOR DATABASE
-    private EditText newDestination, newPrice, newSeats;
+    private EditText newDestination, newPrice, newSeats, newOrigin;
 
-    private final static String KEY_LOCATION = "userLocation";
 
-    private static String userLocation, userID;
+    private static String userID;
     private final static String KEY_USER = "userID";
 
 
+    private boolean tripCreated;
+    private CreateTripTask mCreateTripTask = null;
 
 
 
-
-    private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-            // listener implementation
-            if (key.equals(KEY_LOCATION)) {
-                userLocation = prefs.getString(KEY_LOCATION, " ");
-            }
-
-        }
-    };
 
 
     @Override
@@ -63,10 +51,7 @@ public class FragmentOne extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        prefs.registerOnSharedPreferenceChangeListener(listener);
         userID = prefs.getString(KEY_USER, null);
-
-        userLocation = prefs.getString(KEY_LOCATION,  null);
 
 
         tripTimeButton = (Button) rootView.findViewById(R.id.newTime);
@@ -77,15 +62,14 @@ public class FragmentOne extends Fragment {
         newPrice = (EditText) rootView.findViewById(R.id.newPrice);
         newDestination = (EditText) rootView.findViewById(R.id.newDestination);
         newSeats = (EditText) rootView.findViewById(R.id.newSeats);
-
-
-
+        newOrigin = (EditText) rootView.findViewById(R.id.newOrigin);
 
 
 
         createButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                createTrip(userID, userLocation, newDestination.getText().toString(), newSeats.getText().toString(), time, date, newPrice.getText().toString());
+                mCreateTripTask = new CreateTripTask(userID, newOrigin.getText().toString(), newDestination.getText().toString(), Integer.parseInt(newSeats.getText().toString()), time, date, Integer.parseInt(newPrice.getText().toString()));
+                mCreateTripTask.execute((Void) null);
 
 
             }
@@ -114,45 +98,100 @@ public class FragmentOne extends Fragment {
         return rootView;
     }
 
+    /**
+     * Represents an asynchronous create trip task
+     */
+    public class CreateTripTask extends AsyncTask<Void, Void, Boolean> {
 
-    private void createTrip(String userID, String userLocation, String destination, String seats, String Time, String Date, String price) {
-
-
-
-                HttpUtils.post("trips/" + userID + "/" + userLocation + "/" + destination + "/" + Integer.parseInt(seats) + "/" + Time + "/" + Date + "/" + Integer.parseInt(price), new RequestParams(), new JsonHttpResponseHandler() {
-            @Override
-            public void onFinish() {
-            }
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    if (!response.getString("trips").equals(null)) {
-                        clearFields();
-                        Toast.makeText(getActivity(), "The trip was successfully created", Toast.LENGTH_SHORT).show();
-
-
-                    }
-                    else {
-                        Toast.makeText(getActivity(), "Failed to create a trip", Toast.LENGTH_SHORT).show();
-
-                    }
+        private final String mUser; //change to username
+        private final String mOrigin;
+        private final String mDestination; //change to username
+        private final int mSeats;
+        private final String mTime;
+        private final String mDate;
+        private final int mPrice;
 
 
 
+
+        CreateTripTask(String userID, String origin, String destination, int seats, String time, String date, int price) {
+            mUser = userID;
+            mOrigin = origin;
+            mDestination = destination;
+            mSeats = seats;
+            mTime = time;
+            mDate = date;
+            mPrice = price;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            HttpUtils.post("trips/" + mUser + "/" + mOrigin + "/" + mDestination + "/" + mSeats + "/" + mTime + "/" + mDate + "/" + mPrice, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public boolean getUseSynchronousMode() {
+                    return false;
+                }
+
+                @Override
+                public void setUseSynchronousMode(boolean useSynchronousMode) {
+
+                }
+                @Override
+                public void onFinish() {
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        if (!response.getString("destination").isEmpty()) {
+                            tripCreated = true;
+
+                        } else {
+                            tripCreated = false;
+
+                        }
 
 
                     } catch (JSONException e) {
-                    e.printStackTrace();
+                        e.printStackTrace();
+                    }
                 }
+
+            });
+            return tripCreated;
+        }
+
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+
+
+           mCreateTripTask = null;
+            //showSignInProgress(false);
+
+            if (success) {
+                clearFields();
+
+
+
+            } else {
+
             }
+        }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-
-            }
-        });
-
+        @Override
+        protected void onCancelled() {
+            mCreateTripTask = null;
+            //showSignInProgress(false);
+        }
     }
+
+
+
+
+
+
+
 
 
     public static class TimePickerFragment extends DialogFragment
@@ -199,9 +238,8 @@ public class FragmentOne extends Fragment {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            // TODO DATE OUTPUT
-            date = Integer.toString(year) + convertDate(month) + convertDate(day);
-            dateLabel.setText(Integer.toString(year) + "-" +  convertDate(month) + "-" +  convertDate(day));
+            date = Integer.toString(year) + convertDate(day) + convertDate(month);
+            dateLabel.setText(Integer.toString(year) + "-" +  convertDate(day) + "-" +  convertDate(month));
             dateLabel.setVisibility(View.VISIBLE);
 
         }
@@ -219,6 +257,9 @@ public class FragmentOne extends Fragment {
         newDestination.setText("");
         newPrice.setText("");
         newSeats.setText("");
+        timeLabel.setVisibility(View.INVISIBLE);
+        dateLabel.setVisibility(View.INVISIBLE);
+
 
     }
 
