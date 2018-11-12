@@ -254,9 +254,14 @@ public class FragmentOne extends Fragment {
     }
 
     protected void clearFields() {
+        newOrigin.setText("");
         newDestination.setText("");
         newPrice.setText("");
         newSeats.setText("");
+        newOrigin.clearFocus();
+        newDestination.clearFocus();
+        newPrice.clearFocus();
+        newSeats.clearFocus();
         timeLabel.setVisibility(View.INVISIBLE);
         dateLabel.setVisibility(View.INVISIBLE);
 
