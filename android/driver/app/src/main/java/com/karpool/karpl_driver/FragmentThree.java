@@ -19,6 +19,8 @@ public class FragmentThree extends Fragment {
 
 
     private final static String KEY_USER_ID = "userID";
+    private final static String KEY_RATING = "rating";
+
 
     private TextView signOut, help, userNote;
 
@@ -46,8 +48,22 @@ public class FragmentThree extends Fragment {
             }
         });
 
+       /* String rating = prefs.getString(KEY_RATING, null);
+        if(rating == null) {
+            userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null));
+        }
+        else {
+            userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null) + " (" + rating + ")");
+
+
+        }
+
+        */
 
         userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null));
+
+
+
 
 
 
