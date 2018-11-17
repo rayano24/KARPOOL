@@ -25,23 +25,24 @@ import cz.msebera.android.httpclient.Header;
 public class TripActivity extends AppCompatActivity {
 
 
-    private TextView tripOrigin, tripDestination, tripDriver, tripDate, tripTime, tripPrice, tripSeats, tripRating;
+    private TextView tripOrigin, tripDestination, tripDriver, tripDate, tripTime, tripPrice, tripSeats, driverRating;
     static private Button tripButton;
     private final static String KEY_PAST_FRAGMENT = "pastFrag";
 
-    private final static String KEY_TRIP_DESTINATION = "tripDestination";
-    private final static String KEY_TRIP_TIME = "tripTime";
-    private final static String KEY_TRIP_DATE = "tripDate";
-    private final static String KEY_TRIP_ORIGIN = "tripOrigin";
-    private final static String KEY_TRIP_DRIVER = "searchDriver";
-    private final static String KEY_TRIP_SEATS = "searchSeats";
+    private final static String KEY_TRIP_DESTINATION = "tripdestination";
+    private final static String KEY_TRIP_TIME = "time";
+    private final static String KEY_TRIP_DATE = "date";
+    private final static String KEY_TRIP_ORIGIN = "triplocation";
+    private final static String KEY_TRIP_SEATS = "seats";
     private final static String KEY_TRIP_ID = "tripID";
     private final static String KEY_USER_ID = "userID";
-    private final static String KEY_USER_LOCATION = "userLocation";
+    private final static String KEY_TRIP_PRICE = "tripprice";
+    private final static String KEY_TRIP_DRIVER = "driver";
+
+    private static String userID, tripID, currentFrag;
 
 
-    private static String userID, currentFrag, tripID, userLocation;
-
+    // TODO DRIVER RATING
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,27 +57,25 @@ public class TripActivity extends AppCompatActivity {
         tripTime = (TextView) findViewById(R.id.tripTime);
         tripPrice = (TextView) findViewById(R.id.tripPrice);
         tripDriver = (TextView) findViewById(R.id.tripDriver);
-        tripButton = (Button) findViewById(R.id.joinButton);
+        tripButton = (Button) findViewById(R.id.tripButton);
         tripSeats = (TextView) findViewById(R.id.tripSeats);
-        tripRating = (TextView) findViewById(R.id.tripRating);
+        driverRating = (TextView) findViewById(R.id.driverRating);
 
 
         currentFrag = prefs.getString(KEY_PAST_FRAGMENT, null);
         tripID = prefs.getString(KEY_TRIP_ID, null);
         userID = prefs.getString(KEY_USER_ID, null);
-        userLocation = prefs.getString(KEY_USER_LOCATION, null);
-
-
-
 
 
         updateButton(currentFrag);
+
         tripDate.setText(prefs.getString(KEY_TRIP_DATE, null));
         tripTime.setText(prefs.getString(KEY_TRIP_TIME, null));
         tripDestination.setText(prefs.getString(KEY_TRIP_DESTINATION, null));
         tripOrigin.setText(prefs.getString(KEY_TRIP_ORIGIN, null));
         tripDriver.setText(prefs.getString(KEY_TRIP_DRIVER, null));
         tripSeats.setText(prefs.getString(KEY_TRIP_SEATS, null));
+        tripPrice.setText(prefs.getString(KEY_TRIP_PRICE, null));
 
 
         tripButton.setOnClickListener(new View.OnClickListener() {
@@ -91,20 +90,22 @@ public class TripActivity extends AppCompatActivity {
     }
 
 
-    private static void updateRating(int rating) {
-
-    }
-
     public static void updateButton(String currentFrag) {
         if (currentFrag.equals("JOIN")) {
             tripButton.setText("JOIN TRIP");
         } else {
-            tripButton.setText("DELETE TRIP");
+            tripButton.setText("LEAVE TRIP");
 
         }
     }
 
 
+    /**
+     * Represents an async processor to either join or leave a trip
+     * @param currentFrag
+     * @param userID
+     * @param tripID
+     */
     public static void tripAction(String currentFrag, String userID, final String tripID) {
         if (currentFrag.equals("JOIN")) {
 
@@ -128,12 +129,13 @@ public class TripActivity extends AppCompatActivity {
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
 
                 }
+
                 Toast toast;
             });
 
 
         } else
-            HttpUtils.get("trips/" +  "/" +"close" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
+            HttpUtils.get("trips/" + "/" + "close" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public void onFinish() {
                 }
@@ -159,11 +161,8 @@ public class TripActivity extends AppCompatActivity {
         {
 
 
-
-
         }
     }
-
 
 
 }

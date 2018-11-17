@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,25 +42,21 @@ public class FragmentTwo extends Fragment {
 
     private TextView noTrips;
 
-    private final static String KEY_USER = "userID";
-    private final static String KEY_PAST_FRAGMENT = "pastFrag";
-
 
     private final static String KEY_LOCATION = "userLocation";
-    private final static String KEY_TRIP_DESTINATION = "tripDestination";
-    private final static String KEY_TRIP_TIME= "tripTime";
-    private final static String KEY_TRIP_DATE = "tripDate";
-    private final static String KEY_TRIP_ORIGIN = "tripOrigin";
-    private final static String KEY_TRIP_DRIVER = "searchDriver";
-    private final static String KEY_TRIP_SEATS = "searchSeats";
+    private final static String KEY_PAST_FRAGMENT = "pastFrag";
+    private final static String KEY_TRIP_DESTINATION = "tripdestination";
+    private final static String KEY_TRIP_TIME = "time";
+    private final static String KEY_TRIP_DATE = "date";
+    private final static String KEY_TRIP_ORIGIN = "triplocation";
+    private final static String KEY_TRIP_SEATS = "seats";
     private final static String KEY_TRIP_ID = "tripID";
-
-
-
+    private final static String KEY_TRIP_DRIVER = "driver";
+    private final static String KEY_USER_ID = "userID";
+    private final static String KEY_TRIP_PRICE = "tripprice";
 
 
     private String userID;
-
 
 
     @Override
@@ -67,16 +64,12 @@ public class FragmentTwo extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_two, container, false);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        userID = prefs.getString(KEY_USER, null);
-        prefs.edit().putString(KEY_PAST_FRAGMENT, "JOIN").commit();
-
-
+        userID = prefs.getString(KEY_USER_ID, null);
+        prefs.edit().putString(KEY_PAST_FRAGMENT, "LEAVE").commit();
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.myTripsRecyclerView);
         noTrips = (TextView) rootView.findViewById(R.id.noTrips);
-
-
 
 
         mAdapter = new searchAdapter(tripsList);
@@ -87,9 +80,7 @@ public class FragmentTwo extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
 
-
         // Click listener for trip selection
-        // TODO open and populate the trip activity when this is selected
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), mRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -101,6 +92,8 @@ public class FragmentTwo extends Fragment {
                 prefs.edit().putString(KEY_TRIP_DRIVER, trip.getDriver()).commit();
                 prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
+                prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
+
                 Intent I = new Intent(getActivity(), TripActivity.class);
                 startActivity(I);
 
@@ -114,51 +107,61 @@ public class FragmentTwo extends Fragment {
         }));
 
 
-        prepareUserTripData(userID);
+        displayTrips(userID);
+
 
 
         return rootView;
     }
 
-    /**
-     * Updates the trip information
-     */
-    private void prepareUserTripData(String user) {
-        // TODO Same logic as fragment 1 but we are just adding trips based on UserID
-        tripsList.clear();
 
-        HttpUtils.get("trips/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
+    /**
+     * Represents an asynchronous task to get the trip info
+     */
+
+    public void displayTrips(String mUser) {
+
+        HttpUtils.get("trips/passengers/" + mUser, new RequestParams(), new JsonHttpResponseHandler() {
+
             @Override
             public void onFinish() {
-
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    if(response.getString("departureLocation").isEmpty()) {
+
+                    tripsList.clear();
+
+                    String date = response.getString("departureDate");
+                    String year = date.substring(0, 4);
+                    String remainder = date.substring(4, 8);
+                    String time = response.getString("departureTime");
+                    JSONObject driver = response.getJSONObject("driver");
+                    String driverName = driver.getString("name");
+
+
+                    tripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                            formatter(time, ":", 2), driverName, Integer.toString(response.getInt("seatAvailable")), Integer.toString(response.getInt("price")), Integer.toString(response.getInt("tripId"))));
+
+
+                    if (tripsList.isEmpty())
                         noTrips.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        String date = response.getString("departureDate");
-                        String year = date.substring(0, 4);
-                        String remainder = date.substring(4,8);
-                        String time = response.getString("departureTime");
-                        tripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                formatter(time, ":", 2), response.getString("driver"), response.getString("seatAvailable"), response.getString("tripId")));
-                        noTrips.setVisibility(View.GONE);
-                    }
+
+                    mAdapter.notifyDataSetChanged();
+
+
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
             }
+
+
         });
 
-
-
-
-        mAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -186,7 +189,6 @@ public class FragmentTwo extends Fragment {
         }
         return builder.toString();
     }
-
 
 
 }

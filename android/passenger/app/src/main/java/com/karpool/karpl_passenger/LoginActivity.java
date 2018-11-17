@@ -51,6 +51,59 @@ import cz.msebera.android.httpclient.Header;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Point;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.app.LoaderManager.LoaderCallbacks;
+
+import android.content.CursorLoader;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.AsyncTask;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.text.TextUtils;
+import android.view.Display;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Space;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
+
+import static android.Manifest.permission.READ_CONTACTS;
+
 /**
  * A login screen that offers login via email/password.
  */
@@ -66,16 +119,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mlogInAuthTask = null;
-    private UserRegisterTask mRegAuthTask = null;
+
+    private final static String KEY_USER = "userID";
+    private final static String KEY_RATING = "rating";
 
 
-    private boolean authenticateUser;
-    private boolean registerUser;
-    private String error;
-
-
-    private static String userID;
 
 
     // UI references.
@@ -88,21 +136,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private Button signInPrompt, registerPrompt, signInButton, registerButton;
     private AutoCompleteTextView signInName, registerEmail, registerPhone;
     private EditText signInPassword, registerName, registerPassword;
+    private CheckBox record;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        if(prefs.getString("userID", null) != null) {
+
+        if (prefs.getString("userID", null) != null) {
             Intent I = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(I);
             finish();
         }
 
-
-        // TODO If user is signed in, skip this activity and launch main
-        // I'll fix this when database or mock is set up..
 
 
         signInPrompt = findViewById(R.id.signInPrompt);
@@ -174,7 +221,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptRegistration();
+                    attemptRegistration();
             }
         });
 
@@ -235,13 +282,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * Attempts to sign in the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
+     * If there are form errors (invalid username, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mlogInAuthTask != null) {
-            return;
-        }
 
         // Reset errors.
         signInName.setError(null);
@@ -254,15 +298,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
 
-        /*
-        if (!isPasswordValid(password)) {
-            signInPassword.setError(getString(R.string.error_invalid_password));
-            focusView = signInPassword;
-            cancel = true;
-        }
-        */
         if (TextUtils.isEmpty(password)) {
             signInPassword.setError(getString(R.string.error_field_required));
             focusView = signInPassword;
@@ -274,11 +310,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             signInName.setError(getString(R.string.error_field_required));
             focusView = signInName;
             cancel = true;
-        } /* else if (!isEmailValid(email)) {
-            signInEmail.setError(getString(R.string.error_invalid_email));
-            focusView = signInEmail;
-            cancel = true;
-        } */
+        }
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -288,8 +321,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showSignInProgress(true);
-            mlogInAuthTask = new UserLoginTask(username, password);
-            mlogInAuthTask.execute((Void) null);
+            //  mlogInAuthTask = new UserLoginTask(username, password);
+            //  mlogInAuthTask.execute((Void) null);
+            userLogInTask(username, password);
         }
     }
 
@@ -300,9 +334,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * errors are presented and no actual login attempt is made.
      */
     private void attemptRegistration() {
-        if (mRegAuthTask != null) {
-            return;
-        }
+
 
         // Reset errors.
         registerName.setError(null);
@@ -320,31 +352,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
-     /*   // Check for a valid password, if the user entered one.
-        if (!isPasswordValid(password)) {
-            registerPassword.setError(getString(R.string.error_invalid_password));
-            focusView = registerPassword;
-            cancel = true;
 
-
-        }
-        */
-
-         if (TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(password)) {
             registerPassword.setError(getString(R.string.error_field_required));
             focusView = registerEmail;
             cancel = true;
         }
 
-        /*
-        // Checks for valid phone number
-        if (!isPhoneValid(phoneNumber)) {
-            registerPhone.setError(getString(R.string.error_invalid_phone));
-            focusView = registerPhone;
-            cancel = true;
-        }
-         */
-         if (TextUtils.isEmpty(phoneNumber)) {
+        if (TextUtils.isEmpty(phoneNumber)) {
             registerPhone.setError(getString(R.string.error_field_required));
             focusView = registerPhone;
             cancel = true;
@@ -355,11 +370,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             registerEmail.setError(getString(R.string.error_field_required));
             focusView = registerEmail;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            registerEmail.setError(getString(R.string.error_invalid_email));
-            focusView = registerEmail;
-            cancel = true;
         }
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -369,8 +381,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user registration attempt.
             showRegistrationProgress(true);
-            mRegAuthTask = new UserRegisterTask(name, email, phoneNumber, password);
-            mRegAuthTask.execute((Void) null);
+            userRegisterTask(email, name, password, phoneNumber);
         }
     }
 
@@ -394,7 +405,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return true;//password.length() > 4;
+        return password.length() > 4;
     }
 
     /**
@@ -571,79 +582,43 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
 
-    /**
-     * Represents an asynchronous login task used to authenticate
-     * the user.
-     */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mName; //change to username
-        private final String mPassword;
+    public void userLogInTask(String mName, String mPassword) {
 
-        UserLoginTask(String username, String password) {
-            mName = username;
-            mPassword = password;
-        }
+        final String userID = mName;
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            HttpUtils.get("passengers/auth/" + mName + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public boolean getUseSynchronousMode() {
-                    return false;
-                }
+        HttpUtils.get("passengers/auth/" + mName + "/" + mPassword, new RequestParams(), new JsonHttpResponseHandler() {
 
-                @Override
-                public void setUseSynchronousMode(boolean useSynchronousMode) {
-
-                }
-
-                @Override
-                public void onFinish() {
-
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        if (response.getBoolean("response") == true) {
-                            userID = mName;
-                            authenticateUser = true;
-                        } else {
-                            authenticateUser = false;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-            return authenticateUser;
-        }
-
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-
-
-            mlogInAuthTask = null;
-            showSignInProgress(false);
-
-            if (success) {
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                prefs.edit().putString("userID", userID).commit();
-                Intent I = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(I);
-                finish();
-            } else {
+            @Override
+            public void onFinish() {
 
             }
-        }
 
-        @Override
-        protected void onCancelled() {
-            mlogInAuthTask = null;
-            showSignInProgress(false);
-        }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    if (response.getBoolean("response") == true) {
+                        showSignInProgress(false);
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+                        prefs.edit().putString(KEY_USER, userID).commit();
+                        Intent I = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(I);
+                        finish();
+
+                    } else {
+                        showSignInProgress(false);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject
+                    errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
     }
 
 
@@ -651,78 +626,41 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * Represents an asynchronous registration task used to sign up
      * the user.
      */
-    public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String mEmail;
-        private final String mPassword;
-        private final String mPhone;
-        private final String mName;
+    public void userRegisterTask(String mEmail, String mName, String mPassword, String mPhone) {
 
 
-        UserRegisterTask(String name, String email, String phone, String password) {
-            mName = name;
-            mEmail = email;
-            mPassword = password;
-            mPhone = phone;
-
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-
-
-            HttpUtils.post("passengers/" + mName + "/" + mEmail + "/" + mPassword + "/" + mPhone + "/false", new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public boolean getUseSynchronousMode() {
-                    return false;
-                }
-
-                @Override
-                public void setUseSynchronousMode(boolean useSynchronousMode) {
-
-                }
-
-                @Override
-                public void onFinish() {
-
-                }
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        if (!response.getString("name").isEmpty()) {
-                            registerUser = true;
-                        } else {
-                            registerUser = false;
-                        }
-                    }
-                    catch(JSONException e)
-                    {
-                        e.printStackTrace();
-                    }
-                }
-            });
-
-            return registerUser;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mRegAuthTask = null;
-            showRegistrationProgress(false);
-
-            if (success) {
-                setElementVisbility("register", true);
-            } else {
-
+        HttpUtils.post("passengers/" + mName + "/" + mEmail + "/" + mPassword + "/" + mPhone + "/false", new RequestParams(), new JsonHttpResponseHandler() {
+            @Override
+            public void onFinish() {
+                showRegistrationProgress(false);
 
             }
-        }
 
-        @Override
-        protected void onCancelled() {
-            mRegAuthTask = null;
-            showRegistrationProgress(false);
-        }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    if (!response.getString("name").isEmpty()) {
+                        setElementVisbility("register", true);
+
+
+                    } else {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject
+                    errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+
+
+
+
     }
 
 
@@ -796,9 +734,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 registerPhone.setText("");
                 registerPhone.setError(null);
                 registerButton.setVisibility(View.GONE);
+
             }
         }
 
     }
 }
+
 

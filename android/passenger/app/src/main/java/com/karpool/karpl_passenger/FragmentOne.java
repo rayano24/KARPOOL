@@ -43,18 +43,17 @@ public class FragmentOne extends Fragment {
     private String sortSelection;
     private TextView invalidCity;
 
-    private final static String KEY_LOCATION = "userLocation";
+    private final static String KEY_USER_LOCATION = "userLocation";
     private final static String KEY_PAST_FRAGMENT = "pastFrag";
-    private final static String KEY_TRIP_DESTINATION = "tripDestination";
-    private final static String KEY_TRIP_TIME= "tripTime";
-    private final static String KEY_TRIP_DATE = "tripDate";
-    private final static String KEY_TRIP_ORIGIN = "tripOrigin";
-    private final static String KEY_TRIP_DRIVER = "searchDriver";
-    private final static String KEY_TRIP_SEATS = "searchSeats";
+    private final static String KEY_TRIP_DESTINATION = "tripdestination";
+    private final static String KEY_TRIP_TIME = "time";
+    private final static String KEY_TRIP_DATE = "date";
+    private final static String KEY_TRIP_ORIGIN = "triplocation";
+    private final static String KEY_TRIP_SEATS = "seats";
     private final static String KEY_TRIP_ID = "tripID";
-
-
-
+    private final static String KEY_TRIP_DRIVER = "driver";
+    private final static String KEY_USER_ID = "userID";
+    private final static String KEY_TRIP_PRICE = "tripprice";
 
 
     String userLocation;
@@ -66,7 +65,7 @@ public class FragmentOne extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        userLocation = prefs.getString(KEY_LOCATION, null);
+        userLocation = prefs.getString(KEY_USER_LOCATION, null);
         prefs.edit().putString(KEY_PAST_FRAGMENT, "JOIN").commit();
 
 
@@ -147,6 +146,8 @@ public class FragmentOne extends Fragment {
                 prefs.edit().putString(KEY_TRIP_DRIVER, trip.getDriver()).commit();
                 prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
+                prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
+
 
 
                 Intent I = new Intent(getActivity(), TripActivity.class);
@@ -167,11 +168,6 @@ public class FragmentOne extends Fragment {
      * Updates the trip information
      */
     private void prepareTripData(String destination) {
-        // TODO Look into calling the database here. You have the destintion, need the origin, date and time. Probably needs some kind of for loop in the trips array.
-
-        // TODO Regarding sorting, you use the spinner, to get the spinner selection do, searchSpinner.getSelectedItem().toString(); (output is the string). I already handled this though. Just do if sortSelection is equal to the specific category
-        // An external method could be needed
-
         tripsList.clear();
 
 
@@ -179,7 +175,7 @@ public class FragmentOne extends Fragment {
         if (searchSpinner.getSelectedItem().toString().equals("Time (Ascending)")) {
 
 
-            HttpUtils.get("trips/" + userLocation + "/" + destination, new RequestParams(), new JsonHttpResponseHandler() {
+            HttpUtils.get("trips/" + userLocation + "/" + destination + "/date", new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public void onFinish() {
                     updateVisibility(false, true);
@@ -189,7 +185,6 @@ public class FragmentOne extends Fragment {
                     try {
 
                         tripsList.clear();
-
 
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject obj = response.getJSONObject(i);
@@ -202,7 +197,7 @@ public class FragmentOne extends Fragment {
 
 
                             tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("tripId"))));
+                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
 
 
                         }
@@ -245,7 +240,7 @@ public class FragmentOne extends Fragment {
                             String time = obj.getString("departureTime");
 
                             tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2), obj.getJSONObject("driver").getString("name"), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("tripId"))));
+                                    formatter(time, ":", 2), obj.getJSONObject("driver").getString("name"), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
 
 
                         }
