@@ -20,7 +20,8 @@
         android:id="@+id/noTrips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/trips_none" />
+        android:text="@string/trips_none"
+        android:visibility="gone" />
 
     <Space
         android:layout_width="match_parent"

@@ -2,18 +2,19 @@ package com.karpool.karpl_driver;
 
 public class Trip {
 
-    private String origin, destination, date, time, driver, seats, tripID;
+    private String origin, destination, date, time, driver, seats, tripID, price;
 
     public Trip() {
     }
 
-    public Trip(String origin, String destination, String date, String time, String driver, String seats, String tripID) {
+    public Trip(String origin, String destination, String date, String time, String driver, String seats, String price, String tripID) {
         this.origin = origin;
         this.destination = destination;
         this.date = date;
         this.time = time;
         this.seats = seats;
         this.driver = driver;
+        this.price = price;
         this.tripID = tripID;
     }
 
@@ -72,6 +73,16 @@ public class Trip {
     public void setTripID(String tripID) {
         this.tripID = tripID;
     }
+
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
 }
 
 

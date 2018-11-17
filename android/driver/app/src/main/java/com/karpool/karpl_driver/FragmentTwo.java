@@ -39,16 +39,16 @@ public class FragmentTwo extends Fragment {
     private TextView noTrips;
 
     private String userID;
-    private final static String KEY_TRIP_DESTINATION = "tripDestination";
-    private final static String KEY_TRIP_TIME = "tripTime";
-    private final static String KEY_TRIP_DATE = "tripDate";
-    private final static String KEY_TRIP_ORIGIN = "tripOrigin";
-    private final static String KEY_TRIP_SEATS = "searchSeats";
+    // the keys correspond to the modify mappings in the controller
+    // todo please fix the mapping names because they are not nice
+    private final static String KEY_TRIP_DESTINATION = "tripdestination";
+    private final static String KEY_TRIP_TIME = "time";
+    private final static String KEY_TRIP_DATE = "date";
+    private final static String KEY_TRIP_ORIGIN = "triplocation";
+    private final static String KEY_TRIP_SEATS = "seats";
+    private final static String KEY_TRIP_PRICE = "tripprice";
     private final static String KEY_TRIP_ID = "tripID";
     private final static String KEY_USER = "userID";
-
-    private DisplayTripTask mDisplayTripTask = null;
-    private boolean retrievalSuccess;
 
 
     @Override
@@ -72,7 +72,6 @@ public class FragmentTwo extends Fragment {
 
 
         // Click listener for trip selection
-        // TODO open and populate the trip activity when this is selected
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), mRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -83,6 +82,8 @@ public class FragmentTwo extends Fragment {
                 prefs.edit().putString(KEY_TRIP_TIME, trip.getTime()).commit();
                 prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
+                prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
+
                 Intent I = new Intent(getActivity(), TripActivity.class);
                 startActivity(I);
             }
@@ -94,8 +95,7 @@ public class FragmentTwo extends Fragment {
         }));
 
 
-        mDisplayTripTask = new DisplayTripTask(userID);
-        mDisplayTripTask.execute((Void) null);
+        displayTrips(userID);
 
 
         return rootView;
@@ -105,104 +105,49 @@ public class FragmentTwo extends Fragment {
     /**
      * Represents an asynchronous task to get the trip info
      */
-    public class DisplayTripTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mUser; //change to username
+    public void displayTrips(String mUser) {
 
+        HttpUtils.get("trips/drivers/" + mUser, new RequestParams(), new JsonHttpResponseHandler() {
 
-        DisplayTripTask(String userID) {
-            mUser = userID;
-        }
+            @Override
+            public void onFinish() {
+            }
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            HttpUtils.get("trips/drivers/" + mUser, new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public boolean getUseSynchronousMode() {
-                    return false;
-                }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
 
-                @Override
-                public void setUseSynchronousMode(boolean useSynchronousMode) {
+                    tripsList.clear();
 
-                }
-
-                @Override
-                public void onFinish() {
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    try {
-
-                        tripsList.clear();
-
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject obj = response.getJSONObject(i);
-                            String date = obj.getString("departureDate");
-                            String year = date.substring(0, 4);
-                            String remainder = date.substring(4, 8);
-                            String time = obj.getString("departureTime");
-                            JSONObject driver = obj.getJSONObject("driver");
-                            String driverName = driver.getString("name");
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject obj = response.getJSONObject(i);
+                        String date = obj.getString("departureDate");
+                        String year = date.substring(0, 4);
+                        String remainder = date.substring(4, 8);
+                        String time = obj.getString("departureTime");
+                        JSONObject driver = obj.getJSONObject("driver");
+                        String driverName = driver.getString("name");
 
 
-                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("tripId"))));
+                        tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
 
-                            retrievalSuccess = true;
 
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        mAdapter.notifyDataSetChanged();
                     }
 
+                    if (tripsList.isEmpty())
+                        noTrips.setVisibility(View.VISIBLE);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
-
-            });
-            return retrievalSuccess;
-
-        }
-
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-
-
-            mDisplayTripTask = null;
-            //showSignInProgress(false);
-
-            if (success) {
-
-                updateVisibility(true, false);
             }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mDisplayTripTask = null;
-            //showSignInProgress(false);
-        }
-    }
 
 
-
-    /**
-     * @param displayTrips if true, display recycler view
-     * @param isError      if true, display invalid city error
-     */
-    private void updateVisibility(boolean displayTrips, boolean isError) {
-        if (displayTrips) {
-            mRecyclerView.setVisibility(View.VISIBLE);
-            noTrips.setVisibility(View.GONE);
-        } else {
-            noTrips.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.GONE);
-            if (isError) {
-                noTrips.setVisibility(View.VISIBLE);
-            }
-        }
+        });
 
     }
 
