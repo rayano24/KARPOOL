@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.format.DateFormat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,15 +50,14 @@ public class TripActivity extends AppCompatActivity {
     private final static String KEY_TRIP_ID = "tripID";
     private final static String KEY_USER_ID = "userID";
     private final static String KEY_TRIP_PRICE = "tripprice";
-    private static String userID, tripID;
+    private static String userID, tripID, tripMode;
+    private final static String KEY_TRIP_FRAG_MODE = "tripMode";
 
 
     private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats;
     private static TextView modifyDate, modifyTime;
     private Button deleteButton;
     private static String date, time; // FOR DATABASE
-
-
 
 
     @Override
@@ -78,6 +78,7 @@ public class TripActivity extends AppCompatActivity {
 
         tripID = prefs.getString(KEY_TRIP_ID, null);
         userID = prefs.getString(KEY_USER_ID, null);
+        tripMode = prefs.getString(KEY_TRIP_FRAG_MODE, null);
 
 
         String date = (prefs.getString(KEY_TRIP_DATE, null));
@@ -147,13 +148,13 @@ public class TripActivity extends AppCompatActivity {
             }
         });
 
-
-
+        convertView(tripMode);
     }
 
 
     /**
      * Represents an async task to modify the trip
+     *
      * @param newValue the new value
      * @param category a string to indicate what you are modifying
      */
@@ -161,7 +162,6 @@ public class TripActivity extends AppCompatActivity {
 
         final String mNewValue = newValue;
         final String mToModify = category;
-
 
 
         HttpUtils.post("trips/" + tripID + "/" + mToModify + "/" + mNewValue, new RequestParams(), new JsonHttpResponseHandler() {
@@ -204,7 +204,7 @@ public class TripActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // TODO
+                // TODO what kind of response is this?
                 try {
                     if (response.getBoolean("response")) {
                         Fragment mFragment = null;
@@ -285,7 +285,6 @@ public class TripActivity extends AppCompatActivity {
     }
 
 
-
     public static class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
 
@@ -343,6 +342,7 @@ public class TripActivity extends AppCompatActivity {
 
     /**
      * Converts a date/time value to be two digits
+     *
      * @param input the value you want to convert
      * @return a 2 digit output such as 03 if 3 were inputted
      */
@@ -356,7 +356,6 @@ public class TripActivity extends AppCompatActivity {
     }
 
     /**
-     *
      * @param category
      * @param newValue
      */
@@ -380,6 +379,22 @@ public class TripActivity extends AppCompatActivity {
             case (KEY_TRIP_TIME):
                 modifyTime.setText(time.substring(0, 2) + ":" + time.substring(2, 4));
                 break;
+        }
+    }
+
+    /**
+     * Removes the ability to modify values if a trip has already occurred
+     * @param type the trip type (past or upcoming)
+     */
+    public void convertView(String type) {
+        if (type.equals("PAST")) {
+            modifyOrigin.setClickable(false);
+            modifyDestination.setClickable(false);
+            modifyPrice.setClickable(false);
+            modifySeats.setClickable(false);
+            modifyTime.setClickable(false);
+            modifyDate.setClickable(false);
+            deleteButton.setVisibility(View.INVISIBLE);
         }
     }
 
