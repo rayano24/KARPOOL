@@ -41,7 +41,7 @@ public class FragmentThree extends Fragment {
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prefs.edit().remove("userID").commit();
+                prefs.edit().remove(KEY_USER_ID).commit();
                 Intent I = new Intent(getActivity(), LoginActivity.class);
                 startActivity(I);
                 getActivity().finish();

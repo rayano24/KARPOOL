@@ -23,6 +23,7 @@ public class FragmentThree extends Fragment {
 
     private final static String KEY_USER_ID = "userID";
     private final static String KEY_USER_LOCATION = "userLocation";
+    private String location;
 
 
     private TextView signOut, help, userNote, userLocation;
@@ -44,7 +45,8 @@ public class FragmentThree extends Fragment {
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prefs.edit().remove("userID").commit();
+                prefs.edit().remove(KEY_USER_ID).commit();
+                prefs.edit().remove(KEY_USER_LOCATION).commit();
                 Intent I = new Intent(getActivity(), LoginActivity.class);
                 startActivity(I);
                 getActivity().finish();
@@ -60,8 +62,15 @@ public class FragmentThree extends Fragment {
         });
 
 
+        location = prefs.getString(KEY_USER_LOCATION, null);
+
         userNote.setText("Welcome " + prefs.getString(KEY_USER_ID, null));
-        userLocation.setText(prefs.getString(KEY_USER_LOCATION, null));
+
+
+        if(location != null) {
+
+            userLocation.setText(location);
+        }
 
 
         return rootView;

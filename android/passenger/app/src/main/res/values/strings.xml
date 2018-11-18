@@ -59,6 +59,9 @@
     <!-- preference screen -->
 
     <string name="action_sign_out">Sign out</string>
+    <string name="action_city">Enter your location here</string>
+    <string name="action_help">Help</string>
+
 
 
 

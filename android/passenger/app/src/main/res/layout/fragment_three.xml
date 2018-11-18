@@ -73,10 +73,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="Montreal"
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
+            android:text="@string/action_city"
             android:textSize="18sp" />
 
     </LinearLayout>
@@ -167,7 +167,7 @@
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:text="Help"
+            android:text="@string/action_help"
             android:textSize="18sp" />
 
     </LinearLayout>
