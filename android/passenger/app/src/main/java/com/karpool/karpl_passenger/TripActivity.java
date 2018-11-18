@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,6 +30,8 @@ public class TripActivity extends AppCompatActivity {
     private TextView tripOrigin, tripDestination, tripDriver, tripDate, tripTime, tripPrice, tripSeats, driverRating;
     static private Button tripButton;
     private final static String KEY_PAST_FRAGMENT = "pastFrag";
+    private final static String KEY_TRIP_FRAG_MODE = "tripMode";
+
 
     private final static String KEY_TRIP_DESTINATION = "tripdestination";
     private final static String KEY_TRIP_TIME = "time";
@@ -39,7 +43,7 @@ public class TripActivity extends AppCompatActivity {
     private final static String KEY_TRIP_PRICE = "tripprice";
     private final static String KEY_TRIP_DRIVER = "driver";
 
-    private static String userID, tripID, currentFrag;
+    private static String userID, tripID, currentFrag, tripMode;
 
 
     // TODO DRIVER RATING
@@ -63,11 +67,10 @@ public class TripActivity extends AppCompatActivity {
 
 
         currentFrag = prefs.getString(KEY_PAST_FRAGMENT, null);
+        tripMode = prefs.getString(KEY_TRIP_FRAG_MODE, null);
         tripID = prefs.getString(KEY_TRIP_ID, null);
         userID = prefs.getString(KEY_USER_ID, null);
 
-
-        updateButton(currentFrag);
 
         tripDate.setText(prefs.getString(KEY_TRIP_DATE, null));
         tripTime.setText(prefs.getString(KEY_TRIP_TIME, null));
@@ -82,20 +85,37 @@ public class TripActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 tripAction(currentFrag, userID, tripID);
-                finish();
             }
         });
+
+        if(tripMode == null) {
+            tripMode = "UPCOMING";
+        }
+
+        updateButton(currentFrag, tripMode);
+
+
 
 
     }
 
 
-    public static void updateButton(String currentFrag) {
-        if (currentFrag.equals("JOIN")) {
-            tripButton.setText("JOIN TRIP");
-        } else {
-            tripButton.setText("LEAVE TRIP");
+    /**
+     * Uploads the button based on the current trip type
+     * @param currentFrag whether this is a join or leave button
+     * @param type whether it is an upcoming or past trip
+     */
+    public void updateButton(String currentFrag, String type) {
+        if(type.equals("UPCOMING")) {
+            if (currentFrag.equals("JOIN")) {
+                tripButton.setText("JOIN TRIP");
+            } else {
+                tripButton.setText("LEAVE TRIP");
 
+            }
+        }
+        else {
+            tripButton.setText("RATE TRIP");
         }
     }
 
@@ -106,10 +126,10 @@ public class TripActivity extends AppCompatActivity {
      * @param userID
      * @param tripID
      */
-    public static void tripAction(String currentFrag, String userID, final String tripID) {
+    public void tripAction(String currentFrag, String userID, final String tripID) {
         if (currentFrag.equals("JOIN")) {
 
-            HttpUtils.get("trips/" + tripID + "/" + "add" + "/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
+            HttpUtils.get("trips/" + tripID + "/add/"  + userID, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public void onFinish() {
                 }
@@ -117,7 +137,15 @@ public class TripActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
-                        if (response.getBoolean("response") == true) {
+                        // TODO How to check...
+                        if (response.getString("name") != null) {
+                            Fragment mFragment = null;
+                            mFragment = new FragmentOne();
+                            FragmentManager fragmentManager = getSupportFragmentManager();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.frame_fragmentholder, mFragment).commit();
+
+
                         }
 
                     } catch (JSONException e) {
@@ -130,11 +158,10 @@ public class TripActivity extends AppCompatActivity {
 
                 }
 
-                Toast toast;
             });
 
 
-        } else
+        } else {
             HttpUtils.get("trips/" + "/" + "close" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public void onFinish() {
@@ -156,9 +183,6 @@ public class TripActivity extends AppCompatActivity {
 
                 }
             });
-
-
-        {
 
 
         }

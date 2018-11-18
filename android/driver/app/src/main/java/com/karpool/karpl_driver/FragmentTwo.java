@@ -159,7 +159,6 @@ public class FragmentTwo extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 try {
-
                     upcomingTripsList.clear();
                     pastTripsList.clear();
 
@@ -201,7 +200,17 @@ public class FragmentTwo extends Fragment {
 
             }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                if (upcomingTripsList.isEmpty())
+                    noUpcomingTrips.setVisibility(View.VISIBLE);
 
+                if(pastTripsList.isEmpty())
+                    noPastTrips.setVisibility(View.VISIBLE);
+
+
+            }
         });
 
     }

@@ -37,7 +37,7 @@ public class FragmentOne extends Fragment {
 
     private List<Trip> tripsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
-    private searchAdapter mAdapter;
+    private TripAdapter mAdapter;
     private SearchView citySearch;
     private Spinner searchSpinner;
     private String sortSelection;
@@ -75,7 +75,7 @@ public class FragmentOne extends Fragment {
         searchSpinner = (Spinner) rootView.findViewById(R.id.searchSpinner);
 
 
-        mAdapter = new searchAdapter(tripsList);
+        mAdapter = new TripAdapter(tripsList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());

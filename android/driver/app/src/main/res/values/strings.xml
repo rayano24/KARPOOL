@@ -30,7 +30,6 @@
     <!-- Strings for my trips page -->
     <string name="trips_upcoming">Upcoming</string>
     <string name="trips_past">Past</string>
-    >
     <string name="trips_none">You have no upcoming trips</string>
     <string name="past_trips_none">You have no past trips</string>
 
