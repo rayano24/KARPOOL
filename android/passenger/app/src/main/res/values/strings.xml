@@ -32,7 +32,7 @@
 
     <string name="search_hint">City</string>
     <string name="search_text">Where are we going?</string>
-    <string name="invalid_city_text">You\'ve entered an invalid city!</string>
+    <string name="invalid_city_text">No trips were found for the selected city</string>
     <string name="sort_time">Time (Ascending)</string>
     <string name="sort_price">Lowest Price</string>
 

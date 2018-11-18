@@ -29,10 +29,10 @@ public class TripActivity extends AppCompatActivity {
 
     private TextView tripOrigin, tripDestination, tripDriver, tripDate, tripTime, tripPrice, tripSeats, driverRating;
     static private Button tripButton;
-    private final static String KEY_PAST_FRAGMENT = "pastFrag";
-    private final static String KEY_TRIP_FRAG_MODE = "tripMode";
 
 
+    private final static String KEY_TRIP_STATUS = "tripJoined"; // if trip is already joined or if you are viewing a trip
+    private final static String KEY_TRIP_FRAG_MODE = "tripMode"; // if a trip is upcoming or already happened
     private final static String KEY_TRIP_DESTINATION = "tripdestination";
     private final static String KEY_TRIP_TIME = "time";
     private final static String KEY_TRIP_DATE = "date";
@@ -43,7 +43,7 @@ public class TripActivity extends AppCompatActivity {
     private final static String KEY_TRIP_PRICE = "tripprice";
     private final static String KEY_TRIP_DRIVER = "driver";
 
-    private static String userID, tripID, currentFrag, tripMode;
+    private static String userID, tripID, tripStatus, tripMode;
 
 
     // TODO DRIVER RATING
@@ -66,8 +66,9 @@ public class TripActivity extends AppCompatActivity {
         driverRating = (TextView) findViewById(R.id.driverRating);
 
 
-        currentFrag = prefs.getString(KEY_PAST_FRAGMENT, null);
-        tripMode = prefs.getString(KEY_TRIP_FRAG_MODE, null);
+        tripStatus = prefs.getString(KEY_TRIP_STATUS, null); // JOINED OR VIEW
+        tripMode = prefs.getString(KEY_TRIP_FRAG_MODE, null); // PAST OR UPCOMING
+
         tripID = prefs.getString(KEY_TRIP_ID, null);
         userID = prefs.getString(KEY_USER_ID, null);
 
@@ -84,7 +85,7 @@ public class TripActivity extends AppCompatActivity {
         tripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tripAction(currentFrag, userID, tripID);
+                tripAction(tripStatus, userID, tripID);
             }
         });
 
@@ -92,25 +93,26 @@ public class TripActivity extends AppCompatActivity {
             tripMode = "UPCOMING";
         }
 
-        updateButton(currentFrag, tripMode);
-
-
+        updateButton(tripStatus, tripMode);
 
 
     }
 
 
+
+
+
     /**
      * Uploads the button based on the current trip type
-     * @param currentFrag whether this is a join or leave button
-     * @param type whether it is an upcoming or past trip
+     * @param tripStatus whether this is a join or leave button
+     * @param tripType whether it is an upcoming or past trip
      */
-    public void updateButton(String currentFrag, String type) {
-        if(type.equals("UPCOMING")) {
-            if (currentFrag.equals("JOIN")) {
-                tripButton.setText("JOIN TRIP");
-            } else {
+    public void updateButton(String tripStatus, String tripType) {
+        if(tripType.equals("UPCOMING")) {
+            if (tripStatus.equals("JOINED")) {
                 tripButton.setText("LEAVE TRIP");
+            } else {
+                tripButton.setText("JOIN TRIP");
 
             }
         }
@@ -122,12 +124,12 @@ public class TripActivity extends AppCompatActivity {
 
     /**
      * Represents an async processor to either join or leave a trip
-     * @param currentFrag
+     * @param tripStatus
      * @param userID
      * @param tripID
      */
-    public void tripAction(String currentFrag, String userID, final String tripID) {
-        if (currentFrag.equals("JOIN")) {
+    public void tripAction(String tripStatus, String userID, final String tripID) {
+        if (tripStatus.equals("VIEW")) {
 
             HttpUtils.get("trips/" + tripID + "/add/"  + userID, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override

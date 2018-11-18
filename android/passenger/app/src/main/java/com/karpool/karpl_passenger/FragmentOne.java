@@ -45,8 +45,9 @@ public class FragmentOne extends Fragment {
     private String sortSelection;
     private TextView invalidCity;
 
+    private final static String KEY_TRIP_STATUS = "tripJoined"; // if trip is already joined or if you are viewing a trip
+    private final static String KEY_TRIP_FRAG_MODE = "tripMode"; // if a trip is upcoming or already happened
     private final static String KEY_USER_LOCATION = "userLocation";
-    private final static String KEY_PAST_FRAGMENT = "pastFrag";
     private final static String KEY_TRIP_DESTINATION = "tripdestination";
     private final static String KEY_TRIP_TIME = "time";
     private final static String KEY_TRIP_DATE = "date";
@@ -68,7 +69,6 @@ public class FragmentOne extends Fragment {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         userLocation = prefs.getString(KEY_USER_LOCATION, null);
-        prefs.edit().putString(KEY_PAST_FRAGMENT, "JOIN").commit();
 
 
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
@@ -111,7 +111,6 @@ public class FragmentOne extends Fragment {
         });
 
 
-
         // search listener
         citySearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -129,13 +128,12 @@ public class FragmentOne extends Fragment {
 
             public void callSearch(String query) {
                 // This is where the method search is done
-                if(userLocation == null) {
+                if (userLocation == null) {
                     Snackbar setLocation = Snackbar.make(getActivity().findViewById(android.R.id.content), "You must set your location in the accounts menu!", Snackbar.LENGTH_LONG * 2);
                     setLocation.setAction("Update", new snackBarInfo());
                     setLocation.show();
 
-                }
-                else {
+                } else {
                     prepareTripData(query);
                 }
 
@@ -158,9 +156,8 @@ public class FragmentOne extends Fragment {
                 prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
                 prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
-
-
-
+                prefs.edit().putString(KEY_TRIP_STATUS, "VIEW").commit();
+                prefs.edit().putString(KEY_TRIP_FRAG_MODE, "UPCOMING").commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
                 startActivity(I);
             }
@@ -172,7 +169,6 @@ public class FragmentOne extends Fragment {
         }));
 
 
-
         return rootView;
     }
 
@@ -180,8 +176,8 @@ public class FragmentOne extends Fragment {
      * Updates the trip information
      */
     private void prepareTripData(String destination) {
-        tripsList.clear();
 
+        tripsList.clear();
 
 
         if (searchSpinner.getSelectedItem().toString().equals("Time (Ascending)")) {
@@ -192,27 +188,32 @@ public class FragmentOne extends Fragment {
                 public void onFinish() {
                     updateVisibility(false, true);
                 }
+
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                     try {
-
                         tripsList.clear();
+
 
                         for (int i = 0; i < response.length(); i++) {
                             JSONObject obj = response.getJSONObject(i);
                             String date = obj.getString("departureDate");
                             String year = date.substring(0, 4);
-                            String remainder = date.substring(4,8);
+                            String remainder = date.substring(4, 8);
                             String time = obj.getString("departureTime");
                             JSONObject driver = obj.getJSONObject("driver");
                             String driverName = driver.getString("name");
 
+                            Boolean tripComplete = obj.getBoolean("tripComplete");
 
-                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
 
+                            if (!tripComplete) {
+                                tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                        formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
+                            }
 
                         }
+
                         updateVisibility(true, false);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -222,14 +223,10 @@ public class FragmentOne extends Fragment {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     updateVisibility(false, true);
-                    tripsList.clear();
 
                 }
             });
-        } else  {
-
-
-
+        } else {
             HttpUtils.get("trips/" + userLocation + "/" + destination + "/date", new RequestParams(), new JsonHttpResponseHandler() {
 
                 @Override
@@ -243,17 +240,24 @@ public class FragmentOne extends Fragment {
 
                         tripsList.clear();
 
+
+
                         for (int i = 0; i < response.length(); i++) {
 
                             JSONObject obj = response.getJSONObject(i);
                             String date = obj.getString("departureDate");
                             String year = date.substring(0, 4);
-                            String remainder = date.substring(4,8);
+                            String remainder = date.substring(4, 8);
                             String time = obj.getString("departureTime");
+                            Boolean tripComplete = obj.getBoolean("tripComplete");
+                            JSONObject driver = obj.getJSONObject("driver");
+                            String driverName = driver.getString("name");
 
-                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2), obj.getJSONObject("driver").getString("name"), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
 
+                            if (!tripComplete) {
+                                tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                        formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
+                            }
 
                         }
                         updateVisibility(true, false);
@@ -265,7 +269,6 @@ public class FragmentOne extends Fragment {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     updateVisibility(false, true);
-                    tripsList.clear();
                 }
             });
         }
@@ -321,14 +324,15 @@ public class FragmentOne extends Fragment {
     /**
      * To switch fragments when the snackbar button is clicked
      */
-    private class snackBarInfo implements View.OnClickListener{
+    private class snackBarInfo implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             Fragment mFragment = null;
             mFragment = new FragmentThree();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction()
-                    .replace(R.id.frame_fragmentholder, mFragment).commit();        }
+                    .replace(R.id.frame_fragmentholder, mFragment).commit();
+        }
     }
 
 }

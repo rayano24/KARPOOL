@@ -110,7 +110,6 @@ public class FragmentTwo extends Fragment {
             }
         }));
 
-
         pastRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), pastRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -137,11 +136,17 @@ public class FragmentTwo extends Fragment {
 
 
 
+
         displayTrips(userID);
 
 
         return rootView;
     }
+
+
+
+
+
 
 
     /**
@@ -214,6 +219,9 @@ public class FragmentTwo extends Fragment {
         });
 
     }
+
+
+
 
 
     /**

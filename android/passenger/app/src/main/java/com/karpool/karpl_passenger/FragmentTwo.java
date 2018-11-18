@@ -41,8 +41,6 @@ public class FragmentTwo extends Fragment {
     private TextView noPastTrips, noUpcomingTrips;
 
 
-    private final static String KEY_LOCATION = "userLocation";
-    private final static String KEY_PAST_FRAGMENT = "pastFrag";
     private final static String KEY_TRIP_DESTINATION = "tripdestination";
     private final static String KEY_TRIP_TIME = "time";
     private final static String KEY_TRIP_DATE = "date";
@@ -53,8 +51,8 @@ public class FragmentTwo extends Fragment {
     private final static String KEY_USER_ID = "userID";
     private final static String KEY_TRIP_PRICE = "tripprice";
 
-    private final static String KEY_TRIP_FRAG_MODE = "tripMode";
-
+    private final static String KEY_TRIP_STATUS = "tripJoined"; // if trip is already joined or if you are viewing a trip
+    private final static String KEY_TRIP_FRAG_MODE = "tripMode"; // if a trip is upcoming or already happened
 
     private String userID;
 
@@ -65,7 +63,6 @@ public class FragmentTwo extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_two, container, false);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         userID = prefs.getString(KEY_USER_ID, null);
-        prefs.edit().putString(KEY_PAST_FRAGMENT, "LEAVE").commit();
 
 
         upcomingRecyclerView = (RecyclerView) rootView.findViewById(R.id.myTripsRecyclerView);
@@ -105,6 +102,7 @@ public class FragmentTwo extends Fragment {
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
                 prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
                 prefs.edit().putString(KEY_TRIP_FRAG_MODE, "UPCOMING").commit();
+                prefs.edit().putString(KEY_TRIP_STATUS, "JOINED").commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
                 startActivity(I);
             }
@@ -128,6 +126,7 @@ public class FragmentTwo extends Fragment {
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
                 prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
                 prefs.edit().putString(KEY_TRIP_FRAG_MODE, "PAST").commit();
+                prefs.edit().putString(KEY_TRIP_STATUS, "JOINED").commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
                 startActivity(I);
             }

@@ -152,6 +152,9 @@ public class TripActivity extends AppCompatActivity {
     }
 
 
+
+
+
     /**
      * Represents an async task to modify the trip
      *
