@@ -207,16 +207,16 @@ public class KarpoolRepository
 		entityManager.merge(trip);
 	}
 	
-//	@Transactional
-//	public Passenger addPassenger(Passenger p, Trip t)
-//	{
-//		t.addPassenger(p);
-//		t.setSeatAvailable(t.getSeatAvailable()-1);
-//		p.setTrip(t);
-//		t.setSeatAvailable(t.getSeatAvailable()-1);
-//		entityManager.merge(p);
-//		return p;
-//	}
+	@Transactional
+	public Trip addPassengerToTrip(Passenger p, Trip t)
+	{
+		t.addPassenger(p);
+		t.setSeatAvailable(t.getSeatAvailable()-1);
+		p.addTrip(t);
+		entityManager.merge(p);
+		entityManager.merge(t);
+		return t;
+	}
 
 	@Transactional
 	public boolean checkPassengerInTrip(Trip t, String name) 

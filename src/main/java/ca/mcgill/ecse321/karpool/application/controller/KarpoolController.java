@@ -457,34 +457,34 @@ public class KarpoolController {
 		return t;
 	}
 
-//	/**
-//	 * This method allows for new passengers to be added to a specific 
-//	 * trip taking place. It checks to see if the passenger is already 
-//	 * signed up for this trip, if not it adds to passenger to the trip.
-//	 * @param passenger
-//	 * @param trip
-//	 * @return
-//	 */
-//	@PostMapping("/trips/{trip}/add/{name}")
-//	public Passenger addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
-//	{
-//		Passenger pWithTrip = null;
-//		Trip t = repository.getSpecificTrip(tripID);
-//		Passenger p = repository.getPassenger(name);
-//		if (t.getSeatAvailable() <= 0) {
-//			System.out.println("No seats available");
-//			return null;
-//		}
-//		else if (repository.checkPassengerInTrip(t, name)) 
-//		{
-//			System.out.println("You are already on this trip");
-//			return null;
-//		}
-//		else {
-//			pWithTrip = repository.addPassenger(p, t);
-//		}	
-//		return pWithTrip;
-//	}
+	/**
+	 * This method allows for new passengers to be added to a specific 
+	 * trip taking place. It checks to see if the passenger is already 
+	 * signed up for this trip, if not it adds to passenger to the trip.
+	 * @param passenger
+	 * @param trip
+	 * @return
+	 */
+	@PostMapping("/trips/{trip}/add/{name}")
+	public Trip addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
+	{
+		Trip tripWithP = null;
+		Trip t = repository.getSpecificTrip(tripID);
+		Passenger p = repository.getPassenger(name);
+		if (t.getSeatAvailable() <= 0) {
+			System.out.println("No seats available");
+			return null;
+		}
+		else if (repository.checkPassengerInTrip(t, name)) 
+		{
+			System.out.println("You are already on this trip");
+			return null;
+		}
+		else {
+			tripWithP = repository.addPassengerToTrip(p, t);
+		}	
+		return tripWithP;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////                                                                   /////////////////
