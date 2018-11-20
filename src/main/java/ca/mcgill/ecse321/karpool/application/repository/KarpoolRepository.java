@@ -62,67 +62,51 @@ public class KarpoolRepository
 		
 		trip.setDepartureLocation(location);
 		entityManager.merge(trip);
-		
 	}
+	
 	@Transactional
 	public void modifyTripDestination(Trip trip, String destination) {
 		
 		trip.setDestination(destination);
 		entityManager.merge(trip);
-		
 	}
+	
 	@Transactional
 	public void modifyTripPrice(Trip trip, int price) {
 		
 		trip.setPrice(price);
 		entityManager.merge(trip);
-		
 	}
+	
 	@Transactional
 	public void modifyDepartureTime(Trip trip, String departureTime) {
 		
 		trip.setDepartureTime(departureTime);
 		entityManager.merge(trip);
-		
 	}
+	
 	@Transactional
 	public void modifyDepartureDate(Trip trip, String departureDate) {
 		
 		trip.setDepartureDate(departureDate);
 		entityManager.merge(trip);
-		
 	}
+	
 	@Transactional
 	public void modifySeatAvailable(Trip trip, int seatAvailable) {
 		
 		trip.setSeatAvailable(seatAvailable);
 		entityManager.merge(trip);
-		
 	}
-	//modification methods end
 	
-//	@Transactional
-//	public void setPassengerRating(Passenger passenger, Rating rating) {
-//		
-//		passenger.setRating(rating);
-//		entityManager.merge(passenger);
-//		
-//	}
-	
-//	@Transactional
-//	public void setDriverRating(Driver driver, double rating) {
-//		
-//		if (rating <= 5 && rating > 0) {
-//		driver.addRatings(rating);
-//		double currRating = driver.getRating();
-//		int numberOfRatings = driver.getRatings().size();
-//		currRating = (currRating + rating)/numberOfRatings; 
-//		driver.setRating(currRating);
-//		entityManager.merge(driver);
-//	}
-//		
-//	}
-	
+	@Transactional
+	public void addDriverRating(Driver driver, double rating) 
+	{
+		if (rating <= 5 && rating > 0) {
+			driver.addRating(rating);
+			entityManager.merge(driver);
+		}
+	}
 	
 	@Transactional
 	public Driver getDriver(String name) {
@@ -153,8 +137,6 @@ public class KarpoolRepository
 		List<String> passengers = q.getResultList();
 		return passengers;
 	}
-
-
 	
 	@Transactional
 	public List<Integer> getTrips(String depart, String dest)
@@ -194,17 +176,17 @@ public class KarpoolRepository
 		return trips;
 	}
 	
-//	@Transactional
-//	public Trip getTripForPassenger(String name)
-//	{
-//		Passenger p = entityManager.find(Passenger.class, name);
-//		Trip t = p.getTrip();
-//		return t;
+	@Transactional
+	public Set<Trip> getTripsForPassenger(String name)
+	{
+		Passenger p = entityManager.find(Passenger.class, name);
+		Set<Trip> t = p.getTrips();
+		return t;
 //		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE :pass IN(SELECT passenger FROM trip)");
 //		q.setParameter("pass", p);
 //		Trip t = (Trip) q.getResultList().get(0);
 //		return t;
-//	}
+	}
 	
 	@Transactional
 	public List<Integer> getTripForDriver(String name)

@@ -241,7 +241,7 @@ public class KarpoolController {
 		try {
 			
 			Driver d = repository.getDriver(name);
-//			repository.setDriverRating(d, rating);
+			repository.addDriverRating(d, rating);
 		}
 		catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
@@ -253,19 +253,25 @@ public class KarpoolController {
 	 * @param name
 	 */
 	@GetMapping("/drivers/rate/{name}")
-	public int getAvgRating(@PathVariable("name") String name)
-	{
-		int rating = 0;
+	public double getAvgRating(@PathVariable("name") String name)
+	{ 
+		double r = 0;
 		try {
-			
 			Driver d = repository.getDriver(name);
-			rating = repository.getAvgRating(d);
+			Set<Double> ratings = d.getRatings();
+			int rNum = ratings.size();
+			double rSum = 0.0;
+			for(double rate: ratings)
+			{
+				rSum+=rate;
+			}
+			r = rSum/rNum;
 			
 		} catch(NullPointerException e) {
 			
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
-		return rating;
+		return r;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -433,41 +439,22 @@ public class KarpoolController {
 		return fullPass;
 	}
 
-//	/**
-//	 * lists all trips associated to particular passenger
-//	 * 
-//	 * @return list of trips for passenger
-//	 */
-//	@GetMapping("/trips/passengers/{name}")
-//	public Trip tripsForPassenger(@PathVariable("name") String name)
-//	{
-//		Trip t = repository.getTripForPassenger(name);
-//
-//		if(t == null)
-//		{
-//			System.out.println("There are no trips for this passenger");
-//			return null;
-//		}		
-//		return t;
-//	}
-
 	/**
-	 * Rate the passenger
+	 * lists all trips associated to particular passenger
 	 * 
-	 * @param name
-	 * @param rating
+	 * @return list of trips for passenger
 	 */
-	@PostMapping("/passengers/rate/{name}/{rating}")
-	public void ratePassenger(@PathVariable("name") String name,@PathVariable("rating") int rating)
+	@GetMapping("/trips/passengers/{name}")
+	public Set<Trip> tripsForPassenger(@PathVariable("name") String name)
 	{
-		//need to check if rating is a valid rating
-		try {
-			Passenger p = repository.getPassenger(name);
-//			repository.setPassengerRating(p, rating);
-		}
-		catch (NullPointerException e) {
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}
+		Set<Trip> t = repository.getTripsForPassenger(name);
+
+		if(t == null)
+		{
+			System.out.println("There are no trips for this passenger");
+			return null;
+		}		
+		return t;
 	}
 
 //	/**
