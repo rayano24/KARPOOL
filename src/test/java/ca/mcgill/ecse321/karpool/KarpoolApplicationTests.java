@@ -13,8 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import ca.mcgill.ecse321.karpool.application.KarpoolApplication;
 import ca.mcgill.ecse321.karpool.application.controller.KarpoolController;
-import ca.mcgill.ecse321.karpool.application.model.Rating;
-import ca.mcgill.ecse321.karpool.application.model.EndUser;
 
 
 @RunWith(SpringRunner.class)

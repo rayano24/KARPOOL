@@ -7,30 +7,16 @@ import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import ca.mcgill.ecse321.karpool.application.model.UserRole;
-import ca.mcgill.ecse321.karpool.application.model.Car;
 import ca.mcgill.ecse321.karpool.application.model.Trip;
 
 @Entity
 @Table(name="driver")
-public class Driver extends UserRole
+public class Driver
 {
-	private Car car;
-
-	public void setCar(Car value) {
-		this.car = value;
-	}
-
-	@OneToOne
-	public Car getCar() {
-		return this.car;
-	}
-
 	private Set<Trip> trips;
 
 	public void addTrip(Trip trip) {

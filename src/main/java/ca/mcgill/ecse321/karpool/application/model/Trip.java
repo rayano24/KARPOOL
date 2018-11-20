@@ -1,8 +1,6 @@
 package ca.mcgill.ecse321.karpool.application.model;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
@@ -13,9 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 import java.util.HashSet;
 
@@ -148,13 +144,6 @@ public class Trip
 		this.passenger.add(passenger);
 	}
 
-//	public void removePassenger(Passenger passenger) {
-//		this.passenger.remove(passenger);
-//		passenger.setTrip(null);;
-//	}
-
-//	@Transient
-//	@OneToMany(mappedBy = "trip", cascade = CascadeType.ALL) 
 	@ManyToMany
 	@JoinTable(name = "trip_passenger", joinColumns = {@JoinColumn(name = "trip_id")},
 			inverseJoinColumns = {@JoinColumn(name = "name")})
