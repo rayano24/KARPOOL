@@ -466,7 +466,7 @@ public class KarpoolController {
 	 * @return
 	 */
 	@PostMapping("/trips/{trip}/add/{name}")
-	public Set<Passenger> addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
+	public Passenger addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
 	{
 		Trip tripWithP = null;
 		Trip t = repository.getSpecificTrip(tripID);
@@ -483,7 +483,7 @@ public class KarpoolController {
 		else {
 			tripWithP = repository.addPassengerToTrip(p, t);
 		}	
-		return tripWithP.getPassenger();
+		return p;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////

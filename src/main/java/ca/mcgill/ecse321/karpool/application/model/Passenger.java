@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import ca.mcgill.ecse321.karpool.application.model.Trip;
 
 @Entity
@@ -25,6 +27,7 @@ public class Passenger
 	}
 	
 	@ManyToMany(mappedBy = "passenger")
+	@JsonBackReference
 	public Set<Trip> getTrips() {
 		if (this.trips == null) {
 			this.trips = new HashSet<Trip>();

@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.karpool.application.model;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +13,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.util.HashSet;
 
@@ -144,9 +147,10 @@ public class Trip
 		this.passenger.add(passenger);
 	}
 
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "trip_passenger", joinColumns = {@JoinColumn(name = "trip_id")},
 			inverseJoinColumns = {@JoinColumn(name = "name")})
+	@JsonManagedReference
 	public Set<Passenger> getPassenger() {
 		if (this.passenger == null) {
 			this.passenger = new HashSet<Passenger>();
