@@ -1,9 +1,13 @@
 package ca.mcgill.ecse321.karpool.application.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -14,17 +18,26 @@ import ca.mcgill.ecse321.karpool.application.model.Trip;
 @Table(name="passenger")
 public class Passenger extends UserRole
 {
-	private Trip trip;
+	private Set<Trip> trips;
 
-	public void setTrip(Trip value) {
-		this.trip = value;
+	public void setTrips(Set<Trip> trips) {
+		this.trips = trips;
+	}
+
+	public void addTrip(Trip value) {
+		this.trips.add(value);
 	}
 	
-	@ManyToOne
-	@JoinColumn(name = "trip_id")
-	public Trip getTrip() {
-		return this.trip;
+//	@ManyToOne
+//	@JoinColumn(name = "trip_id")
+	@ManyToMany(mappedBy = "passenger")
+	public Set<Trip> getTrips() {
+		if (this.trips == null) {
+			this.trips = new HashSet<Trip>();
+		}
+		return this.trips;
 	}
+	
 	private String name;
 
 	public void setName(String value) {
@@ -65,17 +78,17 @@ public class Passenger extends UserRole
 	public String getPassword() {
 		return this.password;
 	}
-	
-	private Rating rating;
-
-
-	public void setRating(Rating value) {
-		this.rating = value;
-	}
-
-	public Rating getRating() {
-		return this.rating;
-	}
+//	
+//	private Rating rating;
+//
+//
+//	public void setRating(Rating value) {
+//		this.rating = value;
+//	}
+//
+//	public Rating getRating() {
+//		return this.rating;
+//	}
 
 	private boolean criminalRecord;
 

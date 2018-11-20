@@ -10,6 +10,8 @@ import java.util.Set;
 
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -138,17 +140,24 @@ public class Trip
 
 	private Set<Passenger> passenger;
 
+	public void setPassenger(Set<Passenger> passenger) {
+		this.passenger = passenger;
+	}
+
 	public void addPassenger(Passenger passenger) {
 		this.passenger.add(passenger);
 	}
 
-	public void removePassenger(Passenger passenger) {
-		this.passenger.remove(passenger);
-		passenger.setTrip(null);;
-	}
+//	public void removePassenger(Passenger passenger) {
+//		this.passenger.remove(passenger);
+//		passenger.setTrip(null);;
+//	}
 
-	@Transient
-	@OneToMany(mappedBy = "trip", cascade = CascadeType.ALL) 
+//	@Transient
+//	@OneToMany(mappedBy = "trip", cascade = CascadeType.ALL) 
+	@ManyToMany
+	@JoinTable(name = "trip_passenger", joinColumns = {@JoinColumn(name = "trip_id")},
+			inverseJoinColumns = {@JoinColumn(name = "name")})
 	public Set<Passenger> getPassenger() {
 		if (this.passenger == null) {
 			this.passenger = new HashSet<Passenger>();

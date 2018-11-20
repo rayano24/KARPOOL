@@ -4,9 +4,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -93,15 +93,23 @@ public class Driver extends UserRole
 		return this.password;
 	}
 	
-	private Rating rating;
+	private Set<Double> ratings;
 
 
-	public void setRating(Rating value) {
-		this.rating = value;
+	public void setRatings(Set<Double> ratings) {
+		this.ratings = ratings;
 	}
 
-	public Rating getRating() {
-		return this.rating;
+	public void addRating(Double value) {
+		this.ratings.add(value);
+	}
+
+	@ElementCollection(targetClass=Double.class)
+	public Set<Double> getRatings() {
+		if (this.ratings == null) {
+			this.ratings = new HashSet<Double>();
+		}
+		return this.ratings;
 	}
 
 	private boolean criminalRecord;

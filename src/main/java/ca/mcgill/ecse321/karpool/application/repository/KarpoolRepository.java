@@ -40,7 +40,6 @@ public class KarpoolRepository
 		driver.setEmail(email);
 		driver.setPassword(password);
 		driver.setPhoneNumber(phoneNumber);
-		driver.setRating(0);
 		driver.setRecord(criminalRecord);
 		entityManager.persist(driver);
 		return driver;
@@ -53,13 +52,11 @@ public class KarpoolRepository
 		pass.setEmail(email);
 		pass.setPassword(password);
 		pass.setPhoneNumber(phoneNumber);
-		pass.setRating(Rating.NONE);
 		pass.setRecord(criminalRecord);
 		entityManager.persist(pass);
 		return pass;
 	}
 	
-	//Modification methods start
 	@Transactional
 	public void modifyTripLocation(Trip trip, String location) {
 		
@@ -104,26 +101,27 @@ public class KarpoolRepository
 	}
 	//modification methods end
 	
-	@Transactional
-	public void setPassengerRating(Passenger passenger, Rating rating) {
-		
-		passenger.setRating(rating);
-		entityManager.merge(passenger);
-		
-	}
-	@Transactional
-	public void setDriverRating(Driver driver, double rating) {
-		
-		if (rating <= 5 && rating > 0) {
-		driver.addRatings(rating);
-		double currRating = driver.getRating();
-		int numberOfRatings = driver.getRatings().size();
-		currRating = (currRating + rating)/numberOfRatings; 
-		driver.setRating(currRating);
-		entityManager.merge(driver);
-	}
-		
-	}
+//	@Transactional
+//	public void setPassengerRating(Passenger passenger, Rating rating) {
+//		
+//		passenger.setRating(rating);
+//		entityManager.merge(passenger);
+//		
+//	}
+	
+//	@Transactional
+//	public void setDriverRating(Driver driver, double rating) {
+//		
+//		if (rating <= 5 && rating > 0) {
+//		driver.addRatings(rating);
+//		double currRating = driver.getRating();
+//		int numberOfRatings = driver.getRatings().size();
+//		currRating = (currRating + rating)/numberOfRatings; 
+//		driver.setRating(currRating);
+//		entityManager.merge(driver);
+//	}
+//		
+//	}
 	
 	
 	@Transactional
@@ -196,17 +194,17 @@ public class KarpoolRepository
 		return trips;
 	}
 	
-	@Transactional
-	public Trip getTripForPassenger(String name)
-	{
-		Passenger p = entityManager.find(Passenger.class, name);
-		Trip t = p.getTrip();
-		return t;
+//	@Transactional
+//	public Trip getTripForPassenger(String name)
+//	{
+//		Passenger p = entityManager.find(Passenger.class, name);
+//		Trip t = p.getTrip();
+//		return t;
 //		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE :pass IN(SELECT passenger FROM trip)");
 //		q.setParameter("pass", p);
 //		Trip t = (Trip) q.getResultList().get(0);
 //		return t;
-	}
+//	}
 	
 	@Transactional
 	public List<Integer> getTripForDriver(String name)
@@ -227,16 +225,16 @@ public class KarpoolRepository
 		entityManager.merge(trip);
 	}
 	
-	@Transactional
-	public Passenger addPassenger(Passenger p, Trip t)
-	{
+//	@Transactional
+//	public Passenger addPassenger(Passenger p, Trip t)
+//	{
 //		t.addPassenger(p);
 //		t.setSeatAvailable(t.getSeatAvailable()-1);
-		p.setTrip(t);
-		t.setSeatAvailable(t.getSeatAvailable()-1);
-		entityManager.merge(p);
-		return p;
-	}
+//		p.setTrip(t);
+//		t.setSeatAvailable(t.getSeatAvailable()-1);
+//		entityManager.merge(p);
+//		return p;
+//	}
 
 	@Transactional
 	public boolean checkPassengerInTrip(Trip t, String name) 

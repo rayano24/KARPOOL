@@ -241,7 +241,7 @@ public class KarpoolController {
 		try {
 			
 			Driver d = repository.getDriver(name);
-			repository.setDriverRating(d, rating);
+//			repository.setDriverRating(d, rating);
 		}
 		catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
@@ -369,7 +369,6 @@ public class KarpoolController {
 	 * @param password
 	 * @return TRUE if the account is authenticated
 	 */
-
 	@GetMapping("/passengers/auth/{username}/{password}")
 	public Response authenticatePassenger(@PathVariable("username")String username, @PathVariable("password")String password)
 	{
@@ -434,33 +433,23 @@ public class KarpoolController {
 		return fullPass;
 	}
 
-	/**
-	 * lists all trips associated to particular passenger
-	 * 
-	 * @return list of trips for passenger
-	 */
-	@GetMapping("/trips/passengers/{name}")
-	public Trip tripsForPassenger(@PathVariable("name") String name)
-	{
-		Trip t = repository.getTripForPassenger(name);
-
-		if(t == null)
-		{
-			System.out.println("There are no trips for this passenger");
-			return null;
-		}		
-		return t;
-	}
-
-	/**
-	 * This method marks a trip as completed
-	 * @param trip
-	 */
-	@PostMapping("/trips/close/{trip}")
-	public void closeTrip(@PathVariable("trip")int tripID)
-	{
-		repository.closeTrip(tripID);
-	}
+//	/**
+//	 * lists all trips associated to particular passenger
+//	 * 
+//	 * @return list of trips for passenger
+//	 */
+//	@GetMapping("/trips/passengers/{name}")
+//	public Trip tripsForPassenger(@PathVariable("name") String name)
+//	{
+//		Trip t = repository.getTripForPassenger(name);
+//
+//		if(t == null)
+//		{
+//			System.out.println("There are no trips for this passenger");
+//			return null;
+//		}		
+//		return t;
+//	}
 
 	/**
 	 * Rate the passenger
@@ -474,41 +463,41 @@ public class KarpoolController {
 		//need to check if rating is a valid rating
 		try {
 			Passenger p = repository.getPassenger(name);
-			repository.setPassengerRating(p, rating);
+//			repository.setPassengerRating(p, rating);
 		}
 		catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
 	}
 
-	/**
-	 * This method allows for new passengers to be added to a specific 
-	 * trip taking place. It checks to see if the passenger is already 
-	 * signed up for this trip, if not it adds to passenger to the trip.
-	 * @param passenger
-	 * @param trip
-	 * @return
-	 */
-	@PostMapping("/trips/{trip}/add/{name}")
-	public Passenger addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
-	{
-		Passenger pWithTrip = null;
-		Trip t = repository.getSpecificTrip(tripID);
-		Passenger p = repository.getPassenger(name);
-		if (t.getSeatAvailable() <= 0) {
-			System.out.println("No seats available");
-			return null;
-		}
-		else if (repository.checkPassengerInTrip(t, name)) 
-		{
-			System.out.println("You are already on this trip");
-			return null;
-		}
-		else {
-			pWithTrip = repository.addPassenger(p, t);
-		}	
-		return pWithTrip;
-	}
+//	/**
+//	 * This method allows for new passengers to be added to a specific 
+//	 * trip taking place. It checks to see if the passenger is already 
+//	 * signed up for this trip, if not it adds to passenger to the trip.
+//	 * @param passenger
+//	 * @param trip
+//	 * @return
+//	 */
+//	@PostMapping("/trips/{trip}/add/{name}")
+//	public Passenger addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
+//	{
+//		Passenger pWithTrip = null;
+//		Trip t = repository.getSpecificTrip(tripID);
+//		Passenger p = repository.getPassenger(name);
+//		if (t.getSeatAvailable() <= 0) {
+//			System.out.println("No seats available");
+//			return null;
+//		}
+//		else if (repository.checkPassengerInTrip(t, name)) 
+//		{
+//			System.out.println("You are already on this trip");
+//			return null;
+//		}
+//		else {
+//			pWithTrip = repository.addPassenger(p, t);
+//		}	
+//		return pWithTrip;
+//	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////                                                                   /////////////////
@@ -745,6 +734,16 @@ public class KarpoolController {
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
+	}
+
+	/**
+	 * This method marks a trip as completed
+	 * @param trip
+	 */
+	@PostMapping("/trips/close/{trip}")
+	public void closeTrip(@PathVariable("trip")int tripID)
+	{
+		repository.closeTrip(tripID);
 	}
 
 	/*public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
