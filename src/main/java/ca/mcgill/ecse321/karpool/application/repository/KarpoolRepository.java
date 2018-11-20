@@ -219,13 +219,22 @@ public class KarpoolRepository
 	}
 
 	@Transactional
-	public boolean checkPassengerInTrip(Trip t, String name) 
+	public boolean checkPassengerInTrip(Trip t, Passenger p) 
 	{
-		Query q = entityManager.createNativeQuery("SELECT name FROM passenger WHERE trip= :trip");
-		q.setParameter("trip", t);
-		@SuppressWarnings("unchecked")
-		List<String> names = q.getResultList();
-		if(names.contains(name))
+//		Query q = entityManager.createNativeQuery("SELECT name FROM passenger WHERE trip= :trip");
+//		q.setParameter("trip", t);
+//		@SuppressWarnings("unchecked")
+//		List<String> names = q.getResultList();
+//		if(names.contains(name))
+//		{
+//			return true;
+//		}
+//		else
+//		{
+//			return false;
+//		}
+		
+		if(t.getPassenger().contains(p))
 		{
 			return true;
 		}

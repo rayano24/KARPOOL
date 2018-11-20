@@ -475,7 +475,7 @@ public class KarpoolController {
 			System.out.println("No seats available");
 			return null;
 		}
-		else if (repository.checkPassengerInTrip(t, name)) 
+		else if (repository.checkPassengerInTrip(t, p)) 
 		{
 			System.out.println("You are already on this trip");
 			return null;
