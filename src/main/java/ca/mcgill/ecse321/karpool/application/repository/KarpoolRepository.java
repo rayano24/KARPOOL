@@ -40,7 +40,7 @@ public class KarpoolRepository
 		driver.setEmail(email);
 		driver.setPassword(password);
 		driver.setPhoneNumber(phoneNumber);
-		driver.setRating(0);
+		driver.setRating(Rating.NONE);
 		driver.setRecord(criminalRecord);
 		entityManager.persist(driver);
 		return driver;
@@ -112,13 +112,7 @@ public class KarpoolRepository
 		
 	}
 	@Transactional
-	public void setDriverRating(Driver driver, double rating) {
-		if (rating <=5 && rating > 0) {
-			//driver.addRating(rating);
-			double currRating = driver.getRating();
-			//double numberOfRatings = driver.getNumberOfRatings();
-			//currRating = (currRating + rating)/numberOfRatings; 
-		}
+	public void setDriverRating(Driver driver, Rating rating) {
 		
 		driver.setRating(rating);
 		entityManager.merge(driver);
