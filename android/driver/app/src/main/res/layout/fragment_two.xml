@@ -17,19 +17,60 @@
         android:layout_height="10dp" />
 
     <TextView
-        android:id="@+id/noTrips"
-        android:layout_width="wrap_content"
+        android:id="@+id/upcomingTripsLabel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/trips_none" />
+        android:text="@string/trips_upcoming"
+        android:textSize="15sp"
+        android:textColor="@color/colorAccent"/>
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="10dp" />
 
+    <TextView
+        android:id="@+id/noUpcomingTrips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/trips_none"
+        android:visibility="gone" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/myTripsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:visibility="visible"
+        tools:itemCount="37"
+        tools:listitem="@layout/recycler_view_trip">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <TextView
+        android:id="@+id/Past"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/trips_past"
+        android:textColor="@color/colorAccent"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/noPastTrips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/past_trips_none"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/myOldTripsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:scrollbars="vertical"
         android:visibility="visible"
         tools:itemCount="37"

@@ -32,23 +32,26 @@ public class FragmentTwo extends Fragment {
 
     private RecyclerView.LayoutManager mLayoutManager;
 
-    private List<Trip> tripsList = new ArrayList<>();
-    private RecyclerView mRecyclerView;
-    private TripAdapter mAdapter;
+    private List<Trip> upcomingTripsList = new ArrayList<>();
+    private List<Trip> pastTripsList = new ArrayList<>();
+    private RecyclerView upcomingRecyclerView, pastRecyclerView;
+    private TripAdapter upcomingAdapter, pastAdapter;
 
-    private TextView noTrips;
+    private TextView noPastTrips, noUpcomingTrips;
 
     private String userID;
-    private final static String KEY_TRIP_DESTINATION = "tripDestination";
-    private final static String KEY_TRIP_TIME = "tripTime";
-    private final static String KEY_TRIP_DATE = "tripDate";
-    private final static String KEY_TRIP_ORIGIN = "tripOrigin";
-    private final static String KEY_TRIP_SEATS = "searchSeats";
+    // the keys correspond to the modify mappings in the controller
+    // todo please fix the mapping names because they are not nice
+    private final static String KEY_TRIP_DESTINATION = "tripdestination";
+    private final static String KEY_TRIP_TIME = "time";
+    private final static String KEY_TRIP_DATE = "date";
+    private final static String KEY_TRIP_ORIGIN = "triplocation";
+    private final static String KEY_TRIP_SEATS = "seats";
+    private final static String KEY_TRIP_PRICE = "tripprice";
     private final static String KEY_TRIP_ID = "tripID";
     private final static String KEY_USER = "userID";
+    private final static String KEY_TRIP_FRAG_MODE = "tripMode";
 
-    private DisplayTripTask mDisplayTripTask = null;
-    private boolean retrievalSuccess;
 
 
     @Override
@@ -59,30 +62,67 @@ public class FragmentTwo extends Fragment {
         userID = prefs.getString(KEY_USER, null);
 
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.myTripsRecyclerView);
-        noTrips = (TextView) rootView.findViewById(R.id.noTrips);
+        upcomingRecyclerView = (RecyclerView) rootView.findViewById(R.id.myTripsRecyclerView);
+        pastRecyclerView = (RecyclerView) rootView.findViewById(R.id.myOldTripsRecyclerView);
 
 
-        mAdapter = new TripAdapter(tripsList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
-        mRecyclerView.setAdapter(mAdapter);
+        noPastTrips = (TextView) rootView.findViewById(R.id.noPastTrips);
+        noUpcomingTrips = (TextView) rootView.findViewById(R.id.noUpcomingTrips);
+
+
+
+        upcomingAdapter = new TripAdapter(upcomingTripsList);
+        pastAdapter = new TripAdapter(pastTripsList);
+
+        RecyclerView.LayoutManager upcomingLayoutManager = new LinearLayoutManager(getActivity());
+        upcomingRecyclerView.setLayoutManager(upcomingLayoutManager);
+        upcomingRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        upcomingRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        upcomingRecyclerView.setAdapter(upcomingAdapter);
+
+        RecyclerView.LayoutManager pastLayoutManager = new LinearLayoutManager(getActivity());
+        pastRecyclerView.setLayoutManager(pastLayoutManager);
+        pastRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        pastRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        pastRecyclerView.setAdapter(pastAdapter);
 
 
         // Click listener for trip selection
-        // TODO open and populate the trip activity when this is selected
-        mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), mRecyclerView, new RecyclerTouchListener.ClickListener() {
+        upcomingRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), upcomingRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Trip trip = tripsList.get(position);
+                Trip trip = upcomingTripsList.get(position);
                 prefs.edit().putString(KEY_TRIP_DATE, trip.getDate()).commit();
                 prefs.edit().putString(KEY_TRIP_DESTINATION, trip.getDestination()).commit();
                 prefs.edit().putString(KEY_TRIP_ORIGIN, trip.getOrigin()).commit();
                 prefs.edit().putString(KEY_TRIP_TIME, trip.getTime()).commit();
                 prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
+                prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
+                prefs.edit().putString(KEY_TRIP_FRAG_MODE, "UPCOMING").commit();
+                Intent I = new Intent(getActivity(), TripActivity.class);
+                startActivity(I);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+                // do nothing
+            }
+        }));
+
+        pastRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), pastRecyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                Trip trip = pastTripsList.get(position);
+                prefs.edit().putString(KEY_TRIP_DATE, trip.getDate()).commit();
+                prefs.edit().putString(KEY_TRIP_DESTINATION, trip.getDestination()).commit();
+                prefs.edit().putString(KEY_TRIP_ORIGIN, trip.getOrigin()).commit();
+                prefs.edit().putString(KEY_TRIP_TIME, trip.getTime()).commit();
+                prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
+                prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
+                prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
+                prefs.edit().putString(KEY_TRIP_FRAG_MODE, "PAST").commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
                 startActivity(I);
             }
@@ -94,117 +134,94 @@ public class FragmentTwo extends Fragment {
         }));
 
 
-        mDisplayTripTask = new DisplayTripTask(userID);
-        mDisplayTripTask.execute((Void) null);
+
+
+
+        displayTrips(userID);
 
 
         return rootView;
     }
 
 
+
+
+
+
+
     /**
      * Represents an asynchronous task to get the trip info
      */
-    public class DisplayTripTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mUser; //change to username
+    public void displayTrips(String mUser) {
 
+        HttpUtils.get("trips/drivers/" + mUser, new RequestParams(), new JsonHttpResponseHandler() {
 
-        DisplayTripTask(String userID) {
-            mUser = userID;
-        }
+            @Override
+            public void onFinish() {
+            }
 
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            HttpUtils.get("trips/drivers/" + mUser, new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public boolean getUseSynchronousMode() {
-                    return false;
-                }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
+                    upcomingTripsList.clear();
+                    pastTripsList.clear();
 
-                @Override
-                public void setUseSynchronousMode(boolean useSynchronousMode) {
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject obj = response.getJSONObject(i);
+                        String date = obj.getString("departureDate");
+                        String year = date.substring(0, 4);
+                        String remainder = date.substring(4, 8);
+                        String time = obj.getString("departureTime");
+                        JSONObject driver = obj.getJSONObject("driver");
+                        String driverName = driver.getString("name");
 
-                }
-
-                @Override
-                public void onFinish() {
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    try {
-
-                        tripsList.clear();
-
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject obj = response.getJSONObject(i);
-                            String date = obj.getString("departureDate");
-                            String year = date.substring(0, 4);
-                            String remainder = date.substring(4, 8);
-                            String time = obj.getString("departureTime");
-                            JSONObject driver = obj.getJSONObject("driver");
-                            String driverName = driver.getString("name");
+                        Boolean tripStatus = obj.getBoolean("tripComplete");
 
 
-                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("tripId"))));
-
-                            retrievalSuccess = true;
-
+                        if (!tripStatus) {
+                            upcomingTripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        else {
+                            pastTripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
+                        }
+
+                        upcomingAdapter.notifyDataSetChanged();
+                        pastAdapter.notifyDataSetChanged();
                     }
 
+                    if (upcomingTripsList.isEmpty())
+                        noUpcomingTrips.setVisibility(View.VISIBLE);
+
+                    if(pastTripsList.isEmpty())
+                        noPastTrips.setVisibility(View.VISIBLE);
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
-
-            });
-            return retrievalSuccess;
-
-        }
-
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-
-
-            mDisplayTripTask = null;
-            //showSignInProgress(false);
-
-            if (success) {
-
-                updateVisibility(true, false);
             }
-        }
 
-        @Override
-        protected void onCancelled() {
-            mDisplayTripTask = null;
-            //showSignInProgress(false);
-        }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                if (upcomingTripsList.isEmpty())
+                    noUpcomingTrips.setVisibility(View.VISIBLE);
+
+                if(pastTripsList.isEmpty())
+                    noPastTrips.setVisibility(View.VISIBLE);
+
+
+            }
+        });
+
     }
 
 
 
-    /**
-     * @param displayTrips if true, display recycler view
-     * @param isError      if true, display invalid city error
-     */
-    private void updateVisibility(boolean displayTrips, boolean isError) {
-        if (displayTrips) {
-            mRecyclerView.setVisibility(View.VISIBLE);
-            noTrips.setVisibility(View.GONE);
-        } else {
-            noTrips.setVisibility(View.GONE);
-            mRecyclerView.setVisibility(View.GONE);
-            if (isError) {
-                noTrips.setVisibility(View.VISIBLE);
-            }
-        }
-
-    }
 
 
     /**

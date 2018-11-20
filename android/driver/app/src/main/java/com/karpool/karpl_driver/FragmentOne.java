@@ -18,8 +18,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,12 +39,6 @@ public class FragmentOne extends Fragment {
 
     private static String userID;
     private final static String KEY_USER = "userID";
-
-
-    private boolean tripCreated;
-    private CreateTripTask mCreateTripTask = null;
-
-
 
 
 
@@ -65,11 +61,10 @@ public class FragmentOne extends Fragment {
         newOrigin = (EditText) rootView.findViewById(R.id.newOrigin);
 
 
-
         createButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mCreateTripTask = new CreateTripTask(userID, newOrigin.getText().toString(), newDestination.getText().toString(), Integer.parseInt(newSeats.getText().toString()), time, date, Integer.parseInt(newPrice.getText().toString()));
-                mCreateTripTask.execute((Void) null);
+                createTripTask(userID, newOrigin.getText().toString(), newDestination.getText().toString(), Integer.parseInt(
+                        newSeats.getText().toString()), time, date, Integer.parseInt(newPrice.getText().toString()));
 
 
             }
@@ -94,104 +89,44 @@ public class FragmentOne extends Fragment {
         });
 
 
-
         return rootView;
     }
 
     /**
      * Represents an asynchronous create trip task
      */
-    public class CreateTripTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String mUser; //change to username
-        private final String mOrigin;
-        private final String mDestination; //change to username
-        private final int mSeats;
-        private final String mTime;
-        private final String mDate;
-        private final int mPrice;
+    public void createTripTask(String mUser, String mOrigin, String mDestination, int mSeats, String mTime, String mDate, int mPrice) {
 
 
+        HttpUtils.post("trips/" + mUser + "/" + mOrigin + "/" + mDestination + "/" + mSeats + "/" + mTime + "/" + mDate + "/" + mPrice, new RequestParams(), new JsonHttpResponseHandler() {
 
-
-        CreateTripTask(String userID, String origin, String destination, int seats, String time, String date, int price) {
-            mUser = userID;
-            mOrigin = origin;
-            mDestination = destination;
-            mSeats = seats;
-            mTime = time;
-            mDate = date;
-            mPrice = price;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            HttpUtils.post("trips/" + mUser + "/" + mOrigin + "/" + mDestination + "/" + mSeats + "/" + mTime + "/" + mDate + "/" + mPrice, new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public boolean getUseSynchronousMode() {
-                    return false;
-                }
-
-                @Override
-                public void setUseSynchronousMode(boolean useSynchronousMode) {
-
-                }
-                @Override
-                public void onFinish() {
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        if (!response.getString("destination").isEmpty()) {
-                            tripCreated = true;
-
-                        } else {
-                            tripCreated = false;
-
-                        }
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-            });
-            return tripCreated;
-        }
-
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-
-
-           mCreateTripTask = null;
-            //showSignInProgress(false);
-
-            if (success) {
-                clearFields();
-
-
-
-            } else {
-
+            @Override
+            public void onFinish() {
             }
-        }
 
-        @Override
-        protected void onCancelled() {
-            mCreateTripTask = null;
-            //showSignInProgress(false);
-        }
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    if (!response.getString("destination").isEmpty()) {
+                        clearFields();
+
+
+                    } else {
+
+
+                    }
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        });
+
+
     }
-
-
-
-
-
-
-
 
 
     public static class TimePickerFragment extends DialogFragment
@@ -211,7 +146,8 @@ public class FragmentOne extends Fragment {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             time = convertDate(hourOfDay) + convertDate(minute);
             timeLabel.setText(convertDate(hourOfDay) + ":" + convertDate(minute));
-            timeLabel.setVisibility(View.VISIBLE);        }
+            timeLabel.setVisibility(View.VISIBLE);
+        }
 
 
     }
@@ -239,7 +175,7 @@ public class FragmentOne extends Fragment {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             date = Integer.toString(year) + convertDate(day) + convertDate(month);
-            dateLabel.setText(Integer.toString(year) + "-" +  convertDate(day) + "-" +  convertDate(month));
+            dateLabel.setText(Integer.toString(year) + "-" + convertDate(day) + "-" + convertDate(month));
             dateLabel.setVisibility(View.VISIBLE);
 
         }
@@ -267,12 +203,6 @@ public class FragmentOne extends Fragment {
 
 
     }
-
-
-
-
-
-
 
 
 }

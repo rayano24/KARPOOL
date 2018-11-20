@@ -32,23 +32,36 @@
 
     <string name="search_hint">City</string>
     <string name="search_text">Where are we going?</string>
-    <string name="invalid_city_text">You\'ve entered an invalid city!</string>
+    <string name="invalid_city_text">No trips were found for the selected city</string>
     <string name="sort_time">Time (Ascending)</string>
     <string name="sort_price">Lowest Price</string>
 
 
     <!-- Strings for my trips page -->
-    You have no upcoming trips
+    <string name="trips_upcoming">Upcoming</string>
+    <string name="trips_past">Past</string>
     <string name="trips_none">You have no upcoming trips</string>
+    <string name="past_trips_none">You have no past trips</string>
 
 
     <!-- Trip activity -->
+    <string name="trip_origin">Origin</string>
+    <string name="trip_destination">Destination</string>
+    <string name="trip_price">Price</string>
+    <string name="trip_date">Date</string>
+    <string name="trip_time">Time</string>
+    <string name="trip_seats">Seats</string>
+    <string name="trip_driver">Driver</string>
+    <string name="trip_rating">Rating</string>
     <string name="trip_join">JOIN TRIP</string>
 
 
     <!-- preference screen -->
 
     <string name="action_sign_out">Sign out</string>
+    <string name="action_city">Enter your location here</string>
+    <string name="action_help">Help</string>
+
 
 
 

@@ -5,17 +5,22 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.text.format.DateFormat;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -37,25 +42,22 @@ import cz.msebera.android.httpclient.Header;
 
 public class TripActivity extends AppCompatActivity {
 
-    private final static String KEY_TRIP_DESTINATION = "tripDestination";
-    private final static String KEY_TRIP_TIME = "tripTime";
-    private final static String KEY_TRIP_DATE = "tripDate";
-    private final static String KEY_TRIP_ORIGIN = "tripOrigin";
-    private final static String KEY_TRIP_DRIVER = "searchDriver";
-    private final static String KEY_TRIP_SEATS = "searchSeats";
+    private final static String KEY_TRIP_DESTINATION = "tripdestination";
+    private final static String KEY_TRIP_TIME = "time";
+    private final static String KEY_TRIP_DATE = "date";
+    private final static String KEY_TRIP_ORIGIN = "triplocation";
+    private final static String KEY_TRIP_SEATS = "seats";
     private final static String KEY_TRIP_ID = "tripID";
     private final static String KEY_USER_ID = "userID";
-    private final static String KEY_USER_LOCATION = "userLocation";
-    private static String userID, tripID, userLocation;
+    private final static String KEY_TRIP_PRICE = "tripprice";
+    private static String userID, tripID, tripMode;
+    private final static String KEY_TRIP_FRAG_MODE = "tripMode";
 
 
     private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats;
     private static TextView modifyDate, modifyTime;
+    private Button deleteButton;
     private static String date, time; // FOR DATABASE
-
-
-    private ModifyTripTask mModifyTripTask = null;
-    private boolean valueModified;
 
 
     @Override
@@ -71,10 +73,12 @@ public class TripActivity extends AppCompatActivity {
         modifyTime = (TextView) findViewById(R.id.modifyTripTime);
         modifyPrice = (TextView) findViewById(R.id.modifyTripPrice);
         modifySeats = (TextView) findViewById(R.id.modifyTripSeats);
+        deleteButton = findViewById(R.id.deleteButton);
 
 
         tripID = prefs.getString(KEY_TRIP_ID, null);
         userID = prefs.getString(KEY_USER_ID, null);
+        tripMode = prefs.getString(KEY_TRIP_FRAG_MODE, null);
 
 
         String date = (prefs.getString(KEY_TRIP_DATE, null));
@@ -83,34 +87,39 @@ public class TripActivity extends AppCompatActivity {
         String remainder = date.substring(4, 8);
         String time = prefs.getString(KEY_TRIP_TIME, null);
 
-        modifyTime.setText(formatter(time, ":", 2));
-        modifyDate.setText(year + "-" + formatter(remainder, "-", 2));
+        modifyTime.setText(prefs.getString(KEY_TRIP_TIME, null));
+        modifyDate.setText(prefs.getString(KEY_TRIP_DATE, null));
         modifyDestination.setText(prefs.getString(KEY_TRIP_DESTINATION, null));
         modifyOrigin.setText(prefs.getString(KEY_TRIP_ORIGIN, null));
         modifySeats.setText(prefs.getString(KEY_TRIP_SEATS, null));
+        modifyPrice.setText("$" + prefs.getString(KEY_TRIP_PRICE, null));
 
 
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                deleteTrip();
+
+            }
+        });
 
 
         modifyOrigin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                openDialog(modifyOrigin, "Origin", "Update your trip's starting position" );
+                openDialog(modifyOrigin, "Origin", "Update your trip's starting position");
 
             }
         });
 
         modifyDestination.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                openDialog(modifyDestination, "Destination", "Update your trip's destination" );
+                openDialog(modifyDestination, "Destination", "Update your trip's destination");
             }
         });
 
 
-
         modifyPrice.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                openDialog(modifyPrice, "Price", "Update your trip's price" );
-
+                openDialog(modifyPrice, "Price", "Update your trip's price");
 
 
             }
@@ -118,7 +127,7 @@ public class TripActivity extends AppCompatActivity {
 
         modifySeats.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                openDialog(modifySeats, "Seats", "Update your vehicle's capacity " );
+                openDialog(modifySeats, "Seats", "Update your vehicle's capacity");
 
             }
         });
@@ -139,84 +148,90 @@ public class TripActivity extends AppCompatActivity {
             }
         });
 
+        convertView(tripMode);
+    }
+
+
+
+
+
+    /**
+     * Represents an async task to modify the trip
+     *
+     * @param newValue the new value
+     * @param category a string to indicate what you are modifying
+     */
+    public void modifyTripTask(String newValue, String category) {
+
+        final String mNewValue = newValue;
+        final String mToModify = category;
+
+
+        HttpUtils.post("trips/" + tripID + "/" + mToModify + "/" + mNewValue, new RequestParams(), new JsonHttpResponseHandler() {
+
+
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // TODO
+                try {
+                    if (response.getBoolean("response") == true) {
+                        updateView(mToModify, mNewValue);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+        });
     }
 
 
     /**
-     * Represents an asynchronous modify trip task
-     * Takes the new value of what you are modifying as well as the string to modify to indicate what you are changing
+     * Represents an async task to delete the selected trip
      */
-    public class ModifyTripTask extends AsyncTask<Void, Void, Boolean> {
+    public void deleteTrip() {
 
-        private final String mNewValue;
-        private final String mToModify;
-
-
-        ModifyTripTask(String value, String toModify) {
-            mNewValue = value;
-            mToModify = toModify;
-
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            HttpUtils.post("trips/" + tripID + "/" + mToModify + "/" + mNewValue, new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public boolean getUseSynchronousMode() {
-                    return false;
-                }
-
-                @Override
-                public void setUseSynchronousMode(boolean useSynchronousMode) {
-
-                }
-
-                @Override
-                public void onFinish() {
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                   // TODO
-
-                    /* try {
-                        //
+        HttpUtils.post("trips/close/" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
 
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            @Override
+            public void onFinish() {
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                // TODO what kind of response is this?
+                try {
+                    if (response.getBoolean("response")) {
+                        Fragment mFragment = null;
+                        mFragment = new FragmentTwo();
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.frame_fragmentholder, mFragment).commit();
                     }
-                    */
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
 
-            });
-            return valueModified;
-        }
-
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-
-
-            mModifyTripTask = null;
-
-
-            if (success) {
 
             }
-        }
 
-        @Override
-        protected void onCancelled() {
-            mModifyTripTask = null;
-        }
+        });
     }
 
 
     /**
      * Opens the dialog for modifying a textEdit
-     * @param text the text to modify
-     * @param title the title of the alert
+     *
+     * @param text        the text to modify
+     * @param title       the title of the alert
      * @param description the description of the alert
      */
     private void openDialog(TextView text, String title, String description) {
@@ -231,10 +246,9 @@ public class TripActivity extends AppCompatActivity {
         alert.setTitle(title);
         alert.setMessage(description);
 
-        if(title.equals("Price") || title.equals("Seats")) {
+        if (title.equals("Price") || title.equals("Seats")) {
             input.setInputType(InputType.TYPE_CLASS_NUMBER);
-        }
-        else {
+        } else {
             input.setInputType(InputType.TYPE_CLASS_TEXT);
         }
 
@@ -243,24 +257,19 @@ public class TripActivity extends AppCompatActivity {
 
         alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                updateInput.setText(input.getText());
-                switch(category) {
-                    case("Origin"):
-                        mModifyTripTask = new ModifyTripTask(input.getText().toString(), KEY_TRIP_ORIGIN);
-                        mModifyTripTask.execute((Void) null);
+                switch (category) {
+                    case ("Origin"):
+                        modifyTripTask(input.getText().toString(), KEY_TRIP_ORIGIN);
                         break;
-                    case("Destination"):
-                        mModifyTripTask = new ModifyTripTask(input.getText().toString(), KEY_TRIP_DESTINATION);
-                        mModifyTripTask.execute((Void) null);
+                    case ("Destination"):
+                        modifyTripTask(input.getText().toString(), KEY_TRIP_DESTINATION);
                         break;
-                    case("seats"):
-                        mModifyTripTask = new ModifyTripTask(input.getText().toString(), KEY_TRIP_SEATS);
-                        mModifyTripTask.execute((Void) null);
+                    case ("seats"):
+                        modifyTripTask(input.getText().toString(), KEY_TRIP_SEATS);
                         break;
-                    case("price"):
-                        // todo
+                    case ("price"):
+                        modifyTripTask(input.getText().toString(), KEY_TRIP_PRICE);
                         break;
-
 
 
                 }
@@ -279,7 +288,6 @@ public class TripActivity extends AppCompatActivity {
     }
 
 
-
     public static class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
 
@@ -296,8 +304,9 @@ public class TripActivity extends AppCompatActivity {
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             time = convertDate(hourOfDay) + convertDate(minute);
-            modifyTime.setText(convertDate(hourOfDay) + ":" + convertDate(minute));
-            modifyTime.setVisibility(View.VISIBLE);
+            new TripActivity().modifyTripTask(time, KEY_TRIP_TIME);
+            //modifyTime.setText(convertDate(hourOfDay) + ":" + convertDate(minute));
+
         }
 
 
@@ -327,11 +336,19 @@ public class TripActivity extends AppCompatActivity {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             date = Integer.toString(year) + convertDate(day) + convertDate(month);
-            modifyDate.setText(Integer.toString(year) + "-" + convertDate(day) + "-" + convertDate(month));
-            modifyDate.setVisibility(View.VISIBLE);
+            new TripActivity().modifyTripTask(date, KEY_TRIP_DATE);
+            // modifyDate.setText(Integer.toString(year) + "-" + convertDate(day) + "-" + convertDate(month));
         }
 
     }
+
+
+    /**
+     * Converts a date/time value to be two digits
+     *
+     * @param input the value you want to convert
+     * @return a 2 digit output such as 03 if 3 were inputted
+     */
 
     protected static String convertDate(int input) {
         if (input >= 10) {
@@ -340,6 +357,50 @@ public class TripActivity extends AppCompatActivity {
             return "0" + String.valueOf(input);
         }
     }
+
+    /**
+     * @param category
+     * @param newValue
+     */
+    public void updateView(String category, String newValue) {
+        switch (category) {
+            case (KEY_TRIP_ORIGIN):
+                modifyOrigin.setText(newValue);
+                break;
+            case (KEY_TRIP_DESTINATION):
+                modifyDestination.setText(newValue);
+                break;
+            case (KEY_TRIP_PRICE):
+                modifyPrice.setText(newValue);
+                break;
+            case (KEY_TRIP_SEATS):
+                modifySeats.setText(newValue);
+                break;
+            case (KEY_TRIP_DATE):
+                modifyDate.setText(date.substring(0, 4) + "-" + date.substring(3, 5) + "-" + date.subSequence(5, 7));
+                break;
+            case (KEY_TRIP_TIME):
+                modifyTime.setText(time.substring(0, 2) + ":" + time.substring(2, 4));
+                break;
+        }
+    }
+
+    /**
+     * Removes the ability to modify values if a trip has already occurred
+     * @param type the trip type (past or upcoming)
+     */
+    public void convertView(String type) {
+        if (type.equals("PAST")) {
+            modifyOrigin.setClickable(false);
+            modifyDestination.setClickable(false);
+            modifyPrice.setClickable(false);
+            modifySeats.setClickable(false);
+            modifyTime.setClickable(false);
+            modifyDate.setClickable(false);
+            deleteButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
 
     /**
      * Used for date and time formatting

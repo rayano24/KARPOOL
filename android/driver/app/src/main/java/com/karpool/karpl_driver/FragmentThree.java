@@ -19,6 +19,8 @@ public class FragmentThree extends Fragment {
 
 
     private final static String KEY_USER_ID = "userID";
+    private final static String KEY_RATING = "rating";
+
 
     private TextView signOut, help, userNote;
 
@@ -39,15 +41,29 @@ public class FragmentThree extends Fragment {
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prefs.edit().remove("userID").commit();
+                prefs.edit().remove(KEY_USER_ID).commit();
                 Intent I = new Intent(getActivity(), LoginActivity.class);
                 startActivity(I);
                 getActivity().finish();
             }
         });
 
+       /* String rating = prefs.getString(KEY_RATING, null);
+        if(rating == null) {
+            userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null));
+        }
+        else {
+            userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null) + " (" + rating + ")");
+
+
+        }
+
+        */
 
         userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null));
+
+
+
 
 
 
