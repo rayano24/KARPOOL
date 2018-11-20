@@ -598,7 +598,7 @@ public class KarpoolController {
 	 * @param rating
 	 */
 	@PostMapping("/drivers/rate/{name}/{rating}")
-	public void rateDriver(@PathVariable("name") String name,@PathVariable("rating") Rating rating)
+	public void rateDriver(@PathVariable("name") String name,@PathVariable("rating") double rating)
 
 	{
 		//need to check if rating is a valid rating

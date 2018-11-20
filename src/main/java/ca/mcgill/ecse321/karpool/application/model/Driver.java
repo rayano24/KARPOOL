@@ -1,5 +1,6 @@
 package ca.mcgill.ecse321.karpool.application.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -93,14 +94,23 @@ public class Driver extends UserRole
 		return this.password;
 	}
 	
-	private Rating rating;
+	private double rating;
+	//private ArrayList<double[]> ratings = new ArrayList<double[]>();
 
-
-	public void setRating(Rating value) {
+	//MADE CHANGES TO SetRATING
+//	public void addRating(double value) {
+//		this.ratings.add(new double[] {value});
+//	}
+//	
+//	public double getNumberOfRatings() {
+//	return this.ratings.size();
+//	}
+	
+	public void setRating(double value) {
 		this.rating = value;
 	}
 
-	public Rating getRating() {
+	public double getRating() {
 		return this.rating;
 	}
 
