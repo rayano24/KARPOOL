@@ -643,14 +643,18 @@ public class KarpoolController {
 	 * 
 	 * @return list of trips
 	 */
-	@GetMapping("/trips/all")
+	@GetMapping("/trips/open/all")
 	public List<Trip> listAllOpenTrips()
 	{
 		List<Integer> trips = repository.getAllTrips();
 		List<Trip> fullTrip = new ArrayList<Trip>();
 		for(int t: trips)
 		{
-			fullTrip.add(repository.getSpecificTrip(t));
+			Trip tempTrip = repository.getSpecificTrip(t);
+			if(!tempTrip.isTripComplete())
+			{
+				fullTrip.add(tempTrip);
+			}
 		}
 		if(fullTrip.isEmpty())
 		{
