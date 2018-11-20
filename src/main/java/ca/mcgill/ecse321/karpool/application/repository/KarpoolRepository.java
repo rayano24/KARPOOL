@@ -255,4 +255,11 @@ public class KarpoolRepository
 		}
 	}
 
+	@Transactional
+	public int getAvgRating(Driver d) 
+	{
+		
+		return 0;
+	}
+
 }

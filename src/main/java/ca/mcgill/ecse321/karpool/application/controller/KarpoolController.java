@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
+//import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 @RestController
-@CrossOrigin
+//@CrossOrigin
 public class KarpoolController {
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
@@ -239,13 +239,33 @@ public class KarpoolController {
 	{
 		//need to check if rating is a valid rating
 		try {
+			
 			Driver d = repository.getDriver(name);
 			repository.setDriverRating(d, rating);
-
 		}
 		catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param name
+	 */
+	@GetMapping("/drivers/rate/{name}")
+	public int getAvgRating(@PathVariable("name") String name)
+	{
+		int rating = 0;
+		try {
+			
+			Driver d = repository.getDriver(name);
+			rating = repository.getAvgRating(d);
+			
+		} catch(NullPointerException e) {
+			
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
+		return rating;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
