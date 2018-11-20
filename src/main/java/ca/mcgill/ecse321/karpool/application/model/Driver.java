@@ -1,6 +1,8 @@
 package ca.mcgill.ecse321.karpool.application.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -19,6 +21,10 @@ public class Driver
 {
 	private Set<Trip> trips;
 
+	public void setTrips(Set<Trip> trips) {
+		this.trips = trips;
+	}
+
 	public void addTrip(Trip trip) {
 		this.trips.add(trip);
 		trip.setDriver(this);
@@ -31,7 +37,7 @@ public class Driver
 
 	@Transient
 	@OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
-	public Set<Trip> getTrip() {
+	public Set<Trip> getTrips() {
 		if (this.trips == null) {
 			this.trips = new HashSet<Trip>();
 		}
@@ -79,10 +85,10 @@ public class Driver
 		return this.password;
 	}
 	
-	private Set<Double> ratings;
+	private List<Double> ratings;
 
 
-	public void setRatings(Set<Double> ratings) {
+	public void setRatings(List<Double> ratings) {
 		this.ratings = ratings;
 	}
 
@@ -91,9 +97,9 @@ public class Driver
 	}
 
 	@ElementCollection(targetClass=Double.class)
-	public Set<Double> getRatings() {
+	public List<Double> getRatings() {
 		if (this.ratings == null) {
-			this.ratings = new HashSet<Double>();
+			this.ratings = new ArrayList<Double>();
 		}
 		return this.ratings;
 	}

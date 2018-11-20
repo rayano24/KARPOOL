@@ -1,5 +1,7 @@
 package ca.mcgill.ecse321.karpool.application.repository;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -29,6 +31,7 @@ public class KarpoolRepository
 		trip.setSeatAvailable(seatAvailable);
 		trip.setTripComplete(false);
 		trip.setPrice(price);
+		trip.setPassenger(new HashSet<Passenger>());
 		entityManager.persist(trip);
 		return trip;
 	}
@@ -41,6 +44,8 @@ public class KarpoolRepository
 		driver.setPassword(password);
 		driver.setPhoneNumber(phoneNumber);
 		driver.setRecord(criminalRecord);
+		driver.setTrips(new HashSet<Trip>());
+		driver.setRatings(new ArrayList<Double>());
 		entityManager.persist(driver);
 		return driver;
 	}
@@ -53,6 +58,7 @@ public class KarpoolRepository
 		pass.setPassword(password);
 		pass.setPhoneNumber(phoneNumber);
 		pass.setRecord(criminalRecord);
+		pass.setTrips(new HashSet<Trip>());
 		entityManager.persist(pass);
 		return pass;
 	}

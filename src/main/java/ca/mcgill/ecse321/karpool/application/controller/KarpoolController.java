@@ -235,17 +235,19 @@ public class KarpoolController {
 	 * @param rating
 	 */
 	@PostMapping("/drivers/rate/{name}/{rating}")
-	public void rateDriver(@PathVariable("name") String name,@PathVariable("rating") double rating)
+	public List<Double> rateDriver(@PathVariable("name") String name,@PathVariable("rating") double rating)
 	{
 		//need to check if rating is a valid rating
 		try {
 			
 			Driver d = repository.getDriver(name);
 			repository.addDriverRating(d, rating);
+			return d.getRatings();
 		}
 		catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
+		return null;
 	}
 	
 	/**
@@ -258,7 +260,7 @@ public class KarpoolController {
 		double r = 0;
 		try {
 			Driver d = repository.getDriver(name);
-			Set<Double> ratings = d.getRatings();
+			List<Double> ratings = d.getRatings();
 			int rNum = ratings.size();
 			double rSum = 0.0;
 			for(double rate: ratings)
@@ -621,6 +623,28 @@ public class KarpoolController {
 	 */
 	@GetMapping("/trips/all")
 	public List<Trip> listAllTrips()
+	{
+		List<Integer> trips = repository.getAllTrips();
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		for(int t: trips)
+		{
+			fullTrip.add(repository.getSpecificTrip(t));
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips in the databse");
+			return null;
+		}		
+		return fullTrip;
+	}
+	
+	/**
+	 * lists all trips in the database
+	 * 
+	 * @return list of trips
+	 */
+	@GetMapping("/trips/all")
+	public List<Trip> listAllOpenTrips()
 	{
 		List<Integer> trips = repository.getAllTrips();
 		List<Trip> fullTrip = new ArrayList<Trip>();
