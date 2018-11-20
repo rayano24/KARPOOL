@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.karpool.application.repository.*;
 @CrossOrigin
 @RestController
+@CrossOrigin
 public class KarpoolController {
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
@@ -24,20 +25,14 @@ public class KarpoolController {
 	@Autowired
 	KarpoolRepository repository;
 
-	Driver driver;
-
-	Set<Passenger> passengers;
-	
-	EndUser user;
-
 	//TODO: Password can't just be read as a regular String. NEEDS some form of encryption.
-	
+
 	@RequestMapping("/")
 	public String greeting()
 	{
 		return "Hello world!";
 	}
-	
+
 	@PostMapping("/{name}")
 	public String greeting(@PathVariable("name")String name)
 	{
@@ -50,6 +45,12 @@ public class KarpoolController {
 			return "Hello, " + name + "!";
 		}
 	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////                                                                   /////////////////
+	/////////////////                     DRIVER CONTROLLER                             /////////////////
+	/////////////////                                                                   /////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * Creates a driver via the createDriver method from KarpoolRepository. Performs parameter validation
@@ -100,52 +101,159 @@ public class KarpoolController {
 							{
 								System.out.println("Your password must have over 8 characters");
 								return null;
-								
 							}
-							
 						}
 						catch (NullPointerException e)
 						{
 							System.out.print("Please enter a password");
 							return null;
 						}
-					
 					}
 					else
 					{
 						System.out.println("Oups , this is not a valid email");
 					}
 				}
-				
 				catch(NullPointerException e)
 				{
 					System.out.println("Oups, this is not a valid email");
 					return null;
-			}
+				}
 			}
 			else 
 			{
 				System.out.println("Oups, this is not a valid phone number");
 				return null;
 			}
-
 		}
-			
-		 
 		catch(NullPointerException e1) 
 		{
 			System.out.println("Exception - Null pointer");
 			return null;
 		}
 		catch(NumberFormatException e2)
-
 		{
 			System.out.println("Exception - Number format");
 			return null;
 		}
 		return d;
 	}
-	
+
+	/**
+	 * This method authenticates the driver user on login page
+	 *
+	 * @param username
+	 * @param password
+	 * @return TRUE if the account is authenticated
+	 */
+	@GetMapping("/drivers/auth/{username}/{password}")
+	public Response authenticateDriver(@PathVariable("username")String username, @PathVariable("password")String password)
+	{
+		Response r = new Response();
+		try {
+			Driver driver = repository.getDriver(username);
+			if(driver.getPassword().equals(password))
+			{
+				r.setResponse(true);
+				r.setError(null);
+			}
+			else
+			{
+				r.setResponse(false);
+				r.setError("Wrong username or password");
+			}	
+		}
+		catch(NullPointerException e) {
+			r.setResponse(false);
+			r.setError("Error - Attempted to authenticate null driver");
+		}
+		return r;
+	}
+
+	/**
+	 * searches for a driver with given name
+	 *
+	 * @param name
+	 * @return the queried driver
+	 */
+	@GetMapping("/drivers/{name}")
+	public Driver queryDriver(@PathVariable("name")String name)
+	{
+		Driver driver = repository.getDriver(name);
+		if(driver == null)
+		{
+			System.out.println("No driver with that name in the database");
+			return null;
+		}
+		return driver;
+	}
+
+	/**
+	 * lists all drivers in the database
+	 * 
+	 * @return list of drivers
+	 */
+	@GetMapping("/drivers/all")
+	public List<Driver> listAllDrivers()
+	{
+		List<String> drivers = repository.getAllDrivers();
+		List<Driver> fullDriver = new ArrayList<Driver>();
+		for(String d: drivers)
+		{
+			fullDriver.add(repository.getDriver(d));
+		}
+		if(fullDriver.isEmpty())
+		{
+			System.out.println("There are no drivers in the database");
+			return null;
+		}
+		return fullDriver;
+	}
+
+	@GetMapping("/trips/drivers/{name}")
+	public List<Trip> tripsForDriver(@PathVariable("name") String name)
+	{
+		List<Integer> trip = repository.getTripForDriver(name);
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		for(int t: trip)
+		{
+			fullTrip.add(repository.getSpecificTrip(t));
+		}
+
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips for this driver");
+			return null;
+		}		
+		return fullTrip;
+	}
+
+	/**
+	 * Rate the driver
+	 * 
+	 * @param name
+	 * @param rating
+	 */
+	@PostMapping("/drivers/rate/{name}/{rating}")
+	public void rateDriver(@PathVariable("name") String name,@PathVariable("rating") Rating rating)
+	{
+		//need to check if rating is a valid rating
+		try {
+			Driver d = repository.getDriver(name);
+			repository.setDriverRating(d, rating);
+
+		}
+		catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////                                                                   /////////////////
+	/////////////////                    PASSENGER CONTROLLER                           /////////////////
+	/////////////////                                                                   /////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	/**
 	 * Creates a passenger via the createPassenger method from KarpoolRepository. Performs parameter validation
 	 * 
@@ -161,14 +269,11 @@ public class KarpoolController {
 			@PathVariable("phone") String phone, @PathVariable("record") boolean criminalRecord)
 	{
 		Passenger p = null;
-		
 		try 
 		{
 			if(phone.length() == 10) 
 			{
-
 				Long.parseLong(phone);
-				
 				try 
 				{
 					if(email.indexOf("@")>=0 && email.indexOf(".")>=0)
@@ -238,48 +343,15 @@ public class KarpoolController {
 	}
 
 	/**
-	 * This method authenticates the driver user on login page
-	 *
-	 * @param username
-	 * @param password
-	 * @return TRUE if the account is authenticated
-	 */
-	@GetMapping("/drivers/auth/{username}/{password}")
-	public Response authenticateDriver(@PathVariable("username")String username, @PathVariable("password")String password)
-
-	{
-		Response r = new Response();
-		try {
-			Driver driver = repository.getDriver(username);
-			if(driver.getPassword().equals(password))
-			{
-				r.setResponse(true);
-				r.setError(null);
-			}
-			else
-			{
-				r.setResponse(false);
-				r.setError("Wrong username or password");
-			}	
-		}
-		catch(NullPointerException e) {
-			r.setResponse(false);
-			r.setError("Error - Attempted to authenticate null driver");
-		}
-		return r;
-	}
-	
-	/**
 	 * This method authenticates the passenger user on login page
 	 *
 	 * @param username
 	 * @param password
 	 * @return TRUE if the account is authenticated
 	 */
-	
+
 	@GetMapping("/passengers/auth/{username}/{password}")
 	public Response authenticatePassenger(@PathVariable("username")String username, @PathVariable("password")String password)
-
 	{
 		Response r = new Response();
 		try {
@@ -303,26 +375,6 @@ public class KarpoolController {
 	}
 
 	/**
-	 * searches for a driver with given name
-	 *
-	 * @param name
-	 * @return the queried driver
-	 */
-	@GetMapping("/drivers/{name}")
-	public Driver queryDriver(@PathVariable("name")String name)
-
-	{
-		Driver driver = repository.getDriver(name);
-		if(driver == null)
-		{
-			System.out.println("No driver with that name in the database");
-			return null;
-		}
-		return driver;
-	}
-	
-	
-	/**
 	 * searches for a passenger with given name
 	 *
 	 * @param name
@@ -330,7 +382,6 @@ public class KarpoolController {
 	 */
 	@GetMapping("/passengers/{name}")
 	public Passenger queryPassenger(@PathVariable("name")String name)
-
 	{
 		Passenger passenger = repository.getPassenger(name);
 		if(passenger == null)
@@ -340,29 +391,7 @@ public class KarpoolController {
 		}
 		return passenger;
 	}
-	
-	/**
-	 * lists all drivers in the database
-	 * 
-	 * @return list of drivers
-	 */
-	@GetMapping("/drivers/all")
-	public List<Driver> listAllDrivers()
-	{
-		List<String> drivers = repository.getAllDrivers();
-		List<Driver> fullDriver = new ArrayList<Driver>();
-		for(String d: drivers)
-		{
-			fullDriver.add(repository.getDriver(d));
-		}
-		if(fullDriver.isEmpty())
-		{
-			System.out.println("There are no drivers in the database");
-			return null;
-		}
-		return fullDriver;
-	}
-	
+
 	/**
 	 * lists all users in the database
 	 * 
@@ -384,7 +413,88 @@ public class KarpoolController {
 		}
 		return fullPass;
 	}
-	
+
+	/**
+	 * lists all trips associated to particular passenger
+	 * 
+	 * @return list of trips for passenger
+	 */
+	@GetMapping("/trips/passengers/{name}")
+	public Trip tripsForPassenger(@PathVariable("name") String name)
+	{
+		Trip t = repository.getTripForPassenger(name);
+
+		if(t == null)
+		{
+			System.out.println("There are no trips for this passenger");
+			return null;
+		}		
+		return t;
+	}
+
+	/**
+	 * This method marks a trip as completed
+	 * @param trip
+	 */
+	@PostMapping("/trips/close/{trip}")
+	public void closeTrip(@PathVariable("trip")int tripID)
+	{
+		repository.closeTrip(tripID);
+	}
+
+	/**
+	 * Rate the passenger
+	 * 
+	 * @param name
+	 * @param rating
+	 */
+	@PostMapping("/passengers/rate/{name}/{rating}")
+	public void ratePassenger(@PathVariable("name") String name,@PathVariable("rating") Rating rating)
+	{
+		//need to check if rating is a valid rating
+		try {
+			Passenger p = repository.getPassenger(name);
+			repository.setPassengerRating(p, rating);
+		}
+		catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
+	}
+
+	/**
+	 * This method allows for new passengers to be added to a specific 
+	 * trip taking place. It checks to see if the passenger is already 
+	 * signed up for this trip, if not it adds to passenger to the trip.
+	 * @param passenger
+	 * @param trip
+	 * @return
+	 */
+	@PostMapping("/trips/{trip}/add/{name}")
+	public Passenger addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
+	{
+		Passenger pWithTrip = null;
+		Trip t = repository.getSpecificTrip(tripID);
+		Passenger p = repository.getPassenger(name);
+		if (t.getSeatAvailable() <= 0) {
+			System.out.println("No seats available");
+			return null;
+		}
+		else if (repository.checkPassengerInTrip(t, name)) 
+		{
+			System.out.println("You are already on this trip");
+			return null;
+		}
+		else {
+			pWithTrip = repository.addPassenger(p, t);
+		}	
+		return pWithTrip;
+	}
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
+	/////////////////                                                                   /////////////////
+	/////////////////                      TRIPS CONTROLLER                             /////////////////
+	/////////////////                                                                   /////////////////
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
 	 * creates trip with given parameters
@@ -400,69 +510,55 @@ public class KarpoolController {
 	public Trip createTrip(@PathVariable("driver") String name, @PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
 			@PathVariable("seats") int seatAvailable, @PathVariable("time") String departureTime, @PathVariable("date") String departureDate, @PathVariable("price") int price) throws ParseException
 	{
-		//SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//		LocalDate currDate = LocalDate.now();
-//		LocalTime currTime = LocalTime.now();
-//		currDate = sdf.format(currDate);
-//		destination = (destination.toLowerCase()).replaceAll("\\s+","");
-		//Date tripDate = sdf.parse(departureDate);
-		
 		Date date = new Date();
 		Date time = new Date();
-		        
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        Date dateInput = sdf.parse(departureDate);
-        String date1 = sdf.format(dateInput);        
-        String date2 = sdf.format(date);
-        
-        SimpleDateFormat sdf2 = new SimpleDateFormat("HHmm");
-        Date timeInput = sdf2.parse(departureTime);
-        String time1 = sdf2.format(timeInput);
-        String time2 = sdf2.format(time);
-		
-		
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date dateInput = sdf.parse(departureDate);
+		String date1 = sdf.format(dateInput);        
+		String date2 = sdf.format(date);
+
+		SimpleDateFormat sdf2 = new SimpleDateFormat("HHmm");
+		Date timeInput = sdf2.parse(departureTime);
+		String time1 = sdf2.format(timeInput);
+		String time2 = sdf2.format(time);
+
 		try 
 		{
 			if(seatAvailable == 0) {
-				
+
 				System.out.println("Must have one or more seats available");
 				return null;
 			} 
-			
+
 			//compares system date to departureDate
 			else if ((date1.compareTo(date2)) < 0) {
 				System.out.println("Cannot set a date that has already passed");
 				return null;
 			}
-			
+
 			//compares system time to departureTime
 			else if ((date1.compareTo(date2)) == 0) {
-				
+
 				if ((time1.compareTo(time2)) < 0) {
 					System.out.println(time1);
 					System.out.println(time2);
 					System.out.println("Cannot set a time that has already passed");
 					return null;
 				}
-				
 			}
-			
-		
-			
 		} 
 		catch(NullPointerException |  NumberFormatException e) 
 		{
 			System.out.println("Exception - Invalid seat number");
 			return null;
-			
 		}
-		
+
 		Driver d = repository.getDriver(name);
-		
+
 		Trip trip = repository.createTrip(d, destination, departureTime, departureDate, departureLocation, seatAvailable, price);
 		return trip;
 	}
-
 
 	/**
 	 * finds a trip that matches departure location and destination, with matching number of seats
@@ -493,7 +589,7 @@ public class KarpoolController {
 		}
 		return fullTrip;
 	}
-	
+
 	/**
 	 * lists all trips matching the query in ascending order of times
 	 * 
@@ -520,8 +616,8 @@ public class KarpoolController {
 		}
 		return fullTrip;
 	}
-	
-	
+
+
 	/**
 	 * lists all trips in the database
 	 * 
@@ -543,250 +639,127 @@ public class KarpoolController {
 		}		
 		return fullTrip;
 	}
-	
-	/**
-	 * lists all trips associated to particular passenger
-	 * 
-	 * @return list of trips for passenger
-	 */
-	@GetMapping("/trips/passengers/{name}")
-	public Trip tripsForPassenger(@PathVariable("name") String name)
-	{
-		Trip t = repository.getTripForPassenger(name);
-		
-		if(t == null)
-		{
-			System.out.println("There are no trips for this passenger");
-			return null;
-		}		
-		return t;
-	}
-	
-	@GetMapping("/trips/drivers/{name}")
-	public List<Trip> tripsForDriver(@PathVariable("name") String name)
-	{
-		List<Integer> trip = repository.getTripForDriver(name);
-		List<Trip> fullTrip = new ArrayList<Trip>();
-		for(int t: trip)
-		{
-			fullTrip.add(repository.getSpecificTrip(t));
-		}
-		
-		if(fullTrip.isEmpty())
-		{
-			System.out.println("There are no trips for this driver");
-			return null;
-		}		
-		return fullTrip;
-	}
 
-	/**
-	 * This method marks a trip as completed
-	 * @param trip
-	 */
-	@PostMapping("/trips/close/{trip}")
-	public void closeTrip(@PathVariable("trip")int tripID)
-	{
-		repository.closeTrip(tripID);
-
-	}
-
-	/**
-	 * Rate the driver
-	 * 
-	 * @param name
-	 * @param rating
-	 */
-	@PostMapping("/drivers/rate/{name}/{rating}")
-	public void rateDriver(@PathVariable("name") String name,@PathVariable("rating") Rating rating)
-
-	{
-		//need to check if rating is a valid rating
-		try {
-			Driver d = repository.getDriver(name);
-			repository.setDriverRating(d, rating);
-
-		}
-		catch (NullPointerException e) {
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}
-	}
-	
-	/**
-	 * Rate the passenger
-	 * 
-	 * @param name
-	 * @param rating
-	 */
-	@PostMapping("/passengers/rate/{name}/{rating}")
-	public void ratePassenger(@PathVariable("name") String name,@PathVariable("rating") Rating rating)
-
-	{
-		//need to check if rating is a valid rating
-		try {
-			Passenger p = repository.getPassenger(name);
-			repository.setPassengerRating(p, rating);
-
-		}
-		catch (NullPointerException e) {
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}
-
-	}
-	
-	//modification methods start
 	@PostMapping("/trips/{tripID}/date/{date}")
-	public void modifyTripDate(@PathVariable("trip")int tripID, @PathVariable("date")String departureDate) {
-	
+	public void modifyTripDate(@PathVariable("trip")int tripID, @PathVariable("date")String departureDate)
+	{
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
 			Trip t1 = repository.getSpecificTrip(tripID);
 			repository.modifyDepartureDate(t, departureDate);
-			
+
 			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
-			} catch (NullPointerException e) {
-				System.out.println(ERROR_NOT_FOUND_MESSAGE);
-			}
-			
+		} catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
+
 	}
+
 	@PostMapping("/trips/{tripID}/time/{time}")
-	public void modifyTripTime(@PathVariable("trip")int tripID, @PathVariable("time")String departureTime) {
-	
+	public void modifyTripTime(@PathVariable("trip")int tripID, @PathVariable("time")String departureTime) 
+	{
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
 			Trip t1 = repository.getSpecificTrip(tripID);
 			repository.modifyDepartureTime(t, departureTime);
-			
-			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
-			} catch (NullPointerException e) {
-				System.out.println(ERROR_NOT_FOUND_MESSAGE);
-			}
-			
-	}
 
-	@PostMapping("/trips/{tripID}/triplocation/{location}")
-	public void modifyTripLocation(@PathVariable("tripID")int tripID, @PathVariable("location")String departureLocation) {
-	
-		try {
-		Trip t = repository.getSpecificTrip(tripID);
-		Trip t1 = repository.getSpecificTrip(tripID);
-		repository.modifyTripLocation(t, departureLocation);
-		
-		System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
+			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
-			
+
 	}
+
+	@PostMapping("/trips/{tripID}/triplocation/{location}")
+	public void modifyTripLocation(@PathVariable("tripID")int tripID, @PathVariable("location")String departureLocation) 
+	{
+		try {
+			Trip t = repository.getSpecificTrip(tripID);
+			Trip t1 = repository.getSpecificTrip(tripID);
+			repository.modifyTripLocation(t, departureLocation);
+
+			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
+		} catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
+
+	}
+
 	@PostMapping("/trips/{tripID}/tripdestination/{destination}")
-	public void modifyTripDestination(@PathVariable("trip")int tripID, @PathVariable("destination")String destination) {
-	
+	public void modifyTripDestination(@PathVariable("trip")int tripID, @PathVariable("destination")String destination) 
+	{
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
 			Trip t1 = repository.getSpecificTrip(tripID);
 			repository.modifyTripDestination(t, destination);
-			
+
 			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
-			} catch (NullPointerException e) {
-				System.out.println(ERROR_NOT_FOUND_MESSAGE);
-			}
-			
+		} catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
 	}
+
 	@PostMapping("/trips/{tripID}/tripprice/{price}")
-	public void modifyTripPrice(@PathVariable("trip")int tripID, @PathVariable("price")int price) {
-	
+	public void modifyTripPrice(@PathVariable("trip")int tripID, @PathVariable("price")int price) 
+	{
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
 			Trip t1 = repository.getSpecificTrip(tripID);
 			repository.modifyTripPrice(t, price);
-			
+
 			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
-			} catch (NullPointerException e) {
-				System.out.println(ERROR_NOT_FOUND_MESSAGE);
-			}
-			
+		} catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
 	}
+
 	@PostMapping("/trips/{tripID}/seats/{seats}")
-	public void modifyTripSeats(@PathVariable("trip")int tripID, @PathVariable("seats")int seatAvailable) {
-	
+	public void modifyTripSeats(@PathVariable("trip")int tripID, @PathVariable("seats")int seatAvailable) 
+	{
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
 			Trip t1 = repository.getSpecificTrip(tripID);
 			repository.modifySeatAvailable(t, seatAvailable);
-			
+
 			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
-			} catch (NullPointerException e) {
-				System.out.println(ERROR_NOT_FOUND_MESSAGE);
-			}
-			
+		} catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
 	}
-	//modificaiton methods end
 
-	
-	/**
-	 * This method allows for new passengers to be added to a specific 
-	 * trip taking place. It checks to see if the passenger is already 
-	 * signed up for this trip, if not it adds to passenger to the trip.
-	 * @param passenger
-	 * @param trip
-	 * @return
-	 */
-	@PostMapping("/trips/{trip}/add/{name}")
-	public Passenger addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
+	/*public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
 	{
-		Passenger pWithTrip = null;
-		Trip t = repository.getSpecificTrip(tripID);
-		Passenger p = repository.getPassenger(name);
-		if (t.getSeatAvailable() <= 0) {
-			System.out.println("No seats available");
-			return null;
-		}
 
-		else if (repository.checkPassengerInTrip(t, name)) 
-		{
-			System.out.println("You are already on this trip");
-			return null;
-		}
-		else {
-			pWithTrip = repository.addPassenger(p, t);
-		}	
-		return pWithTrip;
-	}
+        BufferedReader br = null;
 
-//	public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
-//	{
-//
-//        BufferedReader br = null;
-//
-//        try {
-//
-//            URL url = new URL("https://www.zipcodeapi.com/rest/GOhazMBKVJ2VDSEOrrkf0sswW4D5c4NYOjZi2mGTjf2wuvgvTkUj5L1KpR2GkRRI/distance.json/" + zipcode1 + "/" +zipcode2 +"/km");
-//            br = new BufferedReader(new InputStreamReader(url.openStream()));
-//
-//            String line;
-//
-//            StringBuilder sb = new StringBuilder();
-//
-//            while ((line = br.readLine()) != null) {
-//                sb.append(line);
-//                sb.append(System.lineSeparator());
-//            }
-//
-//            String RoughDistance = sb.toString();
-//            if (RoughDistance.charAt(2) == 'e') {
-//            	return 0;
-//            }
-//            String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
-//            float distance = Float.parseFloat(intValue);
-//            return distance;
-//
-//        } finally {
-//
-//            if (br != null) {
-//                br.close();
-//            }
-//        }
-//    }
+        try {
 
+            URL url = new URL("https://www.zipcodeapi.com/rest/GOhazMBKVJ2VDSEOrrkf0sswW4D5c4NYOjZi2mGTjf2wuvgvTkUj5L1KpR2GkRRI/distance.json/" + zipcode1 + "/" +zipcode2 +"/km");
+            br = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            String line;
+
+            StringBuilder sb = new StringBuilder();
+
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                sb.append(System.lineSeparator());
+            }
+
+            String RoughDistance = sb.toString();
+            if (RoughDistance.charAt(2) == 'e') {
+            	return 0;
+            }
+            String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
+            float distance = Float.parseFloat(intValue);
+            return distance;
+
+        } finally {
+
+            if (br != null) {
+                br.close();
+            }
+        }
+    }*/
 }
 
