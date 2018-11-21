@@ -1,6 +1,9 @@
 package ca.mcgill.ecse321.karpool.application.repository;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -255,10 +258,30 @@ public class KarpoolRepository
 	}
 
 	@Transactional
-	public void deleteTrip(int tripID) 
+	public void deleteTrip(int tripID) throws ParseException 
 	{
 		Trip t = entityManager.find(Trip.class, tripID);
+		String tripDate = t.getDepartureDate();
+		
+		Date date = new Date();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date dateInput = sdf.parse(tripDate);
+		String date1 = sdf.format(dateInput);        
+		String date2 = sdf.format(date);
+		
+		if ((date1.compareTo(date2)) <= 0) {
+			System.out.println("Cannot delete a trip on the day of the trip");
+		
+		}
+		
+		else if (t.isTripComplete() == true) {
+			System.out.println("Cannot delete a trip that has been completed");
+			
+		}
+		else {
 		entityManager.remove(t);
+		}
 	}
 	
 	@Transactional
