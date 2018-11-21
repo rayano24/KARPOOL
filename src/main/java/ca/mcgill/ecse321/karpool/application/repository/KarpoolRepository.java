@@ -174,10 +174,31 @@ public class KarpoolRepository
 		return t;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public Trip getTripByID(int tripID)
+	{
+		Query q = entityManager.createNativeQuery("SELECT trip WHERE trip_id= :id");
+		q.setParameter("id", tripID);
+		List<Trip> trips = q.getResultList();
+		return trips.get(0);
+	}
+	
 	@Transactional
 	public List<Integer> getSortedTripsTime(String start, String finish) 
 	{
 		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE departure_location= :departure AND destination= :destination ORDER BY departure_date");
+		q.setParameter("departure", start);
+		q.setParameter("destination", finish);
+		@SuppressWarnings("unchecked")
+		List<Integer> trips = q.getResultList();
+		return trips;
+	}
+	
+	@Transactional
+	public List<Integer> getSortedTripsPrice(String start, String finish) 
+	{
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE departure_location= :departure AND destination= :destination ORDER BY price");
 		q.setParameter("departure", start);
 		q.setParameter("destination", finish);
 		@SuppressWarnings("unchecked")
