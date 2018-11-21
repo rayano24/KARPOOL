@@ -157,5 +157,14 @@ public class Trip
 		}
 		return this.passenger;
 	}
+	
+	public boolean removePassenger(Passenger value ) {
+		if(this.passenger.contains(value))
+		{
+			this.passenger.remove(value);
+			return true;
+		}
+		return false;
+	}
 
 }

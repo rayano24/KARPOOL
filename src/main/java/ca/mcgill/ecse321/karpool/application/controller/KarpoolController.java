@@ -6,6 +6,7 @@ import ca.mcgill.ecse321.karpool.application.model.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -257,22 +258,31 @@ public class KarpoolController {
 	@GetMapping("/drivers/rate/{name}")
 	public double getAvgRating(@PathVariable("name") String name)
 	{ 
-		double r = 0;
+		double r = 0.0;
+//		JSONObject o = new JSONObject();
 		try {
 			Driver d = repository.getDriver(name);
 			List<Double> ratings = d.getRatings();
 			int rNum = ratings.size();
 			double rSum = 0.0;
-			for(double rate: ratings)
+			if(rNum == 0)
 			{
-				rSum+=rate;
+				r =  -1.0;
 			}
-			r = rSum/rNum;
+			else
+			{
+				for(double rate: ratings)
+				{
+					rSum+=rate;
+				}
+				r = rSum/rNum;
+			}
 			
 		} catch(NullPointerException e) {
 			
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}
+		}		
+//		o.append("rating", r);
 		return r;
 	}
 
@@ -485,6 +495,24 @@ public class KarpoolController {
 		else {
 			tripWithP = repository.addPassengerToTrip(p, t);
 		}	
+		return p;
+	}
+	
+	@PostMapping("/trips/{trip}/remove/{name}")
+	public Passenger removePassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name)
+	{
+		Trip t = repository.getSpecificTrip(tripID);
+		Passenger p = repository.getPassenger(name);
+		if(repository.checkPassengerInTrip(t, p))
+		{
+			repository.rempvePassengerFromTrip(p, t);
+		}
+		else
+		{
+			System.out.println("You cannot leave a trip that you are not a part of");
+			return null;
+		}
+		
 		return p;
 	}
 
@@ -759,6 +787,19 @@ public class KarpoolController {
 	public void closeTrip(@PathVariable("trip")int tripID)
 	{
 		repository.closeTrip(tripID);
+	}
+	
+	/**
+	 * This method deletes a trip from the repository. Used when a driver deletes a trip before
+	 * there are any passengers on it
+	 * 
+	 * @param tripID
+	 */
+	@PostMapping("/trips/delete/{trip}")
+	public void deleteTrip(@PathVariable("trip")int tripID)
+	{
+		//TODO can only delete trip if the date hasnt passed yet
+		repository.deleteTrip(tripID);
 	}
 
 	/*public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException

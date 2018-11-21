@@ -35,6 +35,15 @@ public class Passenger
 		return this.trips;
 	}
 	
+	public boolean removeTrip(Trip value ) {
+		if(this.trips.contains(value))
+		{
+			this.trips.remove(value);
+			return true;
+		}
+		return false;
+	}
+	
 	private String name;
 
 	public void setName(String value) {

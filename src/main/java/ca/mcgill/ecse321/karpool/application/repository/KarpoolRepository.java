@@ -223,6 +223,16 @@ public class KarpoolRepository
 		entityManager.merge(t);
 		return t;
 	}
+	
+	@Transactional
+	public void rempvePassengerFromTrip(Passenger p, Trip t)
+	{
+		t.removePassenger(p);
+		t.setSeatAvailable(t.getSeatAvailable()+1);
+		p.removeTrip(t);
+		entityManager.merge(p);
+		entityManager.merge(t);
+	}
 
 	@Transactional
 	public boolean checkPassengerInTrip(Trip t, Passenger p) 
@@ -255,6 +265,13 @@ public class KarpoolRepository
 	{
 		
 		return 0;
+	}
+
+	@Transactional
+	public void deleteTrip(int tripID) 
+	{
+		Trip t = entityManager.find(Trip.class, tripID);
+		entityManager.remove(t);
 	}
 
 }
