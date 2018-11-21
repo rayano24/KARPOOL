@@ -655,6 +655,28 @@ public class KarpoolController {
 		}
 		return fullTrip;
 	}
+	
+	@GetMapping("/trips/{location}/{destination}/date")
+	public List<Trip> listTripsAscendingPrice(@PathVariable("location") String departureLocation, 
+			@PathVariable("destination") String destination)
+	{
+		List<Integer> trips = repository.getSortedTripsTime(departureLocation, destination);
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		for(int t: trips)
+		{
+			Trip tFull = repository.getSpecificTrip(t);
+			if(tFull.getSeatAvailable()>0 && !tFull.isTripComplete())
+			{
+				fullTrip.add(tFull);
+			}
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
+		return fullTrip;
+	}
 
 
 	/**
