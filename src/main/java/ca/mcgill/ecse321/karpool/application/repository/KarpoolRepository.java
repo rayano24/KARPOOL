@@ -165,10 +165,20 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
-	public Trip getSpecificTrip(int id)
+	public Trip getSpecificTrip(int trip_id)
 	{
-		Trip t = entityManager.find(Trip.class, id);
+		Trip t = entityManager.find(Trip.class, trip_id);
 		return t;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public Trip getTripByID(int tripID)
+	{
+		Query q = entityManager.createNativeQuery("SELECT trip WHERE trip_id= :id");
+		q.setParameter("id", tripID);
+		List<Trip> trips = q.getResultList();
+		return trips.get(0);
 	}
 	
 	@Transactional
@@ -237,19 +247,6 @@ public class KarpoolRepository
 	@Transactional
 	public boolean checkPassengerInTrip(Trip t, Passenger p) 
 	{
-//		Query q = entityManager.createNativeQuery("SELECT name FROM passenger WHERE trip= :trip");
-//		q.setParameter("trip", t);
-//		@SuppressWarnings("unchecked")
-//		List<String> names = q.getResultList();
-//		if(names.contains(name))
-//		{
-//			return true;
-//		}
-//		else
-//		{
-//			return false;
-//		}
-		
 		if(t.getPassenger().contains(p))
 		{
 			return true;
@@ -272,6 +269,13 @@ public class KarpoolRepository
 	{
 		Trip t = entityManager.find(Trip.class, tripID);
 		entityManager.remove(t);
+	}
+	
+	@Transactional
+	public Set<Passenger> getPassengersInTrip(Trip t)
+	{
+		Set<Passenger> p = t.getPassenger();
+		return p;
 	}
 
 }
