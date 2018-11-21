@@ -706,7 +706,7 @@ public class KarpoolController {
 		}
 		if(fullTrip.isEmpty())
 		{
-			System.out.println("There are no trips in the databse");
+			System.out.println("There are no trips in the database");
 			return null;
 		}		
 		return fullTrip;
