@@ -21,14 +21,14 @@ public class Response
 	public void setError(String error) {
 		this.error = error;
 	}
-//	
-//	private double rating = -1;
-//
-//	public double getRating() {
-//		return rating;
-//	}
-//
-//	public void setRating(double rating) {
-//		this.rating = rating;
-//	}
+	
+	private double rating = -1;
+
+	public double getRating() {
+		return rating;
+	}
+
+	public void setRating(double rating) {
+		this.rating = rating;
+	}
 }

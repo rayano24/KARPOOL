@@ -255,34 +255,29 @@ public class KarpoolController {
 	 * @param name
 	 */
 	@GetMapping("/drivers/rate/{name}")
-	public double getAvgRating(@PathVariable("name") String name)
+	public Response getAvgRating(@PathVariable("name") String name)
 	{ 
 		double r = 0.0;
-//		JSONObject o = new JSONObject();
+		Response resp = new Response();
 		try {
 			Driver d = repository.getDriver(name);
 			List<Double> ratings = d.getRatings();
 			int rNum = ratings.size();
 			double rSum = 0.0;
-			if(rNum == 0)
+			for(double rate: ratings)
 			{
-				r =  -1.0;
+				rSum+=rate;
 			}
-			else
-			{
-				for(double rate: ratings)
-				{
-					rSum+=rate;
-				}
-				r = rSum/rNum;
-			}
-			
-		} catch(NullPointerException e) {
-			
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}		
-//		o.append("rating", r);
-		return r;
+			r = rSum/rNum;
+			resp.setRating(r);
+		} catch(NullPointerException e1) {
+			resp.setError("Attempted to get rating of nonexistent driver");
+			resp.setRating(-1.0);
+		} catch(NumberFormatException e2) {
+			resp.setError("Divided by zero rating");
+			resp.setRating(-1.0);
+		}
+		return resp;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -668,6 +663,88 @@ public class KarpoolController {
 		{
 			Trip tFull = repository.getSpecificTrip(t);
 			if(tFull.getSeatAvailable()>0 && !tFull.isTripComplete())
+			{
+				fullTrip.add(tFull);
+			}
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
+		return fullTrip;
+	}
+	
+	/**
+	 * finds a trip that matches departure location and destination, with matching number of seats
+	 * 
+	 * @param departureLocation
+	 * @param destination
+	 * @param seatAvailable
+	 * @return queried trip
+	 */
+	@GetMapping("/trips/{location}/{destination}/{passenger}")
+	public List<Trip> queryTrip(@PathVariable("location") String departureLocation, 
+			@PathVariable("destination") String destination, @PathVariable("destination") String name)
+	{
+		List<Integer> trips = repository.getTrips(departureLocation, destination);
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		Passenger p = repository.getPassenger(name);
+		for(int t: trips)
+		{
+			Trip tFull = repository.getSpecificTrip(t);
+			if(tFull.getSeatAvailable()>0 && !tFull.isTripComplete() && !tFull.getPassenger().contains(p))
+			{
+				fullTrip.add(tFull);
+			}
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
+		return fullTrip;
+	}
+	
+	/**
+	 * lists all trips matching the query in ascending order of times
+	 * 
+	 * @return sorted list of trips
+	 */
+	@GetMapping("/trips/{location}/{destination}/{passenger}/date")
+	public List<Trip> listTripsAscendingDate(@PathVariable("location") String departureLocation, 
+			@PathVariable("destination") String destination, @PathVariable("passenger") String name)
+	{
+		List<Integer> trips = repository.getSortedTripsTime(departureLocation, destination);
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		Passenger p = repository.getPassenger(name);
+		for(int t: trips)
+		{
+			Trip tFull = repository.getSpecificTrip(t);
+			if(tFull.getSeatAvailable()>0 && !tFull.isTripComplete() && !tFull.getPassenger().contains(p))
+			{
+				fullTrip.add(tFull);
+			}
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
+		return fullTrip;
+	}
+	
+	@GetMapping("/trips/{location}/{destination}/{passenger}/price")
+	public List<Trip> listTripsAscendingPrice(@PathVariable("location") String departureLocation, 
+			@PathVariable("destination") String destination, @PathVariable("passenger") String name)
+	{
+		List<Integer> trips = repository.getSortedTripsPrice(departureLocation, destination);
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		Passenger p = repository.getPassenger(name);
+		for(int t: trips)
+		{
+			Trip tFull = repository.getSpecificTrip(t);
+			if(tFull.getSeatAvailable()>0 && !tFull.isTripComplete() && !tFull.getPassenger().contains(p))
 			{
 				fullTrip.add(tFull);
 			}
