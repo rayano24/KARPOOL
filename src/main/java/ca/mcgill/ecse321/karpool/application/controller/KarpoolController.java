@@ -749,8 +749,8 @@ public class KarpoolController {
 		try {
 			
 			if ((date1.compareTo(date2)) < 0) {
-				response.setError("Cannot set a date that has already passed");
-				response.setResponse(false);
+				r.setError("Cannot set a date that has already passed");
+				r.setResponse(false);
 				return r;
 				
 			}
@@ -765,6 +765,8 @@ public class KarpoolController {
 	} catch (NullPointerException e) {
 		System.out.println(ERROR_NOT_FOUND_MESSAGE);
 	}
+		r.setResponse(false);
+				return r;
 
 	}
 
@@ -799,6 +801,8 @@ public class KarpoolController {
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
+			r.setResponse(false);
+				return r;
 
 	}
 
@@ -816,7 +820,8 @@ public class KarpoolController {
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
-
+			r.setResponse(false);
+				return r;
 	}
 
 	@PostMapping("/trips/{tripID}/tripdestination/{destination}")
@@ -833,6 +838,8 @@ public class KarpoolController {
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
+			r.setResponse(false);
+				return r;
 	}
 
 	@PostMapping("/trips/{tripID}/tripprice/{price}")
@@ -849,6 +856,8 @@ public class KarpoolController {
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
+			r.setResponse(false);
+				return r;
 	}
 
 	@PostMapping("/trips/{tripID}/seats/{seats}")
@@ -866,6 +875,8 @@ public class KarpoolController {
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
+			r.setResponse(false);
+				return r;
 	}
 
 	/**
