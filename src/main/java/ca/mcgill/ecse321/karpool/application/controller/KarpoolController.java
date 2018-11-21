@@ -6,7 +6,6 @@ import ca.mcgill.ecse321.karpool.application.model.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -480,7 +479,6 @@ public class KarpoolController {
 	@PostMapping("/trips/{trip}/add/{name}")
 	public Passenger addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
 	{
-		Trip tripWithP = null;
 		Trip t = repository.getSpecificTrip(tripID);
 		Passenger p = repository.getPassenger(name);
 		if (t.getSeatAvailable() <= 0) {
@@ -493,7 +491,7 @@ public class KarpoolController {
 			return null;
 		}
 		else {
-			tripWithP = repository.addPassengerToTrip(p, t);
+			repository.addPassengerToTrip(p, t);
 		}	
 		return p;
 	}
