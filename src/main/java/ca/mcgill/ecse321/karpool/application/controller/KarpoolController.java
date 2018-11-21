@@ -735,8 +735,10 @@ public class KarpoolController {
 	}
 
 	@PostMapping("/trips/{tripID}/date/{date}")
-	public void modifyTripDate(@PathVariable("tripID")int tripID, @PathVariable("date")String departureDate) throws ParseException
+	public Response modifyTripDate(@PathVariable("tripID")int tripID, @PathVariable("date")String departureDate) throws ParseException
 	{
+		Response r = new Response();
+
 		Date date = new Date();
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -747,13 +749,17 @@ public class KarpoolController {
 		try {
 			
 			if ((date1.compareTo(date2)) < 0) {
-				System.out.println("Cannot set a date that has already passed");
+				response.setError("Cannot set a date that has already passed");
+				response.setResponse(false);
+				return r;
 				
 			}
 			
 			else {	
 			Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyDepartureDate(t, departureDate);
+			r.setResponse(true);
+			return r;
 		}
 
 	} catch (NullPointerException e) {
@@ -763,8 +769,10 @@ public class KarpoolController {
 	}
 
 	@PostMapping("/trips/{tripID}/time/{time}")
-	public void modifyTripTime(@PathVariable("tripID")int tripID, @PathVariable("time")String departureTime) throws ParseException 
+	public Response modifyTripTime(@PathVariable("tripID")int tripID, @PathVariable("time")String departureTime) throws ParseException 
 	{
+		Response r = new Response();
+
 		Date time = new Date();
 		
 		SimpleDateFormat sdf2 = new SimpleDateFormat("HHmm");
@@ -775,12 +783,16 @@ public class KarpoolController {
 			
 			if ((time1.compareTo(time2)) < 0) {
 
-				System.out.println("Cannot set a time that has already passed");
+				r.setError("Cannot set a time that has already passed");
+				r.setResponse(false);
+				return r;
 			}
 			
 			else {
 				Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyDepartureTime(t, departureTime);
+			r.setResponse(true);
+			return r;
 			
 			}
 			
@@ -791,11 +803,15 @@ public class KarpoolController {
 	}
 
 	@PostMapping("/trips/{tripID}/triplocation/{location}")
-	public void modifyTripLocation(@PathVariable("tripID")int tripID, @PathVariable("location")String departureLocation) 
+	public Response modifyTripLocation(@PathVariable("tripID")int tripID, @PathVariable("location")String departureLocation) 
 	{
+		Response r = new Response();
+
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyTripLocation(t, departureLocation);
+			r.setResponse(true);
+			return r;
 
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
@@ -804,11 +820,15 @@ public class KarpoolController {
 	}
 
 	@PostMapping("/trips/{tripID}/tripdestination/{destination}")
-	public void modifyTripDestination(@PathVariable("tripID")int tripID, @PathVariable("destination")String destination) 
+	public Response modifyTripDestination(@PathVariable("tripID")int tripID, @PathVariable("destination")String destination) 
 	{
+		Response r = new Response();
+
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyTripDestination(t, destination);
+			r.setResponse(true);
+			return r;
 
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
@@ -816,11 +836,15 @@ public class KarpoolController {
 	}
 
 	@PostMapping("/trips/{tripID}/tripprice/{price}")
-	public void modifyTripPrice(@PathVariable("tripID")int tripID, @PathVariable("price")int price) 
+	public Response modifyTripPrice(@PathVariable("tripID")int tripID, @PathVariable("price")int price) 
 	{
+		Response r = new Response();
+
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyTripPrice(t, price);
+			r.setResponse(true);
+			return r;
 
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
@@ -828,11 +852,15 @@ public class KarpoolController {
 	}
 
 	@PostMapping("/trips/{tripID}/seats/{seats}")
-	public void modifyTripSeats(@PathVariable("tripID")int tripID, @PathVariable("seats")int seatAvailable) 
+	public Response modifyTripSeats(@PathVariable("tripID")int tripID, @PathVariable("seats")int seatAvailable) 
 	{
+		Response r = new Response();
+
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
 			repository.modifySeatAvailable(t, seatAvailable);
+			r.setResponse(true);
+			return r;
 
 
 		} catch (NullPointerException e) {
