@@ -50,7 +50,7 @@
     <string name="trip_price">Price</string>
     <string name="trip_date">Date</string>
     <string name="trip_time">Time</string>
-    <string name="trip_seats">Seats</string>
+    <string name="trip_seats">Seats Available</string>
     <string name="trip_driver">Driver</string>
     <string name="trip_rating">Rating</string>
     <string name="trip_join">JOIN TRIP</string>

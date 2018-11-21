@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -51,6 +52,7 @@ public class FragmentTwo extends Fragment {
     private final static String KEY_USER_ID = "userID";
     private final static String KEY_TRIP_PRICE = "tripprice";
     private final static String KEY_TRIP_DRIVER_NUMBER = "number";
+    private final static String KEY_TRIP_DRIVER_RATING = "rating";
     private final static String KEY_TRIP_STATUS = "tripJoined"; // if trip is already joined or if you are viewing a trip
     private final static String KEY_TRIP_FRAG_MODE = "tripMode"; // if a trip is upcoming or already happened
 
@@ -102,6 +104,7 @@ public class FragmentTwo extends Fragment {
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
                 prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
                 prefs.edit().putString(KEY_TRIP_DRIVER_NUMBER, trip.getDriverNumber()).commit();
+                prefs.edit().putString(KEY_TRIP_DRIVER_RATING, trip.getDriverRating()).commit();
                 prefs.edit().putString(KEY_TRIP_FRAG_MODE, "UPCOMING").commit();
                 prefs.edit().putString(KEY_TRIP_STATUS, "JOINED").commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
@@ -126,6 +129,7 @@ public class FragmentTwo extends Fragment {
                 prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
                 prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
+                prefs.edit().putString(KEY_TRIP_DRIVER_RATING, trip.getDriverRating()).commit();
                 prefs.edit().putString(KEY_TRIP_FRAG_MODE, "PAST").commit();
                 prefs.edit().putString(KEY_TRIP_STATUS, "JOINED").commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
@@ -146,6 +150,9 @@ public class FragmentTwo extends Fragment {
     }
 
 
+
+
+
     /**
      * Represents an asynchronous task to get the trip info
      */
@@ -159,34 +166,46 @@ public class FragmentTwo extends Fragment {
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 try {
 
                     upcomingTripsList.clear();
                     pastTripsList.clear();
 
-                    String date = response.getString("departureDate");
-                    String year = date.substring(0, 4);
-                    String remainder = date.substring(4, 8);
-                    String time = response.getString("departureTime");
-                    JSONObject driver = response.getJSONObject("driver");
-                    String driverName = driver.getString("name");
-                    Boolean tripStatus = response.getBoolean("tripComplete");
-                    String driverNumber = driver.getString("phoneNumber");
+
+                    for (int i = 0; i < response.length(); i++) {
+
+                        JSONObject obj = response.getJSONObject(i);
+                        String date = obj.getString("departureDate");
+                        String year = date.substring(0, 4);
+                        String remainder = date.substring(4, 8);
+                        String time = obj.getString("departureTime");
+                        JSONObject driver = obj.getJSONObject("driver");
+                        String driverName = driver.getString("name");
+                        Boolean tripStatus = obj.getBoolean("tripComplete");
+                        String driverNumber = driver.getString("phoneNumber");
+                        JSONArray ratingArray = driver.getJSONArray("ratings");
+                        double driverRating = 0.0;
+
+                        for(int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
+                            driverRating += ratingArray.getDouble(ratingCount);
+                        }
+                        driverRating/=ratingArray.length();
 
 
 
-                    if (!tripStatus) {
-                        upcomingTripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                formatter(time, ":", 2), driverName, driverNumber, Integer.toString(response.getInt("seatAvailable")), Integer.toString(response.getInt("price")), Integer.toString(response.getInt("tripId"))));
-                    } else {
-                        pastTripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                formatter(time, ":", 2), driverName, driverNumber, Integer.toString(response.getInt("seatAvailable")), Integer.toString(response.getInt("price")), Integer.toString(response.getInt("tripId"))));
+                        if (!tripStatus) {
+                            upcomingTripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                    formatter(time, ":", 2), driverName, driverNumber, Double.toString(driverRating), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
+                        } else {
+                            pastTripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                    formatter(time, ":", 2), driverName, driverNumber, Double.toString(driverRating), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
+                        }
+
+
+                        upcomingAdapter.notifyDataSetChanged();
+                        pastAdapter.notifyDataSetChanged();
                     }
-
-
-                    upcomingAdapter.notifyDataSetChanged();
-                    pastAdapter.notifyDataSetChanged();
 
 
                     if (upcomingTripsList.isEmpty())
@@ -217,6 +236,8 @@ public class FragmentTwo extends Fragment {
         });
 
     }
+
+
 
     /**
      * Used for date and time formatting
