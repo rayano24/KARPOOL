@@ -171,6 +171,16 @@ public class KarpoolRepository
 		return t;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Transactional
+	public Trip getTripByID(int tripID)
+	{
+		Query q = entityManager.createNativeQuery("SELECT trip WHERE trip_id= :id");
+		q.setParameter("id", tripID);
+		List<Trip> trips = q.getResultList();
+		return trips.get(0);
+	}
+	
 	@Transactional
 	public List<Integer> getSortedTripsTime(String start, String finish) 
 	{
