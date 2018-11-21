@@ -665,11 +665,26 @@ public class KarpoolController {
 	}
 
 	@PostMapping("/trips/{tripID}/date/{date}")
-	public void modifyTripDate(@PathVariable("tripID")int tripID, @PathVariable("date")String departureDate)
+	public void modifyTripDate(@PathVariable("tripID")int tripID, @PathVariable("date")String departureDate) throws ParseException
 	{
+		Date date = new Date();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date dateInput = sdf.parse(departureDate);
+		String date1 = sdf.format(dateInput);        
+		String date2 = sdf.format(date);
+
 		try {
+			
+			if ((date1.compareTo(date2)) < 0) {
+				System.out.println("Cannot set a date that has already passed");
+				
+			}
+			
+			else {	
 			Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyDepartureDate(t, departureDate);
+		}
 
 	} catch (NullPointerException e) {
 		System.out.println(ERROR_NOT_FOUND_MESSAGE);
@@ -678,11 +693,26 @@ public class KarpoolController {
 	}
 
 	@PostMapping("/trips/{tripID}/time/{time}")
-	public void modifyTripTime(@PathVariable("tripID")int tripID, @PathVariable("time")String departureTime) 
+	public void modifyTripTime(@PathVariable("tripID")int tripID, @PathVariable("time")String departureTime) throws ParseException 
 	{
+		Date time = new Date();
+		
+		SimpleDateFormat sdf2 = new SimpleDateFormat("HHmm");
+		Date timeInput = sdf2.parse(departureTime);
+		String time1 = sdf2.format(timeInput);
+		String time2 = sdf2.format(time);
 		try {
-			Trip t = repository.getSpecificTrip(tripID);
+			
+			if ((time1.compareTo(time2)) < 0) {
+
+				System.out.println("Cannot set a time that has already passed");
+			}
+			
+			else {
+				Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyDepartureTime(t, departureTime);
+			
+			}
 			
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
