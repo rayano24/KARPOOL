@@ -50,7 +50,7 @@ public class FragmentTwo extends Fragment {
     private final static String KEY_TRIP_DRIVER = "driver";
     private final static String KEY_USER_ID = "userID";
     private final static String KEY_TRIP_PRICE = "tripprice";
-
+    private final static String KEY_TRIP_DRIVER_NUMBER = "number";
     private final static String KEY_TRIP_STATUS = "tripJoined"; // if trip is already joined or if you are viewing a trip
     private final static String KEY_TRIP_FRAG_MODE = "tripMode"; // if a trip is upcoming or already happened
 
@@ -101,6 +101,7 @@ public class FragmentTwo extends Fragment {
                 prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
                 prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
+                prefs.edit().putString(KEY_TRIP_DRIVER_NUMBER, trip.getDriverNumber()).commit();
                 prefs.edit().putString(KEY_TRIP_FRAG_MODE, "UPCOMING").commit();
                 prefs.edit().putString(KEY_TRIP_STATUS, "JOINED").commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
@@ -171,14 +172,16 @@ public class FragmentTwo extends Fragment {
                     JSONObject driver = response.getJSONObject("driver");
                     String driverName = driver.getString("name");
                     Boolean tripStatus = response.getBoolean("tripComplete");
+                    String driverNumber = driver.getString("phoneNumber");
+
 
 
                     if (!tripStatus) {
                         upcomingTripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                formatter(time, ":", 2), driverName, Integer.toString(response.getInt("seatAvailable")), Integer.toString(response.getInt("price")), Integer.toString(response.getInt("tripId"))));
+                                formatter(time, ":", 2), driverName, driverNumber, Integer.toString(response.getInt("seatAvailable")), Integer.toString(response.getInt("price")), Integer.toString(response.getInt("tripId"))));
                     } else {
                         pastTripsList.add(new Trip(response.getString("departureLocation"), response.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                formatter(time, ":", 2), driverName, Integer.toString(response.getInt("seatAvailable")), Integer.toString(response.getInt("price")), Integer.toString(response.getInt("tripId"))));
+                                formatter(time, ":", 2), driverName, driverNumber, Integer.toString(response.getInt("seatAvailable")), Integer.toString(response.getInt("price")), Integer.toString(response.getInt("tripId"))));
                     }
 
 

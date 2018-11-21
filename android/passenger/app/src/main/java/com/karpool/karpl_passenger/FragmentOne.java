@@ -55,7 +55,7 @@ public class FragmentOne extends Fragment {
     private final static String KEY_TRIP_SEATS = "seats";
     private final static String KEY_TRIP_ID = "tripID";
     private final static String KEY_TRIP_DRIVER = "driver";
-    private final static String KEY_USER_ID = "userID";
+    private final static String KEY_TRIP_DRIVER_NUMBER = "number";
     private final static String KEY_TRIP_PRICE = "tripprice";
 
 
@@ -156,6 +156,7 @@ public class FragmentOne extends Fragment {
                 prefs.edit().putString(KEY_TRIP_ID, trip.getTripID()).commit();
                 prefs.edit().putString(KEY_TRIP_SEATS, trip.getSeats()).commit();
                 prefs.edit().putString(KEY_TRIP_PRICE, trip.getPrice()).commit();
+                prefs.edit().putString(KEY_TRIP_DRIVER_NUMBER, trip.getDriverNumber()).commit();
                 prefs.edit().putString(KEY_TRIP_STATUS, "VIEW").commit();
                 prefs.edit().putString(KEY_TRIP_FRAG_MODE, "UPCOMING").commit();
                 Intent I = new Intent(getActivity(), TripActivity.class);
@@ -203,13 +204,14 @@ public class FragmentOne extends Fragment {
                             String time = obj.getString("departureTime");
                             JSONObject driver = obj.getJSONObject("driver");
                             String driverName = driver.getString("name");
+                            String driverNumber = driver.getString("phoneNumber");
 
                             Boolean tripComplete = obj.getBoolean("tripComplete");
 
 
                             if (!tripComplete) {
                                 tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                        formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
+                                        formatter(time, ":", 2), driverName, driverNumber, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
                             }
 
                         }
@@ -252,11 +254,13 @@ public class FragmentOne extends Fragment {
                             Boolean tripComplete = obj.getBoolean("tripComplete");
                             JSONObject driver = obj.getJSONObject("driver");
                             String driverName = driver.getString("name");
+                            String driverNumber = driver.getString("phoneNumber");
+
 
 
                             if (!tripComplete) {
                                 tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                        formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
+                                        formatter(time, ":", 2), driverName, driverNumber, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
                             }
 
                         }

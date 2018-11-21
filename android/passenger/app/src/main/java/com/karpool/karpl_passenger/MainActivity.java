@@ -62,34 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
         switchFragment(0, TAG_FRAGMENT_SEARCH);
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        boolean previouslyStarted = prefs.getBoolean("prevStarted", false);
-        if(!previouslyStarted)
-
-        {
-            SharedPreferences.Editor edit = prefs.edit();
-            edit.putBoolean("prevStarted", Boolean.TRUE);
-            edit.commit();
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
-
-            alert.setTitle("Notice");
-            alert.setMessage("Don't forget to set your location in the settings menu");
-
-
-
-
-            alert.setNegativeButton("Got it", new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int whichButton) {
-                    // Canceled.
-                }
-            });
-
-            alert.show();
-        }
-
-
 
 
     }
