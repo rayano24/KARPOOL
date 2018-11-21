@@ -515,6 +515,19 @@ public class KarpoolController {
 		
 		return p;
 	}
+	
+	@GetMapping("/trips/{trip}/passengers")
+	public Set<Passenger> getPassengersInTrip(@PathVariable("trip") int tripID)
+	{
+		Trip t = repository.getSpecificTrip(tripID);
+		Set<Passenger> p = repository.getPassengersInTrip(t);
+		if(p.isEmpty())
+		{
+			System.out.println("There are no passengers on this trip");
+		}	
+		
+		return p;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////                                                                   /////////////////
@@ -664,6 +677,13 @@ public class KarpoolController {
 			return null;
 		}		
 		return fullTrip;
+	}
+	
+	@GetMapping("/trips/{tripID}")
+	public Trip getTripInfo(@PathVariable("tripID")int tripID)
+	{
+		Trip t = repository.getSpecificTrip(tripID);
+		return t;
 	}
 	
 	/**
