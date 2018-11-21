@@ -1,16 +1,21 @@
 package com.karpool.karpl_passenger;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +33,7 @@ public class TripActivity extends AppCompatActivity {
 
 
     private TextView tripOrigin, tripDestination, tripDriver, tripDate, tripTime, tripPrice, tripSeats, driverRating;
-    static private Button tripButton;
+    static private Button tripButton, messageButton, rateButton;
 
 
     private final static String KEY_TRIP_STATUS = "tripJoined"; // if trip is already joined or if you are viewing a trip
@@ -41,9 +46,10 @@ public class TripActivity extends AppCompatActivity {
     private final static String KEY_TRIP_ID = "tripID";
     private final static String KEY_USER_ID = "userID";
     private final static String KEY_TRIP_PRICE = "tripprice";
+    private final static String KEY_TRIP_DRIVER_NUMBER = "number";
     private final static String KEY_TRIP_DRIVER = "driver";
 
-    private static String userID, tripID, tripStatus, tripMode;
+    private static String userID, tripID, tripStatus, tripMode, driverNumber;
 
 
     // TODO DRIVER RATING
@@ -61,13 +67,16 @@ public class TripActivity extends AppCompatActivity {
         tripTime = (TextView) findViewById(R.id.tripTime);
         tripPrice = (TextView) findViewById(R.id.tripPrice);
         tripDriver = (TextView) findViewById(R.id.tripDriver);
-        tripButton = (Button) findViewById(R.id.tripButton);
         tripSeats = (TextView) findViewById(R.id.tripSeats);
         driverRating = (TextView) findViewById(R.id.driverRating);
+        tripButton = (Button) findViewById(R.id.tripButton);
+        rateButton = (Button) findViewById(R.id.rateButton);
+        messageButton = (Button) findViewById(R.id.messageButton);
 
 
         tripStatus = prefs.getString(KEY_TRIP_STATUS, null); // JOINED OR VIEW
         tripMode = prefs.getString(KEY_TRIP_FRAG_MODE, null); // PAST OR UPCOMING
+        driverNumber = prefs.getString(KEY_TRIP_DRIVER_NUMBER, null);
 
         tripID = prefs.getString(KEY_TRIP_ID, null);
         userID = prefs.getString(KEY_USER_ID, null);
@@ -89,9 +98,24 @@ public class TripActivity extends AppCompatActivity {
             }
         });
 
-        if(tripMode == null) {
-            tripMode = "UPCOMING";
-        }
+        messageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"
+                        + driverNumber)));
+            }
+        });
+
+
+        rateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showRatingDialog();
+
+
+            }
+        });
+
 
         updateButton(tripStatus, tripMode);
 
@@ -99,31 +123,88 @@ public class TripActivity extends AppCompatActivity {
     }
 
 
-
-
-
     /**
      * Uploads the button based on the current trip type
+     *
      * @param tripStatus whether this is a join or leave button
-     * @param tripType whether it is an upcoming or past trip
+     * @param tripType   whether it is an upcoming or past trip
      */
     public void updateButton(String tripStatus, String tripType) {
-        if(tripType.equals("UPCOMING")) {
+        if (tripType.equals("UPCOMING")) {
+            messageButton.setVisibility(View.VISIBLE);
+            tripButton.setVisibility(View.VISIBLE);
+            rateButton.setVisibility(View.GONE);
             if (tripStatus.equals("JOINED")) {
                 tripButton.setText("LEAVE TRIP");
             } else {
                 tripButton.setText("JOIN TRIP");
 
             }
+        } else {
+            messageButton.setVisibility(View.GONE);
+            tripButton.setVisibility(View.GONE);
+            rateButton.setVisibility(View.VISIBLE);
         }
-        else {
-            tripButton.setText("RATE TRIP");
-        }
+    }
+
+
+    public void showRatingDialog() {
+        final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
+
+        LinearLayout linearLayout = new LinearLayout(this);
+        final RatingBar rating = new RatingBar(this);
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        rating.setLayoutParams(lp);
+        rating.setNumStars(4);
+        rating.setStepSize(1);
+
+        //add ratingBar to linearLayout
+        linearLayout.addView(rating);
+
+
+        popDialog.setIcon(android.R.drawable.btn_star_big_on);
+        popDialog.setTitle("Add Rating: ");
+
+        //add linearLayout to dailog
+        popDialog.setView(linearLayout);
+
+
+        rating.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float v, boolean b) {
+            }
+        });
+
+
+        // Button OK
+        popDialog.setPositiveButton(android.R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+
+                })
+
+                // Button Cancel
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        popDialog.create();
+        popDialog.show();
     }
 
 
     /**
      * Represents an async processor to either join or leave a trip
+     *
      * @param tripStatus
      * @param userID
      * @param tripID
@@ -131,7 +212,7 @@ public class TripActivity extends AppCompatActivity {
     public void tripAction(String tripStatus, String userID, final String tripID) {
         if (tripStatus.equals("VIEW")) {
 
-            HttpUtils.get("trips/" + tripID + "/add/"  + userID, new RequestParams(), new JsonHttpResponseHandler() {
+            HttpUtils.get("trips/" + tripID + "/add/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public void onFinish() {
                 }
@@ -140,7 +221,7 @@ public class TripActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
                         // TODO How to check...
-                        if (response.getString("name") != null) {
+                        if (response.getString("destination") != null) {
                             Fragment mFragment = null;
                             mFragment = new FragmentOne();
                             FragmentManager fragmentManager = getSupportFragmentManager();

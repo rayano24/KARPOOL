@@ -693,29 +693,55 @@ public class KarpoolController {
 	}
 
 	@PostMapping("/trips/{tripID}/date/{date}")
-	public void modifyTripDate(@PathVariable("trip")int tripID, @PathVariable("date")String departureDate)
+	public void modifyTripDate(@PathVariable("tripID")int tripID, @PathVariable("date")String departureDate) throws ParseException
 	{
-		try {
-			Trip t = repository.getSpecificTrip(tripID);
-			Trip t1 = repository.getSpecificTrip(tripID);
-			repository.modifyDepartureDate(t, departureDate);
+		Date date = new Date();
 
-			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
-		} catch (NullPointerException e) {
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date dateInput = sdf.parse(departureDate);
+		String date1 = sdf.format(dateInput);        
+		String date2 = sdf.format(date);
+
+		try {
+			
+			if ((date1.compareTo(date2)) < 0) {
+				System.out.println("Cannot set a date that has already passed");
+				
+			}
+			
+			else {	
+			Trip t = repository.getSpecificTrip(tripID);
+			repository.modifyDepartureDate(t, departureDate);
 		}
+
+	} catch (NullPointerException e) {
+		System.out.println(ERROR_NOT_FOUND_MESSAGE);
+	}
 
 	}
 
 	@PostMapping("/trips/{tripID}/time/{time}")
-	public void modifyTripTime(@PathVariable("trip")int tripID, @PathVariable("time")String departureTime) 
+	public void modifyTripTime(@PathVariable("tripID")int tripID, @PathVariable("time")String departureTime) throws ParseException 
 	{
+		Date time = new Date();
+		
+		SimpleDateFormat sdf2 = new SimpleDateFormat("HHmm");
+		Date timeInput = sdf2.parse(departureTime);
+		String time1 = sdf2.format(timeInput);
+		String time2 = sdf2.format(time);
 		try {
-			Trip t = repository.getSpecificTrip(tripID);
-			Trip t1 = repository.getSpecificTrip(tripID);
-			repository.modifyDepartureTime(t, departureTime);
+			
+			if ((time1.compareTo(time2)) < 0) {
 
-			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
+				System.out.println("Cannot set a time that has already passed");
+			}
+			
+			else {
+				Trip t = repository.getSpecificTrip(tripID);
+			repository.modifyDepartureTime(t, departureTime);
+			
+			}
+			
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
@@ -727,10 +753,8 @@ public class KarpoolController {
 	{
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
-			Trip t1 = repository.getSpecificTrip(tripID);
 			repository.modifyTripLocation(t, departureLocation);
 
-			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
@@ -738,42 +762,37 @@ public class KarpoolController {
 	}
 
 	@PostMapping("/trips/{tripID}/tripdestination/{destination}")
-	public void modifyTripDestination(@PathVariable("trip")int tripID, @PathVariable("destination")String destination) 
+	public void modifyTripDestination(@PathVariable("tripID")int tripID, @PathVariable("destination")String destination) 
 	{
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
-			Trip t1 = repository.getSpecificTrip(tripID);
 			repository.modifyTripDestination(t, destination);
 
-			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
 	}
 
 	@PostMapping("/trips/{tripID}/tripprice/{price}")
-	public void modifyTripPrice(@PathVariable("trip")int tripID, @PathVariable("price")int price) 
+	public void modifyTripPrice(@PathVariable("tripID")int tripID, @PathVariable("price")int price) 
 	{
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
-			Trip t1 = repository.getSpecificTrip(tripID);
 			repository.modifyTripPrice(t, price);
 
-			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
 	}
 
 	@PostMapping("/trips/{tripID}/seats/{seats}")
-	public void modifyTripSeats(@PathVariable("trip")int tripID, @PathVariable("seats")int seatAvailable) 
+	public void modifyTripSeats(@PathVariable("tripID")int tripID, @PathVariable("seats")int seatAvailable) 
 	{
 		try {
 			Trip t = repository.getSpecificTrip(tripID);
-			Trip t1 = repository.getSpecificTrip(tripID);
 			repository.modifySeatAvailable(t, seatAvailable);
 
-			System.out.println(t.getDepartureLocation() + " " + t1.getDepartureLocation());
+
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
@@ -783,8 +802,8 @@ public class KarpoolController {
 	 * This method marks a trip as completed
 	 * @param trip
 	 */
-	@PostMapping("/trips/close/{trip}")
-	public void closeTrip(@PathVariable("trip")int tripID)
+	@PostMapping("/trips/close/{tripID}")
+	public void closeTrip(@PathVariable("tripID")int tripID)
 	{
 		repository.closeTrip(tripID);
 	}
