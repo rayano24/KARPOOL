@@ -193,6 +193,17 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
+	public List<Integer> getSortedTripsPrice(String start, String finish) 
+	{
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE departure_location= :departure AND destination= :destination ORDER BY price");
+		q.setParameter("departure", start);
+		q.setParameter("destination", finish);
+		@SuppressWarnings("unchecked")
+		List<Integer> trips = q.getResultList();
+		return trips;
+	}
+	
+	@Transactional
 	public Set<Trip> getTripsForPassenger(String name)
 	{
 		Passenger p = entityManager.find(Passenger.class, name);

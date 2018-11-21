@@ -656,11 +656,11 @@ public class KarpoolController {
 		return fullTrip;
 	}
 	
-	@GetMapping("/trips/{location}/{destination}/date")
+	@GetMapping("/trips/{location}/{destination}/price")
 	public List<Trip> listTripsAscendingPrice(@PathVariable("location") String departureLocation, 
 			@PathVariable("destination") String destination)
 	{
-		List<Integer> trips = repository.getSortedTripsTime(departureLocation, destination);
+		List<Integer> trips = repository.getSortedTripsPrice(departureLocation, destination);
 		List<Trip> fullTrip = new ArrayList<Trip>();
 		for(int t: trips)
 		{
