@@ -2,12 +2,12 @@ package com.karpool.karpl_passenger;
 
 public class Trip {
 
-    private String origin, destination, date, time, driver, seats, tripID, price, driverNumber;
+    private String origin, destination, date, time, driver, seats, tripID, price, driverNumber, driverRating;
 
     public Trip() {
     }
 
-    public Trip(String origin, String destination, String date, String time, String driver, String driverNumber, String seats, String price, String tripID) {
+    public Trip(String origin, String destination, String date, String time, String driver, String driverNumber, String driverRating, String seats, String price, String tripID) {
         this.origin = origin;
         this.destination = destination;
         this.date = date;
@@ -17,6 +17,7 @@ public class Trip {
         this.price = price;
         this.tripID = tripID;
         this.driverNumber = driverNumber;
+        this.driverRating = driverRating;
     }
 
     public String getOrigin() {
@@ -91,6 +92,15 @@ public class Trip {
     public void setDriverNumber(String number) {
         this.driverNumber = number;
     }
+
+    public String getDriverRating() {
+        return driverRating;
+    }
+
+    public void setDriverRating(String rating) {
+        this.driverRating = driverRating;
+    }
+
 
 
 

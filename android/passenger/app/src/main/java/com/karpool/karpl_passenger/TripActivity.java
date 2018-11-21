@@ -16,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,12 +28,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
+
 import cz.msebera.android.httpclient.Header;
 
 public class TripActivity extends AppCompatActivity {
 
 
-    private TextView tripOrigin, tripDestination, tripDriver, tripDate, tripTime, tripPrice, tripSeats, driverRating;
+    private TextView tripOrigin, tripDestination, tripDriver, tripDate, tripTime, tripPrice, tripSeats, tripDriverRating;
     static private Button tripButton, messageButton, rateButton;
 
 
@@ -47,9 +50,12 @@ public class TripActivity extends AppCompatActivity {
     private final static String KEY_USER_ID = "userID";
     private final static String KEY_TRIP_PRICE = "tripprice";
     private final static String KEY_TRIP_DRIVER_NUMBER = "number";
+    private final static String KEY_TRIP_DRIVER_RATING = "rating";
     private final static String KEY_TRIP_DRIVER = "driver";
 
-    private static String userID, tripID, tripStatus, tripMode, driverNumber;
+    private static String userID, tripStatus, tripMode, driverNumber, driverName, driverRating;
+    private static Integer tripID;
+    protected static double userRating;
 
 
     // TODO DRIVER RATING
@@ -68,7 +74,7 @@ public class TripActivity extends AppCompatActivity {
         tripPrice = (TextView) findViewById(R.id.tripPrice);
         tripDriver = (TextView) findViewById(R.id.tripDriver);
         tripSeats = (TextView) findViewById(R.id.tripSeats);
-        driverRating = (TextView) findViewById(R.id.driverRating);
+        tripDriverRating = (TextView) findViewById(R.id.driverRating);
         tripButton = (Button) findViewById(R.id.tripButton);
         rateButton = (Button) findViewById(R.id.rateButton);
         messageButton = (Button) findViewById(R.id.messageButton);
@@ -77,8 +83,10 @@ public class TripActivity extends AppCompatActivity {
         tripStatus = prefs.getString(KEY_TRIP_STATUS, null); // JOINED OR VIEW
         tripMode = prefs.getString(KEY_TRIP_FRAG_MODE, null); // PAST OR UPCOMING
         driverNumber = prefs.getString(KEY_TRIP_DRIVER_NUMBER, null);
+        driverName = prefs.getString(KEY_TRIP_DRIVER, null);
+        driverRating = prefs.getString(KEY_TRIP_DRIVER_RATING, null);
 
-        tripID = prefs.getString(KEY_TRIP_ID, null);
+        tripID = Integer.parseInt(prefs.getString(KEY_TRIP_ID, null));
         userID = prefs.getString(KEY_USER_ID, null);
 
 
@@ -86,15 +94,23 @@ public class TripActivity extends AppCompatActivity {
         tripTime.setText(prefs.getString(KEY_TRIP_TIME, null));
         tripDestination.setText(prefs.getString(KEY_TRIP_DESTINATION, null));
         tripOrigin.setText(prefs.getString(KEY_TRIP_ORIGIN, null));
-        tripDriver.setText(prefs.getString(KEY_TRIP_DRIVER, null));
+        tripDriver.setText(driverName);
         tripSeats.setText(prefs.getString(KEY_TRIP_SEATS, null));
         tripPrice.setText(prefs.getString(KEY_TRIP_PRICE, null));
+
+        DecimalFormat df = new DecimalFormat("###.#");
+        if(driverRating.equals("NaN")) {
+            tripDriverRating.setText("No Rating ");
+        }
+        else {
+            tripDriverRating.setText(df.format(Double.parseDouble(driverRating)) + "/5");
+        }
 
 
         tripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tripAction(tripStatus, userID, tripID);
+                tripAction();
             }
         });
 
@@ -148,28 +164,56 @@ public class TripActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * This method displays a pop up with the option to rate a driver by inflating a linear layout.
+     * It also calls an async task to update the drivers rating.
+     */
     public void showRatingDialog() {
         final AlertDialog.Builder popDialog = new AlertDialog.Builder(this);
 
-        LinearLayout linearLayout = new LinearLayout(this);
+        final Space horizontalSpace = new Space(this);
+        final Space verticalSpace = new Space(this);
         final RatingBar rating = new RatingBar(this);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+        LinearLayout linearLayout = new LinearLayout(this);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout horizontalLayout = new LinearLayout(this);
+        horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        LinearLayout.LayoutParams verticalSpacelp = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        rating.setLayoutParams(lp);
-        rating.setNumStars(4);
+
+        LinearLayout.LayoutParams horizontalSpacelp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        LinearLayout.LayoutParams ratinglp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+
+        horizontalSpace.setLayoutParams(horizontalSpacelp);
+        horizontalSpace.getLayoutParams().width = 30;
+
+        verticalSpace.setLayoutParams(verticalSpacelp);
+        verticalSpace.getLayoutParams().height = 30;
+
+        rating.setLayoutParams(ratinglp);
+        rating.setNumStars(5);
         rating.setStepSize(1);
 
-        //add ratingBar to linearLayout
-        linearLayout.addView(rating);
+        linearLayout.addView(verticalSpace);
+        linearLayout.addView(horizontalLayout);
+        horizontalLayout.addView((horizontalSpace));
+        horizontalLayout.addView(rating);
 
 
-        popDialog.setIcon(android.R.drawable.btn_star_big_on);
-        popDialog.setTitle("Add Rating: ");
-
-        //add linearLayout to dailog
+        popDialog.setTitle("Rate your driver ");
         popDialog.setView(linearLayout);
 
 
@@ -184,6 +228,8 @@ public class TripActivity extends AppCompatActivity {
         popDialog.setPositiveButton(android.R.string.ok,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
+                        userRating = rating.getRating();
+                        tripAction();
                         dialog.dismiss();
                     }
 
@@ -204,15 +250,14 @@ public class TripActivity extends AppCompatActivity {
 
     /**
      * Represents an async processor to either join or leave a trip
-     *
-     * @param tripStatus
-     * @param userID
-     * @param tripID
      */
-    public void tripAction(String tripStatus, String userID, final String tripID) {
-        if (tripStatus.equals("VIEW")) {
+    public void tripAction() {
 
-            HttpUtils.get("trips/" + tripID + "/add/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
+        // as you have not joined the trip yet, you will want to view the trip
+
+        if(tripStatus.equals("VIEW")) {
+
+            HttpUtils.post("trips/" + tripID + "/add/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
                 @Override
                 public void onFinish() {
                 }
@@ -220,15 +265,8 @@ public class TripActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
-                        // TODO How to check...
-                        if (response.getString("destination") != null) {
-                            Fragment mFragment = null;
-                            mFragment = new FragmentOne();
-                            FragmentManager fragmentManager = getSupportFragmentManager();
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.frame_fragmentholder, mFragment).commit();
-
-
+                        if (response.getString("name") != null) {
+                            finish();
                         }
 
                     } catch (JSONException e) {
@@ -242,30 +280,71 @@ public class TripActivity extends AppCompatActivity {
                 }
 
             });
+        }
 
 
-        } else {
-            HttpUtils.get("trips/" + "/" + "close" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public void onFinish() {
-                }
+         else if(tripStatus.equals("JOINED")) {
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        if (response.getBoolean("response") == true) {
-                        }
+            // Since we've already joined the trip, a button action here will be to leave the trip
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            if(tripMode.equals("UPCOMING")) {
+
+                // TODO
+
+                HttpUtils.post("trips/" + tripID + "/remove/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
+                    @Override
+                    public void onFinish() {
                     }
-                }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            if (response.getString("name") != null) {
+                                finish();
+                            }
 
-                }
-            });
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+
+                    }
+                });
+            }
+
+            // since it is a trip that has already occurred, you will want to rate the driver
+            else {
+
+
+                HttpUtils.post("drivers/rate/" + driverName + "/" + userRating, new RequestParams(), new JsonHttpResponseHandler() {
+                    @Override
+                    public void onFinish() {
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        //TODO
+                        try {
+                            if (response.getJSONArray("ratings").length() != 0) {
+                                finish();
+                                startActivity(getIntent());
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+
+                    }
+                });
+
+            }
 
 
         }

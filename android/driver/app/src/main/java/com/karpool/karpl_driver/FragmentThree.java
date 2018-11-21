@@ -14,12 +14,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cz.msebera.android.httpclient.Header;
+
 
 public class FragmentThree extends Fragment {
 
 
     private final static String KEY_USER_ID = "userID";
     private final static String KEY_RATING = "rating";
+    private static String userID;
 
 
     private TextView signOut, help, userNote;
@@ -48,6 +57,8 @@ public class FragmentThree extends Fragment {
             }
         });
 
+        userID = prefs.getString(KEY_USER_ID, null);
+
        /* String rating = prefs.getString(KEY_RATING, null);
         if(rating == null) {
             userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null));
@@ -60,19 +71,43 @@ public class FragmentThree extends Fragment {
 
         */
 
-        userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null));
-
-
-
-
-
-
+        userNote.setText("Welcome "+ userID);
 
 
 
 
         return rootView;
     }
+
+
+    public void displayRatingTask() {
+
+        HttpUtils.get("drivers/rate/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    if (response.getDouble("rating") != -1) {
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject
+                    errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
+
 
 
 
