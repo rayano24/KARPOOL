@@ -974,9 +974,10 @@ public class KarpoolController {
 	 * there are any passengers on it
 	 * 
 	 * @param tripID
+	 * @throws ParseException 
 	 */
 	@PostMapping("/trips/delete/{trip}")
-	public void deleteTrip(@PathVariable("trip")int tripID)
+	public void deleteTrip(@PathVariable("trip")int tripID) throws ParseException
 	{
 		//TODO can only delete trip if the date hasnt passed yet
 		repository.deleteTrip(tripID);
