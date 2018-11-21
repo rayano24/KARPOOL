@@ -255,34 +255,29 @@ public class KarpoolController {
 	 * @param name
 	 */
 	@GetMapping("/drivers/rate/{name}")
-	public double getAvgRating(@PathVariable("name") String name)
+	public Response getAvgRating(@PathVariable("name") String name)
 	{ 
 		double r = 0.0;
-//		JSONObject o = new JSONObject();
+		Response resp = new Response();
 		try {
 			Driver d = repository.getDriver(name);
 			List<Double> ratings = d.getRatings();
 			int rNum = ratings.size();
 			double rSum = 0.0;
-			if(rNum == 0)
+			for(double rate: ratings)
 			{
-				r =  -1.0;
+				rSum+=rate;
 			}
-			else
-			{
-				for(double rate: ratings)
-				{
-					rSum+=rate;
-				}
-				r = rSum/rNum;
-			}
-			
-		} catch(NullPointerException e) {
-			
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}		
-//		o.append("rating", r);
-		return r;
+			r = rSum/rNum;
+			resp.setRating(r);
+		} catch(NullPointerException e1) {
+			resp.setError("Attempted to get rating of nonexistent driver");
+			resp.setRating(-1.0);
+		} catch(NumberFormatException e2) {
+			resp.setError("Divided by zero rating");
+			resp.setRating(-1.0);
+		}
+		return resp;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
