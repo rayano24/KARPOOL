@@ -675,6 +675,88 @@ public class KarpoolController {
 		}
 		return fullTrip;
 	}
+	
+	/**
+	 * finds a trip that matches departure location and destination, with matching number of seats
+	 * 
+	 * @param departureLocation
+	 * @param destination
+	 * @param seatAvailable
+	 * @return queried trip
+	 */
+	@GetMapping("/trips/{location}/{destination}/{passenger}")
+	public List<Trip> queryTrip(@PathVariable("location") String departureLocation, 
+			@PathVariable("destination") String destination, @PathVariable("destination") String name)
+	{
+		List<Integer> trips = repository.getTrips(departureLocation, destination);
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		Passenger p = repository.getPassenger(name);
+		for(int t: trips)
+		{
+			Trip tFull = repository.getSpecificTrip(t);
+			if(tFull.getSeatAvailable()>0 && !tFull.isTripComplete() && !tFull.getPassenger().contains(p))
+			{
+				fullTrip.add(tFull);
+			}
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
+		return fullTrip;
+	}
+	
+	/**
+	 * lists all trips matching the query in ascending order of times
+	 * 
+	 * @return sorted list of trips
+	 */
+	@GetMapping("/trips/{location}/{destination}/{passenger}/date")
+	public List<Trip> listTripsAscendingDate(@PathVariable("location") String departureLocation, 
+			@PathVariable("destination") String destination, @PathVariable("passenger") String name)
+	{
+		List<Integer> trips = repository.getSortedTripsTime(departureLocation, destination);
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		Passenger p = repository.getPassenger(name);
+		for(int t: trips)
+		{
+			Trip tFull = repository.getSpecificTrip(t);
+			if(tFull.getSeatAvailable()>0 && !tFull.isTripComplete() && !tFull.getPassenger().contains(p))
+			{
+				fullTrip.add(tFull);
+			}
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
+		return fullTrip;
+	}
+	
+	@GetMapping("/trips/{location}/{destination}/{passenger}/price")
+	public List<Trip> listTripsAscendingPrice(@PathVariable("location") String departureLocation, 
+			@PathVariable("destination") String destination, @PathVariable("passenger") String name)
+	{
+		List<Integer> trips = repository.getSortedTripsPrice(departureLocation, destination);
+		List<Trip> fullTrip = new ArrayList<Trip>();
+		Passenger p = repository.getPassenger(name);
+		for(int t: trips)
+		{
+			Trip tFull = repository.getSpecificTrip(t);
+			if(tFull.getSeatAvailable()>0 && !tFull.isTripComplete() && !tFull.getPassenger().contains(p))
+			{
+				fullTrip.add(tFull);
+			}
+		}
+		if(fullTrip.isEmpty())
+		{
+			System.out.println("There are no trips that match your query");
+			return null;
+		}
+		return fullTrip;
+	}
 
 
 	/**
