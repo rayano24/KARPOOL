@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.io.NumberOutput;
+
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 @RestController
@@ -280,6 +282,25 @@ public class KarpoolController {
 		return resp;
 	}
 	
+	private double getAvgRating(Driver d)
+	{ 
+		double r = 0.0;
+		List<Double> ratings = d.getRatings();
+		int rNum = ratings.size();
+		double rSum = 0.0;
+		for(double rate: ratings)
+		{
+			rSum+=rate;
+		}
+		try {
+			r = rSum/rNum;
+		} catch(ArithmeticException e) {
+			r = -1.0;
+			System.out.println("Divided by zero rating");
+		}
+		return r;
+	}
+	
 	@GetMapping("/drivers/active/all")
 	public List<Driver> getActiveDrivers()
 	{
@@ -310,6 +331,43 @@ public class KarpoolController {
 			}
 		}
 		return actDrivers;
+	}
+	
+	@GetMapping("/drivers/top3")
+	public ArrayList<Driver> getTopDrivers()
+	{
+		List<Double> rate = new ArrayList<Double>();
+		rate.add(0.0);
+		List<Driver> allDrivers = listAllDrivers();
+		ArrayList<Driver> topThree = new ArrayList<Driver>();
+		Driver first = new Driver();
+		first.setRatings(rate);
+		Driver second = new Driver();
+		second.setRatings(rate);
+		Driver third = new Driver();
+		third.setRatings(rate);
+		for(Driver d: allDrivers)
+		{
+			if(getAvgRating(d) >= getAvgRating(first)) //#1
+			{
+				third = second;
+				second = first;
+				first = d;
+			}
+			else if(getAvgRating(d) >= getAvgRating(second)) //#2
+			{
+				third = second;
+				second = d;
+			}
+			else if(getAvgRating(d) >= getAvgRating(third)) //#3
+			{
+				third = d;
+			}
+		}
+		topThree.add(first);
+		topThree.add(second);
+		topThree.add(third);
+		return topThree;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
