@@ -388,7 +388,7 @@ public class KarpoolController {
 	public Passenger createPassenger(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
 			@PathVariable("phone") String phone, @PathVariable("record") boolean criminalRecord)
 	{
-		Passenger p = null;
+		Passenger p = new Passenger();
 		try 
 		{
 			if(phone.length() == 10) 
@@ -410,54 +410,54 @@ public class KarpoolController {
 									}
 									else 
 									{
-										System.out.println("Your username must have 3 characters or over");
-										return null;
+										p.setError("Your username must have 3 characters or over");
+										return p;
 									}
 								}
 								catch (NullPointerException e)
 								{
-									System.out.println("Please enter a name ");
-									return null;
+									p.setError("Please enter a name ");
+									return p;
 								}
 							}
 							else 
 							{
-								System.out.println("Your password must have over 6 characters");
-								return null;
+								p.setError("Your password must have over 6 characters");
+								return p;
 							}
 						}
 						catch (NullPointerException e)
 						{
-							System.out.print("Please enter a password");
-							return null;
+							p.setError("Please enter a password");
+							return p;
 						}
 					}
 					else
 					{
-						System.out.println("Oups , this is not a valid email");
+						p.setError("Oups , this is not a valid email");
 					}
 				}
 				catch(NullPointerException e)
 				{
-					System.out.println("Oups, this is not a valid email");
-					return null;
+					p.setError("Oups , this is not a valid email");
+					return p;
 				}
 			}
 			else 
 			{
-				System.out.println("Oups, this is not a valid phone number");
-				return null;
+				p.setError("Oups, this is not a valid phone number");
+				return p;
 			}
 		}
 		catch(NullPointerException e1) 
 		{
-			System.out.println("Exception - Null pointer");
-			return null;
+			p.setError("Exception - Null pointer");
+			return p;
 		}
 		catch(NumberFormatException e2)
 		{
-			System.out.println("Exception - Number format");
-			return null;
+			p.setError("Exception - Number format");
+			return p;
 		}
 		return p;
 	}
