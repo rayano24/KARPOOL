@@ -17,8 +17,11 @@ import android.widget.TextView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -41,7 +44,6 @@ public class FragmentThree extends Fragment {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
 
-
         signOut = rootView.findViewById(R.id.signOutButton);
         help = rootView.findViewById(R.id.helpButton);
         userNote = rootView.findViewById(R.id.userNote);
@@ -59,21 +61,10 @@ public class FragmentThree extends Fragment {
 
         userID = prefs.getString(KEY_USER_ID, null);
 
-       /* String rating = prefs.getString(KEY_RATING, null);
-        if(rating == null) {
-            userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null));
-        }
-        else {
-            userNote.setText("Welcome "+ prefs.getString(KEY_USER_ID, null) + " (" + rating + ")");
 
+        userNote.setText("Welcome " + userID);
 
-        }
-
-        */
-
-        userNote.setText("Welcome "+ userID);
-
-
+        displayRatingTask();
 
 
         return rootView;
@@ -82,18 +73,25 @@ public class FragmentThree extends Fragment {
 
     public void displayRatingTask() {
 
-        HttpUtils.get("drivers/rate/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.get("drivers/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onFinish() {
 
             }
-
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    if (response.getDouble("rating") != -1) {
+                        JSONArray ratingArray = response.getJSONArray("ratings");
+                        double driverRating = 0.0;
 
+                        for (int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
+                            driverRating += ratingArray.getDouble(ratingCount);
+
+                        driverRating /= ratingArray.length();
+                        DecimalFormat df = new DecimalFormat("###.#");
+                        String displayedRating =  "Welcome " + userID + df.format(driverRating) + "/5";
+                        userNote.setText(displayedRating);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -107,8 +105,6 @@ public class FragmentThree extends Fragment {
             }
         });
     }
-
-
 
 
 }

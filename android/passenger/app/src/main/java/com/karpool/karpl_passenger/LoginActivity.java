@@ -607,6 +607,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     } else {
                         showSignInProgress(false);
+                        Toast.makeText(LoginActivity.this, response.getString("error"),
+                                Toast.LENGTH_LONG).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -617,6 +619,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject
                     errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                showSignInProgress(false);
             }
         });
     }
@@ -644,6 +647,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
                     } else {
+
 
                     }
                 } catch (JSONException e) {

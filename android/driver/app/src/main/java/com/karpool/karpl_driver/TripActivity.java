@@ -14,6 +14,10 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
@@ -32,11 +36,14 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -54,10 +61,11 @@ public class TripActivity extends AppCompatActivity {
     private final static String KEY_TRIP_FRAG_MODE = "tripMode";
 
 
-    private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats;
+    private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats, noPassengersJoined;
     private static TextView modifyDate, modifyTime;
-    private Button deleteButton;
+    private Button deleteButton, viewPassengerButton;
     private static String date, time; // FOR DATABASE
+
 
 
     @Override
@@ -67,13 +75,14 @@ public class TripActivity extends AppCompatActivity {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
 
-        modifyOrigin = (TextView) findViewById(R.id.modifyTripOrigin);
-        modifyDestination = (TextView) findViewById(R.id.modifyTripDestination);
-        modifyDate = (TextView) findViewById(R.id.modifyTripDate);
-        modifyTime = (TextView) findViewById(R.id.modifyTripTime);
-        modifyPrice = (TextView) findViewById(R.id.modifyTripPrice);
-        modifySeats = (TextView) findViewById(R.id.modifyTripSeats);
+        modifyOrigin = findViewById(R.id.modifyTripOrigin);
+        modifyDestination = findViewById(R.id.modifyTripDestination);
+        modifyDate = findViewById(R.id.modifyTripDate);
+        modifyTime = findViewById(R.id.modifyTripTime);
+        modifyPrice = findViewById(R.id.modifyTripPrice);
+        modifySeats = findViewById(R.id.modifyTripSeats);
         deleteButton = findViewById(R.id.deleteButton);
+        viewPassengerButton = findViewById(R.id.messageButton);
 
 
         tripID = prefs.getString(KEY_TRIP_ID, null);
@@ -95,10 +104,19 @@ public class TripActivity extends AppCompatActivity {
         modifyPrice.setText("$" + prefs.getString(KEY_TRIP_PRICE, null));
 
 
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 deleteTrip();
 
+            }
+        });
+
+
+        viewPassengerButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent I = new Intent(TripActivity.this, PassengerActivity.class);
+                startActivity(I);
             }
         });
 
@@ -161,36 +179,65 @@ public class TripActivity extends AppCompatActivity {
      * @param newValue the new value
      * @param category a string to indicate what you are modifying
      */
-    public void modifyTripTask(String newValue, String category) {
-
-        final String mNewValue = newValue;
-        final String mToModify = category;
+    public void modifyTripTask(final String newValue, final String category) {
 
 
-        HttpUtils.post("trips/" + tripID + "/" + mToModify + "/" + mNewValue, new RequestParams(), new JsonHttpResponseHandler() {
+        if (category.equals(KEY_TRIP_PRICE) || category.equals(KEY_TRIP_SEATS)) {
+
+            HttpUtils.post("trips/" + Integer.parseInt(tripID) + "/" + category + "/" + Integer.parseInt(newValue), new RequestParams(), new JsonHttpResponseHandler() {
 
 
-            @Override
-            public void onFinish() {
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // TODO
-                try {
-                    if (response.getBoolean("response") == true) {
-                        updateView(mToModify, mNewValue);
-
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                @Override
+                public void onFinish() {
                 }
 
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // TODO
+                    try {
+                        if (response.getBoolean("response") == true) {
+                            updateView(category, newValue);
 
-            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-        });
+
+                }
+
+            });
+        } else {
+
+
+            HttpUtils.post("trips/" + Integer.parseInt(tripID) + "/" + category + "/" + newValue, new RequestParams(), new JsonHttpResponseHandler() {
+
+
+                @Override
+                public void onFinish() {
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    // TODO
+                    try {
+                        if (response.getBoolean("response") == true) {
+                            updateView(category, newValue);
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+            });
+        }
     }
+
+
+
 
 
     /**
@@ -264,10 +311,10 @@ public class TripActivity extends AppCompatActivity {
                     case ("Destination"):
                         modifyTripTask(input.getText().toString(), KEY_TRIP_DESTINATION);
                         break;
-                    case ("seats"):
+                    case ("Seats"):
                         modifyTripTask(input.getText().toString(), KEY_TRIP_SEATS);
                         break;
-                    case ("price"):
+                    case ("Price"):
                         modifyTripTask(input.getText().toString(), KEY_TRIP_PRICE);
                         break;
 
@@ -363,17 +410,22 @@ public class TripActivity extends AppCompatActivity {
      * @param newValue
      */
     public void updateView(String category, String newValue) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         switch (category) {
             case (KEY_TRIP_ORIGIN):
+                prefs.edit().putString(KEY_TRIP_ORIGIN, newValue).commit();
                 modifyOrigin.setText(newValue);
                 break;
             case (KEY_TRIP_DESTINATION):
+                prefs.edit().putString(KEY_TRIP_DESTINATION, newValue).commit();
                 modifyDestination.setText(newValue);
                 break;
             case (KEY_TRIP_PRICE):
-                modifyPrice.setText(newValue);
+                prefs.edit().putString(KEY_TRIP_PRICE, newValue).commit();
+                modifyPrice.setText("$" + newValue);
                 break;
             case (KEY_TRIP_SEATS):
+                prefs.edit().putString(KEY_TRIP_SEATS, newValue).commit();
                 modifySeats.setText(newValue);
                 break;
             case (KEY_TRIP_DATE):
@@ -383,6 +435,7 @@ public class TripActivity extends AppCompatActivity {
                 modifyTime.setText(time.substring(0, 2) + ":" + time.substring(2, 4));
                 break;
         }
+
     }
 
     /**
@@ -398,6 +451,7 @@ public class TripActivity extends AppCompatActivity {
             modifyTime.setClickable(false);
             modifyDate.setClickable(false);
             deleteButton.setVisibility(View.INVISIBLE);
+            viewPassengerButton.setVisibility(View.INVISIBLE);
         }
     }
 

@@ -23,7 +23,7 @@
     <string name="title_create">Create</string>
     <string name="title_trips">My Trips</string>
     <string name="disclaimer_record">I attest to the fact that I have never been convicted of a crime. </string>
-    <string name="title_other">Other</string>
+    <string name="title_account">Account</string>
     <string name="title_activity_splash">SplashActivity</string>
 
 
@@ -34,27 +34,25 @@
     <string name="past_trips_none">You have no past trips</string>
 
 
-
-
     <!-- Trip activity -->
     <string name="trip_origin">Origin</string>
     <string name="trip_destination">Destination</string>
     <string name="trip_price">Price</string>
     <string name="trip_date">Date</string>
     <string name="trip_time">Time</string>
-    <string name="trip_seats">Seats</string>
+    <string name="trip_seats">Seats Available</string>
+    <string name="trips_passengers">View Passengers</string>
     <string name="trip_delete">DELETE TRIP</string>
 
-
+    <!-- Passenger activity -->
+    <string name="passenger_none">Passengers</string>
 
 
     <!-- preference screen -->
 
     <string name="action_help">Help</string>
     <string name="action_sign_out">Sign out</string>
-
-
-
+    <string name="title_activity_passenger">PassengerActivity</string>
 
 
 </resources>

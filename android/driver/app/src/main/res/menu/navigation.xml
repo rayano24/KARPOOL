@@ -12,8 +12,8 @@
         android:title="@string/title_trips" />
 
     <item
-        android:id="@+id/navigation_other"
+        android:id="@+id/navigation_account"
         android:icon="@drawable/ic_other"
-        android:title="@string/title_other" />
+        android:title="@string/title_account" />
 
 </menu>

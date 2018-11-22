@@ -13,70 +13,64 @@
         android:id="@+id/modifyOriginLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
         android:text="@string/trip_origin"
         android:textColor="@color/colorAccent"
         android:textSize="30sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/modifyTripOrigin" />
+        app:layout_constraintStart_toStartOf="@+id/newDestination"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/newDestination"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="68dp"
+        android:layout_marginTop="38dp"
         android:text="@string/trip_destination"
         android:textColor="@color/colorAccent"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/divider8"
-        app:layout_constraintEnd_toStartOf="@+id/modifyTripDestination"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider7" />
+        app:layout_constraintTop_toTopOf="@+id/modifyOriginLabel" />
 
     <TextView
         android:id="@+id/modifyPriceLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginTop="1dp"
         android:text="@string/trip_price"
         android:textColor="@color/colorAccent"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/divider9"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/modifySeatsLabel"
         app:layout_constraintTop_toBottomOf="@+id/divider8" />
 
     <TextView
         android:id="@+id/modifySeatsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="2dp"
         android:text="@string/trip_seats"
         android:textColor="@color/colorAccent"
         android:textSize="30sp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/modifyDateLabel"
         app:layout_constraintTop_toBottomOf="@+id/divider9" />
 
     <TextView
         android:id="@+id/modifyTripOrigin"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:gravity="center"
         android:text="Montreal"
         android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/modifyTripDestination"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/divider7"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
         android:id="@+id/modifyTripDestination"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:gravity="center"
@@ -84,10 +78,8 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/divider8"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/newDestination"
-        app:layout_constraintStart_toStartOf="@+id/modifyTripPrice"
-        app:layout_constraintTop_toBottomOf="@+id/divider7" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/modifyTripOrigin" />
 
     <TextView
         android:id="@+id/modifyTripPrice"
@@ -102,8 +94,7 @@
         app:layout_constraintBottom_toTopOf="@+id/divider9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/modifyTripSeats"
-        app:layout_constraintTop_toBottomOf="@+id/divider8" />
+        app:layout_constraintStart_toStartOf="@+id/modifyTripDestination" />
 
     <TextView
         android:id="@+id/modifyTripSeats"
@@ -115,11 +106,10 @@
         android:gravity="center"
         android:text="6"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/modifyTripDate"
+        app:layout_constraintBottom_toTopOf="@+id/divider10"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/modifyTripDate"
-        app:layout_constraintTop_toBottomOf="@+id/divider9" />
+        app:layout_constraintStart_toStartOf="@+id/modifyTripPrice" />
 
     <TextView
         android:id="@+id/modifyTripDate"
@@ -131,17 +121,17 @@
         android:gravity="center"
         android:text="15-10-2018"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/modifyTripTime"
+        app:layout_constraintBottom_toTopOf="@+id/divider11"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/modifyTripTime"
-        app:layout_constraintTop_toBottomOf="@+id/modifyTripSeats" />
+        app:layout_constraintStart_toStartOf="@+id/modifyTripSeats" />
 
     <TextView
         android:id="@+id/modifyTripTime"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="1dp"
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:gravity="center"
@@ -149,19 +139,19 @@
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/divider12"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyTripDate" />
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/modifyTripDate" />
 
     <TextView
         android:id="@+id/modifyDateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginTop="1dp"
         android:text="@string/trip_date"
         android:textColor="@color/colorAccent"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/modifyTimeLabel"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/modifyTimeLabel"
+        app:layout_constraintTop_toBottomOf="@+id/divider10" />
 
     <TextView
         android:id="@+id/modifyTimeLabel"
@@ -171,96 +161,95 @@
         android:text="@string/trip_time"
         android:textColor="@color/colorAccent"
         android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="@+id/divider12"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/modifyDateLabel" />
 
     <Button
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="404dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
         android:text="@string/trip_delete"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/messageButton"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider12" />
+
+    <Button
+        android:id="@+id/messageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="3dp"
+        android:text="@string/trips_passengers"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/deleteButton"
         app:layout_constraintTop_toBottomOf="@+id/divider12" />
 
     <View
         android:id="@+id/divider7"
-        android:layout_width="395dp"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="66dp"
         android:layout_marginEnd="8dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/modifyTripDestination"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/modifyOriginLabel" />
 
     <View
         android:id="@+id/divider8"
-        android:layout_width="395dp"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="41dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/divider9"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyTripDestination" />
+        app:layout_constraintTop_toBottomOf="@+id/newDestination" />
 
     <View
         android:id="@+id/divider9"
-        android:layout_width="395dp"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="2dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/modifyTripSeats"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider8" />
+        app:layout_constraintTop_toBottomOf="@+id/modifyPriceLabel" />
 
     <View
         android:id="@+id/divider10"
-        android:layout_width="395dp"
+        android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="@+id/modifyTripSeats"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyTripSeats" />
+        app:layout_constraintTop_toBottomOf="@+id/modifySeatsLabel" />
 
     <View
         android:id="@+id/divider11"
-        android:layout_width="395dp"
+        android:layout_width="0dp"
         android:layout_height="1dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="@+id/modifyTripDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyTripDate" />
+        app:layout_constraintTop_toTopOf="@+id/modifyTimeLabel" />
 
     <View
         android:id="@+id/divider12"
-        android:layout_width="395dp"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="23dp"
         android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toTopOf="@+id/deleteButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/modifyTripTime" />
+        app:layout_constraintTop_toBottomOf="@+id/modifyTimeLabel" />
 
 </android.support.constraint.ConstraintLayout>

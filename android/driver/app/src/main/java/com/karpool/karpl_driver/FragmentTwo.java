@@ -62,12 +62,12 @@ public class FragmentTwo extends Fragment {
         userID = prefs.getString(KEY_USER, null);
 
 
-        upcomingRecyclerView = (RecyclerView) rootView.findViewById(R.id.myTripsRecyclerView);
-        pastRecyclerView = (RecyclerView) rootView.findViewById(R.id.myOldTripsRecyclerView);
+        upcomingRecyclerView = rootView.findViewById(R.id.myTripsRecyclerView);
+        pastRecyclerView = rootView.findViewById(R.id.myOldTripsRecyclerView);
 
 
-        noPastTrips = (TextView) rootView.findViewById(R.id.noPastTrips);
-        noUpcomingTrips = (TextView) rootView.findViewById(R.id.noUpcomingTrips);
+        noPastTrips = rootView.findViewById(R.id.noPastTrips);
+        noUpcomingTrips = rootView.findViewById(R.id.noUpcomingTrips);
 
 
 

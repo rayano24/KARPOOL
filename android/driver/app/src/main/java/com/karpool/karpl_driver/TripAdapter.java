@@ -19,10 +19,10 @@ public class TripAdapter extends RecyclerView.Adapter<TripAdapter.MyViewHolder> 
 
         public MyViewHolder(View view) {
             super(view);
-            origin = (TextView) view.findViewById(R.id.origin);
-            destination = (TextView) view.findViewById(R.id.destination);
-            date = (TextView) view.findViewById(R.id.date);
-            time = (TextView) view.findViewById(R.id.time);
+            origin = view.findViewById(R.id.origin);
+            destination = view.findViewById(R.id.destination);
+            date = view.findViewById(R.id.date);
+            time = view.findViewById(R.id.time);
 
         }
     }

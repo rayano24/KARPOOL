@@ -552,7 +552,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
-                            if (response.getBoolean("response") == true) {
+                            if (response.getBoolean("response")) {
                                 showSignInProgress(false);
                                 SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
                                 prefs.edit().putString(KEY_USER, userID).commit();
