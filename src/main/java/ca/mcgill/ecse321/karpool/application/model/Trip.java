@@ -158,13 +158,24 @@ public class Trip
 		return this.passenger;
 	}
 	
-	public boolean removePassenger(Passenger value ) {
+	public boolean removePassenger(Passenger value ) 
+	{
 		if(this.passenger.contains(value))
 		{
 			this.passenger.remove(value);
 			return true;
 		}
 		return false;
+	}
+	
+	private String error;
+
+	public String getError() {
+		return error;
+	}
+
+	public void setError(String error) {
+		this.error = error;
 	}
 
 }

@@ -63,7 +63,7 @@ public class TripActivity extends AppCompatActivity {
 
     private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats, noPassengersJoined;
     private static TextView modifyDate, modifyTime;
-    private Button deleteButton, viewPassengerButton;
+    private Button deleteButton, viewPassengerButton, closeButton;
     private static String date, time; // FOR DATABASE
 
 
@@ -83,6 +83,8 @@ public class TripActivity extends AppCompatActivity {
         modifySeats = findViewById(R.id.modifyTripSeats);
         deleteButton = findViewById(R.id.deleteButton);
         viewPassengerButton = findViewById(R.id.messageButton);
+        closeButton = findViewById(R.id.closeButton);
+
 
 
         tripID = prefs.getString(KEY_TRIP_ID, null);
@@ -107,7 +109,15 @@ public class TripActivity extends AppCompatActivity {
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                deleteTrip();
+                setTripStatus("delete");
+
+            }
+        });
+
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                setTripStatus("close");
 
             }
         });
@@ -153,7 +163,7 @@ public class TripActivity extends AppCompatActivity {
 
         modifyDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                DialogFragment newFragment = new FragmentOne.DatePickerFragment();
+                DialogFragment newFragment = new DatePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "datePicker");
             }
         });
@@ -161,7 +171,7 @@ public class TripActivity extends AppCompatActivity {
 
         modifyTime.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                DialogFragment newFragment = new FragmentOne.TimePickerFragment();
+                DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
@@ -193,9 +203,8 @@ public class TripActivity extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    // TODO
                     try {
-                        if (response.getBoolean("response") == true) {
+                        if (response.getBoolean("response")) {
                             updateView(category, newValue);
 
                         }
@@ -221,7 +230,7 @@ public class TripActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     // TODO
                     try {
-                        if (response.getBoolean("response") == true) {
+                        if (response.getBoolean("response")) {
                             updateView(category, newValue);
 
                         }
@@ -243,34 +252,25 @@ public class TripActivity extends AppCompatActivity {
     /**
      * Represents an async task to delete the selected trip
      */
-    public void deleteTrip() {
+    public void setTripStatus(String status) {
 
-        HttpUtils.post("trips/close/" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
-
-
-            @Override
-            public void onFinish() {
-            }
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                // TODO what kind of response is this?
-                try {
-                    if (response.getBoolean("response")) {
-                        Fragment mFragment = null;
-                        mFragment = new FragmentTwo();
-                        FragmentManager fragmentManager = getSupportFragmentManager();
-                        fragmentManager.beginTransaction()
-                                .replace(R.id.frame_fragmentholder, mFragment).commit();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            HttpUtils.post("trips/" + status + "/" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public void onFinish() {
                 }
 
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                   finish();
 
-            }
 
-        });
+                }
+
+            });
+
+
+
+
     }
 
 
@@ -334,6 +334,102 @@ public class TripActivity extends AppCompatActivity {
 
     }
 
+    // This is added to return the main page when you are in the process of signing up/registering
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+
+    /**
+     * Converts a date/time value to be two digits
+     *
+     * @param input the value you want to convert
+     * @return a 2 digit output such as 03 if 3 were inputted
+     */
+
+    protected static String convertDate(int input) {
+        if (input >= 10) {
+            return String.valueOf(input);
+        } else {
+            return "0" + String.valueOf(input);
+        }
+    }
+
+    /**
+     * @param category
+     * @param newValue
+     */
+    public void updateView(String category, String newValue) {
+        switch (category) {
+            case (KEY_TRIP_ORIGIN):
+                modifyOrigin.setText(newValue);
+                break;
+            case (KEY_TRIP_DESTINATION):
+                modifyDestination.setText(newValue);
+                break;
+            case (KEY_TRIP_PRICE):
+                modifyPrice.setText("$" + newValue);
+                break;
+            case (KEY_TRIP_SEATS):
+                modifySeats.setText(newValue);
+                break;
+            case (KEY_TRIP_DATE):
+                final String formattedDate = newValue.substring(0, 4) + "-" + newValue.substring(4, 6) + "-" + newValue.subSequence(6, 8);
+                modifyDate.setText(formattedDate);
+                break;
+            case (KEY_TRIP_TIME):
+                final String formattedTime = time.substring(0, 2) + ":" + time.substring(2, 4);
+                modifyTime.setText(formattedTime);
+                break;
+        }
+
+    }
+
+    /**
+     * Removes the ability to modify values if a trip has already occurred
+     * @param type the trip type (past or upcoming)
+     */
+    public void convertView(String type) {
+        if (type.equals("PAST")) {
+            modifyOrigin.setClickable(false);
+            modifyDestination.setClickable(false);
+            modifyPrice.setClickable(false);
+            modifySeats.setClickable(false);
+            modifyTime.setClickable(false);
+            modifyDate.setClickable(false);
+            deleteButton.setVisibility(View.INVISIBLE);
+            viewPassengerButton.setVisibility(View.INVISIBLE);
+            closeButton.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+    /**
+     * Used for date and time formatting
+     *
+     * @param text   the string you want to format
+     * @param insert the character to insert
+     * @param n      insert every n characters
+     * @return
+     */
+    public static String formatter(
+            String text, String insert, int n) {
+        StringBuilder builder = new StringBuilder(
+                text.length() + insert.length() * (text.length() / n) + 1);
+
+        int index = 0;
+        String prefix = "";
+        while (index < text.length()) {
+
+            builder.append(prefix);
+            prefix = insert;
+            builder.append(text.substring(index,
+                    Math.min(index + n, text.length())));
+            index += n;
+        }
+        return builder.toString();
+    }
 
     public static class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
@@ -382,104 +478,10 @@ public class TripActivity extends AppCompatActivity {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            date = Integer.toString(year) + convertDate(day) + convertDate(month);
+            date = Integer.toString(year) + convertDate(month + 1) + convertDate(day);
             new TripActivity().modifyTripTask(date, KEY_TRIP_DATE);
-            // modifyDate.setText(Integer.toString(year) + "-" + convertDate(day) + "-" + convertDate(month));
         }
 
-    }
-
-
-    /**
-     * Converts a date/time value to be two digits
-     *
-     * @param input the value you want to convert
-     * @return a 2 digit output such as 03 if 3 were inputted
-     */
-
-    protected static String convertDate(int input) {
-        if (input >= 10) {
-            return String.valueOf(input);
-        } else {
-            return "0" + String.valueOf(input);
-        }
-    }
-
-    /**
-     * @param category
-     * @param newValue
-     */
-    public void updateView(String category, String newValue) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        switch (category) {
-            case (KEY_TRIP_ORIGIN):
-                prefs.edit().putString(KEY_TRIP_ORIGIN, newValue).commit();
-                modifyOrigin.setText(newValue);
-                break;
-            case (KEY_TRIP_DESTINATION):
-                prefs.edit().putString(KEY_TRIP_DESTINATION, newValue).commit();
-                modifyDestination.setText(newValue);
-                break;
-            case (KEY_TRIP_PRICE):
-                prefs.edit().putString(KEY_TRIP_PRICE, newValue).commit();
-                modifyPrice.setText("$" + newValue);
-                break;
-            case (KEY_TRIP_SEATS):
-                prefs.edit().putString(KEY_TRIP_SEATS, newValue).commit();
-                modifySeats.setText(newValue);
-                break;
-            case (KEY_TRIP_DATE):
-                modifyDate.setText(date.substring(0, 4) + "-" + date.substring(3, 5) + "-" + date.subSequence(5, 7));
-                break;
-            case (KEY_TRIP_TIME):
-                modifyTime.setText(time.substring(0, 2) + ":" + time.substring(2, 4));
-                break;
-        }
-
-    }
-
-    /**
-     * Removes the ability to modify values if a trip has already occurred
-     * @param type the trip type (past or upcoming)
-     */
-    public void convertView(String type) {
-        if (type.equals("PAST")) {
-            modifyOrigin.setClickable(false);
-            modifyDestination.setClickable(false);
-            modifyPrice.setClickable(false);
-            modifySeats.setClickable(false);
-            modifyTime.setClickable(false);
-            modifyDate.setClickable(false);
-            deleteButton.setVisibility(View.INVISIBLE);
-            viewPassengerButton.setVisibility(View.INVISIBLE);
-        }
-    }
-
-
-    /**
-     * Used for date and time formatting
-     *
-     * @param text   the string you want to format
-     * @param insert the character to insert
-     * @param n      insert every n characters
-     * @return
-     */
-    public static String formatter(
-            String text, String insert, int n) {
-        StringBuilder builder = new StringBuilder(
-                text.length() + insert.length() * (text.length() / n) + 1);
-
-        int index = 0;
-        String prefix = "";
-        while (index < text.length()) {
-
-            builder.append(prefix);
-            prefix = insert;
-            builder.append(text.substring(index,
-                    Math.min(index + n, text.length())));
-            index += n;
-        }
-        return builder.toString();
     }
 
 

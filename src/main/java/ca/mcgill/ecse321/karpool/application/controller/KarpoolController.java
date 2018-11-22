@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 @RestController
-//@CrossOrigin
+@CrossOrigin
 public class KarpoolController {
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
@@ -280,15 +280,34 @@ public class KarpoolController {
 		return resp;
 	}
 	
+	private double getAvgRating(Driver d)
+	{ 
+		double r = 0.0;
+		List<Double> ratings = d.getRatings();
+		int rNum = ratings.size();
+		double rSum = 0.0;
+		for(double rate: ratings)
+		{
+			rSum+=rate;
+		}
+		try {
+			r = rSum/rNum;
+		} catch(ArithmeticException e) {
+			r = -1.0;
+			System.out.println("Divided by zero rating");
+		}
+		return r;
+	}
+	
 	@GetMapping("/drivers/active/all")
 	public List<Driver> getActiveDrivers()
 	{
 		List<Driver> allDrivers = listAllDrivers();
 		List<Driver> actDrivers = new ArrayList<Driver>();
-		boolean active = true;
+		boolean active = false;
 		for(Driver d: allDrivers)
 		{
-			Set<Trip> trips = d.getTrips();
+			Set<Trip> trips = repository.getTripForDriver(d);
 			if(trips.isEmpty())
 			{
 				active = false;
@@ -297,9 +316,10 @@ public class KarpoolController {
 			{
 				for(Trip t: trips)
 				{
-					if(t.isTripComplete())
+					if(!t.isTripComplete())
 					{
-						active = false;
+						active = true;
+						break;
 					}
 				}
 			}
@@ -307,9 +327,45 @@ public class KarpoolController {
 			{
 				actDrivers.add(d);
 			}
-			active = true;
 		}
 		return actDrivers;
+	}
+	
+	@GetMapping("/drivers/top3")
+	public ArrayList<Driver> getTopDrivers()
+	{
+		List<Double> rate = new ArrayList<Double>();
+		rate.add(0.0);
+		List<Driver> allDrivers = listAllDrivers();
+		ArrayList<Driver> topThree = new ArrayList<Driver>();
+		Driver first = new Driver();
+		first.setRatings(rate);
+		Driver second = new Driver();
+		second.setRatings(rate);
+		Driver third = new Driver();
+		third.setRatings(rate);
+		for(Driver d: allDrivers)
+		{
+			if(getAvgRating(d) >= getAvgRating(first)) //#1
+			{
+				third = second;
+				second = first;
+				first = d;
+			}
+			else if(getAvgRating(d) >= getAvgRating(second)) //#2
+			{
+				third = second;
+				second = d;
+			}
+			else if(getAvgRating(d) >= getAvgRating(third)) //#3
+			{
+				third = d;
+			}
+		}
+		topThree.add(first);
+		topThree.add(second);
+		topThree.add(third);
+		return topThree;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -332,7 +388,7 @@ public class KarpoolController {
 	public Passenger createPassenger(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
 			@PathVariable("phone") String phone, @PathVariable("record") boolean criminalRecord)
 	{
-		Passenger p = null;
+		Passenger p = new Passenger();
 		try 
 		{
 			if(phone.length() == 10) 
@@ -354,54 +410,54 @@ public class KarpoolController {
 									}
 									else 
 									{
-										System.out.println("Your username must have 3 characters or over");
-										return null;
+										p.setError("Your username must have 3 characters or over");
+										return p;
 									}
 								}
 								catch (NullPointerException e)
 								{
-									System.out.println("Please enter a name ");
-									return null;
+									p.setError("Please enter a name ");
+									return p;
 								}
 							}
 							else 
 							{
-								System.out.println("Your password must have over 6 characters");
-								return null;
+								p.setError("Your password must have over 6 characters");
+								return p;
 							}
 						}
 						catch (NullPointerException e)
 						{
-							System.out.print("Please enter a password");
-							return null;
+							p.setError("Please enter a password");
+							return p;
 						}
 					}
 					else
 					{
-						System.out.println("Oups , this is not a valid email");
+						p.setError("Oups , this is not a valid email");
 					}
 				}
 				catch(NullPointerException e)
 				{
-					System.out.println("Oups, this is not a valid email");
-					return null;
+					p.setError("Oups , this is not a valid email");
+					return p;
 				}
 			}
 			else 
 			{
-				System.out.println("Oups, this is not a valid phone number");
-				return null;
+				p.setError("Oups, this is not a valid phone number");
+				return p;
 			}
 		}
 		catch(NullPointerException e1) 
 		{
-			System.out.println("Exception - Null pointer");
-			return null;
+			p.setError("Exception - Null pointer");
+			return p;
 		}
 		catch(NumberFormatException e2)
 		{
-			System.out.println("Exception - Number format");
-			return null;
+			p.setError("Exception - Number format");
+			return p;
 		}
 		return p;
 	}
@@ -556,6 +612,74 @@ public class KarpoolController {
 		}	
 		
 		return p;
+	}
+	
+	@GetMapping("/passengers/active/all")
+	public List<Passenger> getActivePassengers()
+	{
+		List<Passenger> allPassengers = listAllPassengers();
+		List<Passenger> actPassengers = new ArrayList<Passenger>();
+		boolean active = false;
+		for(Passenger p: allPassengers)
+		{
+			Set<Trip> trips = repository.getTripsForPassenger(p);
+			if(trips.isEmpty())
+			{
+				active = false;
+			}
+			else
+			{
+				for(Trip t: trips)
+				{
+					if(!t.isTripComplete()) //change this condition
+					{
+						active = true;
+						break;
+					}
+				}
+			}
+			if(active)
+			{
+				actPassengers.add(p);
+			}
+		}
+		return actPassengers;
+	}
+	
+	@GetMapping("/passengers/top3")
+	public ArrayList<Passenger> getTopPassengers()
+	{
+		Set<Trip> trip = new HashSet<Trip>();
+		List<Passenger> allPassengers = listAllPassengers();
+		ArrayList<Passenger> topThree = new ArrayList<Passenger>();
+		Passenger first = new Passenger();
+		first.setTrips(trip);
+		Passenger second = new Passenger();
+		second.setTrips(trip);
+		Passenger third = new Passenger();
+		third.setTrips(trip);
+		for(Passenger p: allPassengers)
+		{
+			if(p.getTrips().size() >= first.getTrips().size()) //#1
+			{
+				third = second;
+				second = first;
+				first = p;
+			}
+			else if(p.getTrips().size() >= second.getTrips().size()) //#2
+			{
+				third = second;
+				second = p;
+			}
+			else if(p.getTrips().size() >= third.getTrips().size()) //#3
+			{
+				third = p;
+			}
+		}
+		topThree.add(first);
+		topThree.add(second);
+		topThree.add(third);
+		return topThree;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1066,7 +1190,6 @@ public class KarpoolController {
 			return r;
 		}
 	}
-	
 
 	/**
 	 * This method marks a trip as completed
@@ -1074,9 +1197,12 @@ public class KarpoolController {
 	 * @throws ParseException 
 	 */
 	@PostMapping("/trips/close/{tripID}")
-	public void closeTrip(@PathVariable("tripID")int tripID) throws ParseException
+	public Response closeTrip(@PathVariable("tripID")int tripID) throws ParseException
 	{
 		repository.closeTrip(tripID);
+		Response r = new Response();
+		r.setResponse(true);
+		return r;
 	}
 	
 	/**
@@ -1087,10 +1213,13 @@ public class KarpoolController {
 	 * @throws ParseException 
 	 */
 	@PostMapping("/trips/delete/{trip}")
-	public void deleteTrip(@PathVariable("trip")int tripID) throws ParseException
+	public Response deleteTrip(@PathVariable("trip")int tripID) throws ParseException
 	{
 		//TODO can only delete trip if the date hasnt passed yet
 		repository.deleteTrip(tripID);
+		Response r = new Response();
+		r.setResponse(true);
+		return r;
 	}
 
 	/*public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException

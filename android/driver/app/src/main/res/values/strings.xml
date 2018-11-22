@@ -45,7 +45,8 @@
     <string name="trip_delete">DELETE TRIP</string>
 
     <!-- Passenger activity -->
-    <string name="passenger_none">Passengers</string>
+    <string name="passengers_label">Passengers</string>
+    <string name="passenger_none">No passengers have joined this trip yet</string>
 
 
     <!-- preference screen -->

@@ -17,7 +17,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
+/**
+ * This page allows the user to sign out, change their location, or view the help menu
+ */
 public class FragmentThree extends Fragment {
 
 
@@ -35,6 +37,7 @@ public class FragmentThree extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_three, container, false);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
+        // main view elements
 
         signOut = rootView.findViewById(R.id.signOutButton);
         help = rootView.findViewById(R.id.helpButton);
@@ -45,6 +48,7 @@ public class FragmentThree extends Fragment {
         signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // removing user data and revert to log in screen
                 prefs.edit().remove(KEY_USER_ID).commit();
                 prefs.edit().remove(KEY_USER_LOCATION).commit();
                 Intent I = new Intent(getActivity(), LoginActivity.class);
@@ -64,21 +68,22 @@ public class FragmentThree extends Fragment {
 
         location = prefs.getString(KEY_USER_LOCATION, null);
 
+
         userNote.setText("Welcome " + prefs.getString(KEY_USER_ID, null));
 
 
-        if(location != null) {
-
+        if (location != null) {
             userLocation.setText(location);
+        } else if (location == null || location.equals(" ")) {
+            userLocation.setText("Enter your location here");
         }
-
 
         return rootView;
     }
 
 
     /**
-     * Opens a pop up dialog to enter a new location
+     * Opens a dialog so that the user can enter their location. Once entered, is committed to preferences.
      */
     private void openDialog() {
 

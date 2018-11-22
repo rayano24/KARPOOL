@@ -31,7 +31,7 @@ public class FragmentThree extends Fragment {
 
     private final static String KEY_USER_ID = "userID";
     private final static String KEY_RATING = "rating";
-    private static String userID;
+    private static String userID, userRating;
 
 
     private TextView signOut, help, userNote;
@@ -60,50 +60,19 @@ public class FragmentThree extends Fragment {
         });
 
         userID = prefs.getString(KEY_USER_ID, null);
+        userRating = prefs.getString(KEY_RATING, null);
 
 
-        userNote.setText("Welcome " + userID);
+        if (userRating != null) {
 
-        displayRatingTask();
+            userNote.setText("Welcome " + userID + " " + userRating + "/5");
+        } else {
+            userNote.setText("Welcome " + userID);
+
+        }
 
 
         return rootView;
-    }
-
-
-    public void displayRatingTask() {
-
-        HttpUtils.get("drivers/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
-
-            @Override
-            public void onFinish() {
-
-            }
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                        JSONArray ratingArray = response.getJSONArray("ratings");
-                        double driverRating = 0.0;
-
-                        for (int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
-                            driverRating += ratingArray.getDouble(ratingCount);
-
-                        driverRating /= ratingArray.length();
-                        DecimalFormat df = new DecimalFormat("###.#");
-                        String displayedRating =  "Welcome " + userID + df.format(driverRating) + "/5";
-                        userNote.setText(displayedRating);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject
-                    errorResponse) {
-                super.onFailure(statusCode, headers, throwable, errorResponse);
-            }
-        });
     }
 
 

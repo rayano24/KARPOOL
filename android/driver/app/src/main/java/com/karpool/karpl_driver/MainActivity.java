@@ -16,8 +16,18 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,14 +39,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_FRAGMENT_TRIPS = "tag_frag_trips";
     private static final String TAG_FRAGMENT_ACCOUNT = "tag_frag_account";
 
-    private List<String> participantNames = new ArrayList<>();
-    private ArrayAdapter<String> participantAdapter;
-    private List<String> eventNames = new ArrayList<>();
-    private ArrayAdapter<String> eventAdapter;
-    private static final String error = null; //error handling
 
-
-
+    private final static String KEY_USER_ID = "userID";
+    private final static String KEY_RATING = "rating";
+    private static String userID;
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -73,11 +79,9 @@ public class MainActivity extends AppCompatActivity {
         switchFragment(0, TAG_FRAGMENT_CREATE);
 
 
-
-
-
-
-
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+        userID = prefs.getString(KEY_USER_ID, null);
+        getUserRatingTask();
 
     }
 
@@ -123,6 +127,47 @@ public class MainActivity extends AppCompatActivity {
         return fragment;
     }
 
+
+    public void getUserRatingTask() {
+
+        HttpUtils.get("drivers/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
+
+            @Override
+            public void onFinish() {
+
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                try {
+                    if (response.getJSONArray("ratings").length() != 0) {
+                        JSONArray ratingArray = response.getJSONArray("ratings");
+                        double driverRating = 0.0;
+
+                        for (int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
+                            driverRating += ratingArray.getDouble(ratingCount);
+
+                            driverRating /= ratingArray.length();
+                            DecimalFormat df = new DecimalFormat("###.#");
+                            prefs.edit().putString(KEY_RATING, df.format(driverRating)).commit();
+
+                        }
+                    } else {
+                        prefs.edit().putString(KEY_RATING, null).commit();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject
+                    errorResponse) {
+                super.onFailure(statusCode, headers, throwable, errorResponse);
+            }
+        });
+    }
 
 
 }

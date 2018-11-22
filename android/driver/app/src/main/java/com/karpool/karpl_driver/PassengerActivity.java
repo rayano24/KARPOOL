@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -73,6 +74,7 @@ public class PassengerActivity extends Activity {
 
             @Override
             public void onFinish() {
+                passengerList.clear();
             }
 
             @Override
@@ -89,12 +91,16 @@ public class PassengerActivity extends Activity {
                         String secondHalfNumber = passengerNumber.substring(6, 10);
                         String formattedNumber = "(" + areaCode + ") " + firstHalfNumber + "-" + secondHalfNumber;
 
-
                         passengerList.add(new Passenger(passenger.getString("name"), formattedNumber));
 
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+
+                if(passengerList.size() == 0) {
+                    noPassengersJoined.setVisibility(View.VISIBLE);
+
                 }
 
                 passengerAdapter.notifyDataSetChanged();

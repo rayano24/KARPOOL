@@ -1,5 +1,9 @@
 package com.karpool.karpl_passenger;
 
+
+/**
+ * Constructor for the Trip class used in recyclerView.
+ */
 public class Trip {
 
     private String origin, destination, date, time, driver, seats, tripID, price, driverNumber, driverRating;

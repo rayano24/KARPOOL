@@ -174,8 +174,8 @@ public class FragmentOne extends Fragment {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            date = Integer.toString(year) + convertDate(day) + convertDate(month);
-            dateLabel.setText(Integer.toString(year) + "-" + convertDate(day) + "-" + convertDate(month));
+            date = Integer.toString(year) + convertDate(month + 1) + convertDate(day);
+            dateLabel.setText(Integer.toString(year) + "-" + convertDate(month + 1) + "-" + convertDate(day));
             dateLabel.setVisibility(View.VISIBLE);
 
         }
