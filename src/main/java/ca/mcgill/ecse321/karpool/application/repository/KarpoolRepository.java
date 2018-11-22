@@ -230,6 +230,21 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
+	public Set<Trip> getTripForDriver(Driver d)
+	{
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE driver= :driver");
+		q.setParameter("driver", d);
+		@SuppressWarnings("unchecked")
+		List<Integer> trips = q.getResultList();
+		Set<Trip> tripList = new HashSet<Trip>();
+		for(int i: trips)
+		{
+			tripList.add(getSpecificTrip(i));
+		}
+		return tripList;
+	}
+	
+	@Transactional
 	public void closeTrip(int tripID)
 	{
 		Trip trip = entityManager.find(Trip.class, tripID);

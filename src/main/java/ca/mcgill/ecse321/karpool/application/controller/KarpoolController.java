@@ -285,10 +285,10 @@ public class KarpoolController {
 	{
 		List<Driver> allDrivers = listAllDrivers();
 		List<Driver> actDrivers = new ArrayList<Driver>();
-		boolean active = true;
+		boolean active = false;
 		for(Driver d: allDrivers)
 		{
-			Set<Trip> trips = d.getTrips();
+			Set<Trip> trips = repository.getTripForDriver(d);
 			if(trips.isEmpty())
 			{
 				active = false;
@@ -297,9 +297,10 @@ public class KarpoolController {
 			{
 				for(Trip t: trips)
 				{
-					if(t.isTripComplete())
+					if(!t.isTripComplete())
 					{
-						active = false;
+						active = true;
+						break;
 					}
 				}
 			}
@@ -307,7 +308,6 @@ public class KarpoolController {
 			{
 				actDrivers.add(d);
 			}
-			active = true;
 		}
 		return actDrivers;
 	}
