@@ -212,10 +212,13 @@ public class KarpoolRepository
 		Passenger p = entityManager.find(Passenger.class, name);
 		Set<Trip> t = p.getTrips();
 		return t;
-//		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE :pass IN(SELECT passenger FROM trip)");
-//		q.setParameter("pass", p);
-//		Trip t = (Trip) q.getResultList().get(0);
-//		return t;
+	}
+	
+	@Transactional
+	public Set<Trip> getTripsForPassenger(Passenger p)
+	{
+		Set<Trip> t = p.getTrips();
+		return t;
 	}
 	
 	@Transactional

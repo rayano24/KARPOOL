@@ -557,6 +557,38 @@ public class KarpoolController {
 		
 		return p;
 	}
+	
+	@GetMapping("/passengers/active/all")
+	public List<Passenger> getActivePassengers()
+	{
+		List<Passenger> allPassengers = listAllPassengers();
+		List<Passenger> actPassengers = new ArrayList<Passenger>();
+		boolean active = false;
+		for(Passenger p: allPassengers)
+		{
+			Set<Trip> trips = repository.getTripsForPassenger(p);
+			if(trips.isEmpty())
+			{
+				active = false;
+			}
+			else
+			{
+				for(Trip t: trips)
+				{
+					if(!t.isTripComplete()) //change this condition
+					{
+						active = true;
+						break;
+					}
+				}
+			}
+			if(active)
+			{
+				actPassengers.add(p);
+			}
+		}
+		return actPassengers;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////                                                                   /////////////////
