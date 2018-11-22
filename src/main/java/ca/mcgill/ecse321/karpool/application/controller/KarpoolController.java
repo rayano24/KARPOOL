@@ -279,6 +279,38 @@ public class KarpoolController {
 		}
 		return resp;
 	}
+	
+	@GetMapping("/drivers/active/all")
+	public List<Driver> getActiveDrivers()
+	{
+		List<Driver> allDrivers = listAllDrivers();
+		List<Driver> actDrivers = new ArrayList<Driver>();
+		boolean active = true;
+		for(Driver d: allDrivers)
+		{
+			Set<Trip> trips = d.getTrips();
+			if(trips.isEmpty())
+			{
+				active = false;
+			}
+			else
+			{
+				for(Trip t: trips)
+				{
+					if(t.isTripComplete())
+					{
+						active = false;
+					}
+				}
+			}
+			if(active)
+			{
+				actDrivers.add(d);
+			}
+			active = true;
+		}
+		return actDrivers;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////                                                                   /////////////////
