@@ -1049,7 +1049,7 @@ public class KarpoolController {
 		
 		try {
 		
-		if((date1.compareTo(date2)) <= 0) {  
+		if((date1.compareTo(date2)) == 0) {  
 			
 			if ((time1.compareTo(time2)) < 0) {
 
@@ -1057,14 +1057,21 @@ public class KarpoolController {
 				r.setResponse(false);
 				return r;
 			}
+		}
 			
-			else {
+		else if ((date1.compareTo(date2)) < 0) {
+				r.setError("Cannot set time for a trip that has already passed");
+				r.setResponse(false);
+				return r;
+			}
+			
+		else {
 			repository.modifyDepartureTime(t, departureTime);
 			r.setResponse(true);
 			return r;
 			
 			}
-		}
+		
 			
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
