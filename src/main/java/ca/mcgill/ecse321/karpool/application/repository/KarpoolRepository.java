@@ -248,8 +248,31 @@ public class KarpoolRepository
 	public void closeTrip(int tripID)
 	{
 		Trip trip = entityManager.find(Trip.class, tripID);
+		String tripDate = trip.getDepartureDate(); 
+		
+		Date date = new Date();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date dateInput = null;
+		try {
+			dateInput = sdf.parse(tripDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String date1 = sdf.format(dateInput);        
+		String date2 = sdf.format(date);
+		
+		if (date1.compareTo(date2) > 0) {
+			System.out.println("Cannot close a trip that has not yet occured");
+		}
+		
+		else if (date1.compareTo(date2) <= 0) {
+			
+		
 		trip.setTripComplete(true);
 		entityManager.merge(trip);
+		}
 	}
 	
 	@Transactional
@@ -264,7 +287,7 @@ public class KarpoolRepository
 	}
 	
 	@Transactional
-	public void rempvePassengerFromTrip(Passenger p, Trip t)
+	public void removePassengerFromTrip(Passenger p, Trip t)
 	{
 		t.removePassenger(p);
 		t.setSeatAvailable(t.getSeatAvailable()+1);
