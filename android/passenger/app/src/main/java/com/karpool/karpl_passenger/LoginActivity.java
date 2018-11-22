@@ -18,7 +18,6 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 
 import android.os.Build;
 import android.os.Bundle;
@@ -50,62 +49,12 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 
 import static android.Manifest.permission.READ_CONTACTS;
-
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.graphics.Point;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
-import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.view.Display;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Space;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.JsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
-
-import static android.Manifest.permission.READ_CONTACTS;
 
 /**
- * A login screen that offers login via email/password.
+ * Handles logging in and signing up
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
@@ -121,10 +70,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
 
     private final static String KEY_USER = "userID";
-    private final static String KEY_RATING = "rating";
-
-
-
 
     // UI references.
 
@@ -144,12 +89,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        // if the user is already signed in, skip this and open the main activity
         if (prefs.getString("userID", null) != null) {
             Intent I = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(I);
             finish();
         }
-
 
 
         signInPrompt = findViewById(R.id.signInPrompt);
@@ -170,14 +115,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         signInPrompt.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setElementVisbility("signIn", false);
+                setElementVisibility("signIn", false);
 
             }
         });
         registerPrompt.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                setElementVisbility("register", false);
+                setElementVisibility("register", false);
 
 
             }
@@ -282,8 +227,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * Attempts to sign in the account specified by the login form.
-     * If there are form errors (invalid username, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * If there are form errors such as an empty field, no log in attempt is made
      */
     private void attemptLogin() {
 
@@ -321,8 +265,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showSignInProgress(true);
-            //  mlogInAuthTask = new UserLoginTask(username, password);
-            //  mlogInAuthTask.execute((Void) null);
             userLogInTask(username, password);
         }
     }
@@ -330,8 +272,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     /**
      * Attempts to register the account specified by the register form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * If there are form errors such as missing fields, no register attempt is made.
      */
     private void attemptRegistration() {
 
@@ -385,39 +326,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    /**
-     * Checks if an entered email address is valid
-     *
-     * @param email the user input
-     * @return true if valid
-     */
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        //return email.contains("@");
-        return true;
-    }
 
-    /**
-     * Checks if an entered password is valid
-     *
-     * @param password the user password
-     * @return true if valid
-     */
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
-
-    /**
-     * Checks if an entered phone number is the valid format
-     *
-     * @param phoneNumber the user phone number
-     * @return true if valid
-     */
-    private boolean isPhoneValid(String phoneNumber) {
-        //TODO: Replace this with your own logic
-        return true;
-    }
 
     /**
      * Shows the progress UI and hides the login form.
@@ -566,7 +475,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         signInName.setAdapter(adapter);
-        // TODO HERE
     }
 
 
@@ -581,8 +489,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
-
-
+    /**
+     * Attempts to authorize the user account and log in through an asynchronous task
+     * @param mName the username
+     * @param mPassword the password
+     */
     public void userLogInTask(String mName, String mPassword) {
 
         final String userID = mName;
@@ -591,6 +502,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             @Override
             public void onFinish() {
+                showSignInProgress(false);
 
             }
 
@@ -600,7 +512,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     if (response.getBoolean("response") == true) {
                         showSignInProgress(false);
                         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-                        prefs.edit().putString(KEY_USER, userID).commit();
+                        prefs.edit().putString(KEY_USER, userID).commit(); // adding userID to preferences for future use
                         Intent I = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(I);
                         finish();
@@ -620,14 +532,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
                 showSignInProgress(false);
+                Toast.makeText(LoginActivity.this, "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
+
             }
         });
     }
 
 
     /**
-     * Represents an asynchronous registration task used to sign up
-     * the user.
+     * Attempts to register the user account through an asynchronous task
+     * @param mEmail user email
+     * @param mName username
+     * @param mPassword user password
+     * @param mPhone user phone number
      */
     public void userRegisterTask(String mEmail, String mName, String mPassword, String mPhone) {
 
@@ -643,7 +560,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
                     if (!response.getString("name").isEmpty()) {
-                        setElementVisbility("register", true);
+                        setElementVisibility("register", true);
 
 
                     } else {
@@ -659,6 +576,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject
                     errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
+                Toast.makeText(LoginActivity.this, "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
+                showRegistrationProgress(false);
+
+
             }
         });
 
@@ -672,13 +593,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     public void onBackPressed() {
         if (signInButton.getVisibility() == View.VISIBLE) {
-            setElementVisbility("signIn", true);
+            setElementVisibility("signIn", true);
         } else if (registerButton.getVisibility() == View.VISIBLE) {
-            setElementVisbility("register", true);
+            setElementVisibility("register", true);
         } else {
             super.onBackPressed();
         }
     }
+
 
     /**
      * This method handles the visibility of elements on the logIn activity.
@@ -686,7 +608,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      * @param mode    signIn or Registration depends on the user's button selection
      * @param reverse This is to complete the opposite action when the back button is pressed, i.e, go back to main page
      */
-    private void setElementVisbility(String mode, Boolean reverse) {
+    private void setElementVisibility(String mode, Boolean reverse) {
         if (mode == "signIn") {
             if (!reverse) {
                 registerPrompt.setVisibility(View.GONE);

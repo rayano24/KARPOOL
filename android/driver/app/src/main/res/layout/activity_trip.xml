@@ -168,10 +168,12 @@
         android:id="@+id/deleteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="80dp"
         android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:text="@string/trip_delete"
-        app:layout_constraintEnd_toStartOf="@+id/messageButton"
+        app:layout_constraintEnd_toStartOf="@+id/closeButton"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider12" />
 
@@ -179,12 +181,11 @@
         android:id="@+id/messageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="3dp"
+        android:layout_marginTop="20dp"
         android:text="@string/trips_passengers"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/deleteButton"
-        app:layout_constraintTop_toBottomOf="@+id/divider12" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/deleteButton" />
 
     <View
         android:id="@+id/divider7"
@@ -251,5 +252,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/modifyTimeLabel" />
+
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="88dp"
+        android:text="CLOSE TRIP"
+        app:layout_constraintBottom_toBottomOf="@+id/deleteButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/deleteButton" />
 
 </android.support.constraint.ConstraintLayout>

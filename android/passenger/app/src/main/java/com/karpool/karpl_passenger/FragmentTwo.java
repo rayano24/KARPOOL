@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -29,18 +30,18 @@ import cz.msebera.android.httpclient.Header;
 public class FragmentTwo extends Fragment {
 
 
+    // recycler views
+
     private List<Trip> upcomingTripsList = new ArrayList<>();
     private List<Trip> pastTripsList = new ArrayList<>();
     private RecyclerView upcomingRecyclerView, pastRecyclerView;
     private TripAdapter upcomingAdapter, pastAdapter;
 
 
-    private List<Trip> tripsList = new ArrayList<>();
-    private RecyclerView mRecyclerView;
-    private TripAdapter mAdapter;
-
     private TextView noPastTrips, noUpcomingTrips;
 
+
+    // preference keys
 
     private final static String KEY_TRIP_DESTINATION = "tripdestination";
     private final static String KEY_TRIP_TIME = "time";
@@ -56,7 +57,7 @@ public class FragmentTwo extends Fragment {
     private final static String KEY_TRIP_STATUS = "tripJoined"; // if trip is already joined or if you are viewing a trip
     private final static String KEY_TRIP_FRAG_MODE = "tripMode"; // if a trip is upcoming or already happened
 
-    private String userID;
+    private static String userID;
 
 
     @Override
@@ -67,12 +68,14 @@ public class FragmentTwo extends Fragment {
         userID = prefs.getString(KEY_USER_ID, null);
 
 
-        upcomingRecyclerView = (RecyclerView) rootView.findViewById(R.id.myTripsRecyclerView);
-        pastRecyclerView = (RecyclerView) rootView.findViewById(R.id.myOldTripsRecyclerView);
+        // setting up the recycler views for upcoming/past trips
+
+        upcomingRecyclerView = rootView.findViewById(R.id.myTripsRecyclerView);
+        pastRecyclerView = rootView.findViewById(R.id.myOldTripsRecyclerView);
 
 
-        noPastTrips = (TextView) rootView.findViewById(R.id.noPastTrips);
-        noUpcomingTrips = (TextView) rootView.findViewById(R.id.noUpcomingTrips);
+        noPastTrips = rootView.findViewById(R.id.noPastTrips);
+        noUpcomingTrips = rootView.findViewById(R.id.noUpcomingTrips);
 
         upcomingAdapter = new TripAdapter(upcomingTripsList);
         pastAdapter = new TripAdapter(pastTripsList);
@@ -143,23 +146,28 @@ public class FragmentTwo extends Fragment {
         }));
 
 
-        displayTrips(userID);
+        displayTrips();
 
 
         return rootView;
     }
 
 
+    // If the user moves to the TripActivity and leaves the trip, it should not be listed in upcoming anymore, so a refresh is needed
+    @Override
+    public void onResume() {
+        super.onResume();
+        displayTrips();
 
+    }
 
 
     /**
-     * Represents an asynchronous task to get the trip info
+     * Displays the trap data for both upcoming and past trips. If the trips complete flag is set to true, it is added to past, otherwise, it is added to upcoming.
      */
+    public void displayTrips() {
 
-    public void displayTrips(String mUser) {
-
-        HttpUtils.get("trips/passengers/" + mUser, new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.get("trips/passengers/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onFinish() {
@@ -173,6 +181,8 @@ public class FragmentTwo extends Fragment {
                     pastTripsList.clear();
 
 
+                    // parse each trip in the passenger array and load it into the trip lists
+
                     for (int i = 0; i < response.length(); i++) {
 
                         JSONObject obj = response.getJSONObject(i);
@@ -185,13 +195,15 @@ public class FragmentTwo extends Fragment {
                         Boolean tripStatus = obj.getBoolean("tripComplete");
                         String driverNumber = driver.getString("phoneNumber");
                         JSONArray ratingArray = driver.getJSONArray("ratings");
+
+                        // driver ratings are provided as an array so the average must be calculated
+
                         double driverRating = 0.0;
 
-                        for(int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
+                        for (int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
                             driverRating += ratingArray.getDouble(ratingCount);
                         }
-                        driverRating/=ratingArray.length();
-
+                        driverRating /= ratingArray.length();
 
 
                         if (!tripStatus) {
@@ -220,15 +232,11 @@ public class FragmentTwo extends Fragment {
                 }
 
             }
+
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                if (upcomingTripsList.isEmpty())
-                    noUpcomingTrips.setVisibility(View.VISIBLE);
-
-                if(pastTripsList.isEmpty())
-                    noPastTrips.setVisibility(View.VISIBLE);
-
+                Toast.makeText(getActivity(), "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
 
             }
 
@@ -236,7 +244,6 @@ public class FragmentTwo extends Fragment {
         });
 
     }
-
 
 
     /**

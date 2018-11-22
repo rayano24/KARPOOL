@@ -1,19 +1,15 @@
 package com.karpool.karpl_passenger;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.Space;
@@ -23,15 +19,17 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 
 import cz.msebera.android.httpclient.Header;
 
+
+/**
+ * Displays details of a specific trip and gives the user options to message a driver, leave a trip, or rate it.
+ */
 public class TripActivity extends AppCompatActivity {
 
 
@@ -58,26 +56,25 @@ public class TripActivity extends AppCompatActivity {
     protected static double userRating;
 
 
-    // TODO DRIVER RATING
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip);
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
+        // main UI elements
 
-        tripOrigin = (TextView) findViewById(R.id.tripOrigin);
-        tripDestination = (TextView) findViewById(R.id.tripDestination);
-        tripDate = (TextView) findViewById(R.id.tripDate);
-        tripTime = (TextView) findViewById(R.id.tripTime);
-        tripPrice = (TextView) findViewById(R.id.tripPrice);
-        tripDriver = (TextView) findViewById(R.id.tripDriver);
-        tripSeats = (TextView) findViewById(R.id.tripSeats);
-        tripDriverRating = (TextView) findViewById(R.id.driverRating);
-        tripButton = (Button) findViewById(R.id.tripButton);
-        rateButton = (Button) findViewById(R.id.rateButton);
-        messageButton = (Button) findViewById(R.id.messageButton);
+        tripOrigin = findViewById(R.id.tripOrigin);
+        tripDestination = findViewById(R.id.tripDestination);
+        tripDate = findViewById(R.id.tripDate);
+        tripTime = findViewById(R.id.tripTime);
+        tripPrice = findViewById(R.id.tripPrice);
+        tripDriver = findViewById(R.id.tripDriver);
+        tripSeats = findViewById(R.id.tripSeats);
+        tripDriverRating = findViewById(R.id.driverRating);
+        tripButton = findViewById(R.id.tripButton);
+        rateButton = findViewById(R.id.rateButton);
+        messageButton = findViewById(R.id.messageButton);
 
 
         tripStatus = prefs.getString(KEY_TRIP_STATUS, null); // JOINED OR VIEW
@@ -89,6 +86,7 @@ public class TripActivity extends AppCompatActivity {
         tripID = Integer.parseInt(prefs.getString(KEY_TRIP_ID, null));
         userID = prefs.getString(KEY_USER_ID, null);
 
+        // updating data based on preferences set in fragment 2 (trips fragment)
 
         tripDate.setText(prefs.getString(KEY_TRIP_DATE, null));
         tripTime.setText(prefs.getString(KEY_TRIP_TIME, null));
@@ -96,16 +94,19 @@ public class TripActivity extends AppCompatActivity {
         tripOrigin.setText(prefs.getString(KEY_TRIP_ORIGIN, null));
         tripDriver.setText(driverName);
         tripSeats.setText(prefs.getString(KEY_TRIP_SEATS, null));
-        tripPrice.setText(prefs.getString(KEY_TRIP_PRICE, null));
+        tripPrice.setText("$" + prefs.getString(KEY_TRIP_PRICE, null));
+
+        // formatting rating so that trailing zeroes do not show
 
         DecimalFormat df = new DecimalFormat("###.#");
-        if(driverRating.equals("NaN")) {
+        if (driverRating.equals("NaN")) {
             tripDriverRating.setText("No Rating ");
-        }
-        else {
+        } else {
             tripDriverRating.setText(df.format(Double.parseDouble(driverRating)) + "/5");
         }
 
+
+        // to leave a trip
 
         tripButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,6 +114,9 @@ public class TripActivity extends AppCompatActivity {
                 tripAction();
             }
         });
+
+
+        // message driver, opens intent for SMS
 
         messageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,6 +126,8 @@ public class TripActivity extends AppCompatActivity {
             }
         });
 
+
+        // rate the driver, opens a dialog that allows them to rate the driver by filling stars
 
         rateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,6 +142,111 @@ public class TripActivity extends AppCompatActivity {
         updateButton(tripStatus, tripMode);
 
 
+    }
+
+
+    /**
+     * Represents an asynchronous task where there are three possibilities based on the static variable tripStatus.
+     * If a user has not yet joined a trip, this will join a trip.
+     * If a user has already joined a trip, but it has not occurred, this will leave a trip.
+     * If a user has already joined a trip and it has already occurred, this will allow the user to rate the trip.
+     */
+    public void tripAction() {
+
+        // as you have not joined the trip yet, you will want to view the trip. The only possible (network) option is to join a trip.
+
+        if (tripStatus.equals("VIEW")) {
+
+            HttpUtils.post("trips/" + tripID + "/add/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
+                @Override
+                public void onFinish() {
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        if (response.getString("name") != null) {
+                            finish();
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                    Toast.makeText(TripActivity.this, "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
+
+
+                }
+
+            });
+        } else if (tripStatus.equals("JOINED")) {
+
+            // Since we've already joined the trip, a button action here will be to leave the trip
+
+            if (tripMode.equals("UPCOMING")) {
+
+                HttpUtils.post("trips/" + tripID + "/remove/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
+                    @Override
+                    public void onFinish() {
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            if (response.getString("name") != null) {
+                                finish();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Toast.makeText(TripActivity.this, "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
+
+                    }
+                });
+            }
+
+            // since it is a trip that has already occurred, you will want to rate the driver
+
+            else {
+
+
+                HttpUtils.post("drivers/rate/" + driverName + "/" + userRating, new RequestParams(), new JsonHttpResponseHandler() {
+                    @Override
+                    public void onFinish() {
+                    }
+
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            if (response.getJSONArray("ratings").length() != 0) {
+                                finish();
+                                startActivity(getIntent());
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                        Toast.makeText(TripActivity.this, "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
+
+                    }
+                });
+
+            }
+
+
+        }
     }
 
 
@@ -245,109 +356,6 @@ public class TripActivity extends AppCompatActivity {
 
         popDialog.create();
         popDialog.show();
-    }
-
-
-    /**
-     * Represents an async processor to either join or leave a trip
-     */
-    public void tripAction() {
-
-        // as you have not joined the trip yet, you will want to view the trip
-
-        if(tripStatus.equals("VIEW")) {
-
-            HttpUtils.post("trips/" + tripID + "/add/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public void onFinish() {
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    try {
-                        if (response.getString("name") != null) {
-                            finish();
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-
-                }
-
-            });
-        }
-
-
-         else if(tripStatus.equals("JOINED")) {
-
-            // Since we've already joined the trip, a button action here will be to leave the trip
-
-            if(tripMode.equals("UPCOMING")) {
-
-                // TODO
-
-                HttpUtils.post("trips/" + tripID + "/remove/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
-                    @Override
-                    public void onFinish() {
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        try {
-                            if (response.getString("name") != null) {
-                                finish();
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-
-                    }
-                });
-            }
-
-            // since it is a trip that has already occurred, you will want to rate the driver
-            else {
-
-
-                HttpUtils.post("drivers/rate/" + driverName + "/" + userRating, new RequestParams(), new JsonHttpResponseHandler() {
-                    @Override
-                    public void onFinish() {
-                    }
-
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        //TODO
-                        try {
-                            if (response.getJSONArray("ratings").length() != 0) {
-                                finish();
-                                startActivity(getIntent());
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-
-                    }
-                });
-
-            }
-
-
-        }
     }
 
 

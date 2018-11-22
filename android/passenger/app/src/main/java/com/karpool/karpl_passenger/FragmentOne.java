@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -32,18 +33,21 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * This fragment handles searching for a trip. It opens the TripActivity when needed.
+ */
 public class FragmentOne extends Fragment {
 
-
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private List<Trip> tripsList = new ArrayList<>();
     private RecyclerView mRecyclerView;
     private TripAdapter mAdapter;
     private SearchView citySearch;
     private Spinner searchSpinner;
-    private String sortSelection;
     private TextView invalidCity;
+
+
+    // preference keys
 
     private final static String KEY_TRIP_STATUS = "tripJoined"; // if trip is already joined or if you are viewing a trip
     private final static String KEY_TRIP_FRAG_MODE = "tripMode"; // if a trip is upcoming or already happened
@@ -55,12 +59,13 @@ public class FragmentOne extends Fragment {
     private final static String KEY_TRIP_SEATS = "seats";
     private final static String KEY_TRIP_ID = "tripID";
     private final static String KEY_TRIP_DRIVER = "driver";
+    private final static String KEY_USER_ID = "userID";
     private final static String KEY_TRIP_DRIVER_NUMBER = "number";
     private final static String KEY_TRIP_DRIVER_RATING = "rating";
     private final static String KEY_TRIP_PRICE = "tripprice";
 
 
-    String userLocation;
+    private static String userLocation, userID;
 
 
     @Override
@@ -68,15 +73,18 @@ public class FragmentOne extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_one, container, false);
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
         userLocation = prefs.getString(KEY_USER_LOCATION, null);
+        userID = prefs.getString(KEY_USER_ID, null);
 
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
-        citySearch = (SearchView) rootView.findViewById(R.id.citySearch);
-        invalidCity = (TextView) rootView.findViewById(R.id.invalidCity);
-        searchSpinner = (Spinner) rootView.findViewById(R.id.searchSpinner);
+        // main view elements
 
+        mRecyclerView = rootView.findViewById(R.id.recyclerView);
+        citySearch = rootView.findViewById(R.id.citySearch);
+        invalidCity = rootView.findViewById(R.id.invalidCity);
+        searchSpinner = rootView.findViewById(R.id.searchSpinner);
+
+        // setting up the recycler view to display the trips
 
         mAdapter = new TripAdapter(tripsList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
@@ -92,15 +100,19 @@ public class FragmentOne extends Fragment {
         sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         searchSpinner.setAdapter(sortAdapter);
         searchSpinner.setSelection(0);
-        sortSelection = searchSpinner.getSelectedItem().toString();
 
 
         searchSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                sortSelection = searchSpinner.getSelectedItem().toString();
                 if (!citySearch.getQuery().toString().isEmpty()) {
-                    prepareTripData(citySearch.getQuery().toString());
+                    if (searchSpinner.getSelectedItem().toString().equals(getResources().getString(R.string.sort_time))) {
+                        searchSpinner.clearFocus();
+                        prepareTripData(citySearch.getQuery().toString(), "date");
+                    } else {
+                        searchSpinner.clearFocus();
+                        prepareTripData(citySearch.getQuery().toString(), "price");
+                    }
                 }
             }
 
@@ -128,14 +140,18 @@ public class FragmentOne extends Fragment {
             }
 
             public void callSearch(String query) {
-                // This is where the method search is done
                 if (userLocation == null) {
+                    // shows a snackbar in order to tell the user to set their location
                     Snackbar setLocation = Snackbar.make(getActivity().findViewById(android.R.id.content), "You must set your location in the accounts menu!", Snackbar.LENGTH_LONG * 2);
                     setLocation.setAction("Update", new snackBarInfo());
                     setLocation.show();
 
                 } else {
-                    prepareTripData(query);
+                    if (searchSpinner.getSelectedItem().toString().equals(getResources().getString(R.string.sort_time))) {
+                        prepareTripData(citySearch.getQuery().toString(), "date");
+                    } else {
+                        prepareTripData(citySearch.getQuery().toString(), "price");
+                    }
                 }
 
             }
@@ -144,7 +160,6 @@ public class FragmentOne extends Fragment {
 
 
         // Click listener for trip selection
-        // TODO open and populate the trip activity when this is selected
         mRecyclerView.addOnItemTouchListener(new RecyclerTouchListener(getActivity().getApplicationContext(), mRecyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -171,132 +186,96 @@ public class FragmentOne extends Fragment {
             }
         }));
 
-
         return rootView;
     }
 
+
+
+    // If the user moves to the TripActivity and joins the trip, this will clear the front page when they go back
+    @Override
+    public void onResume() {
+        super.onResume();
+        citySearch.setQuery("", false);
+        citySearch.clearFocus();
+        tripsList.clear();
+        mAdapter.notifyDataSetChanged();
+    }
+
+
     /**
-     * Updates the trip information
+     * Queries trips based on the destination that the user inputted.
+     * Two options: Query based on trip time, or lowest price.
+     *
+     * @param destination the desired trip destination
+     * @param searchType  date or price based on the criteria discussed above
      */
-    private void prepareTripData(String destination) {
+    private void prepareTripData(String destination, String searchType) {
 
         tripsList.clear();
 
+        HttpUtils.get("trips/" + userLocation + "/" + destination + "/" + userID + "/" + searchType, new RequestParams(), new JsonHttpResponseHandler() {
+            @Override
+            public void onFinish() {
+                updateVisibility(false, true);
+            }
 
-        if (searchSpinner.getSelectedItem().toString().equals("Time (Ascending)")) {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
+                try {
+                    tripsList.clear();
 
+                    // parse all the data needed and put each trip one by one into the recycler view, if it is empty, display the error message
+                    for (int i = 0; i < response.length(); i++) {
+                        JSONObject obj = response.getJSONObject(i);
+                        String date = obj.getString("departureDate");
+                        String year = date.substring(0, 4);
+                        String remainder = date.substring(4, 8);
+                        String time = obj.getString("departureTime");
+                        JSONObject driver = obj.getJSONObject("driver");
+                        String driverName = driver.getString("name");
+                        String driverNumber = driver.getString("phoneNumber");
+                        Boolean tripComplete = obj.getBoolean("tripComplete");
 
-            HttpUtils.get("trips/" + userLocation + "/" + destination + "/date", new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public void onFinish() {
-                    updateVisibility(false, true);
-                }
+                        JSONArray ratingArray = driver.getJSONArray("ratings");
+                        double driverRating = 0.0;
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    try {
-                        tripsList.clear();
-
-
-                        for (int i = 0; i < response.length(); i++) {
-                            JSONObject obj = response.getJSONObject(i);
-                            String date = obj.getString("departureDate");
-                            String year = date.substring(0, 4);
-                            String remainder = date.substring(4, 8);
-                            String time = obj.getString("departureTime");
-                            JSONObject driver = obj.getJSONObject("driver");
-                            String driverName = driver.getString("name");
-                            String driverNumber = driver.getString("phoneNumber");
-                            Boolean tripComplete = obj.getBoolean("tripComplete");
-
-                            JSONArray ratingArray = driver.getJSONArray("ratings");
-                            double driverRating = 0.0;
-
-                            for(int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
-                                driverRating += ratingArray.getDouble(ratingCount);
-                            }
-                            driverRating/=ratingArray.length();
+                        for (int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
+                            driverRating += ratingArray.getDouble(ratingCount);
+                        }
+                        driverRating /= ratingArray.length();
 
 
-
-                            if (!tripComplete) {
-                                tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                        formatter(time, ":", 2), driverName, driverNumber, Double.toString(driverRating), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
-                            }
-
+                        if (!tripComplete) {
+                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                                    formatter(time, ":", 2), driverName, driverNumber, Double.toString(driverRating), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
                         }
 
-                        updateVisibility(true, false);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    updateVisibility(false, true);
-
-                }
-            });
-        } else {
-            HttpUtils.get("trips/" + userLocation + "/" + destination + "/date", new RequestParams(), new JsonHttpResponseHandler() {
-
-                @Override
-                public void onFinish() {
-                    updateVisibility(false, true);
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                    try {
-
-                        tripsList.clear();
+                    updateVisibility(true, false);
 
 
-
-                        for (int i = 0; i < response.length(); i++) {
-
-                            JSONObject obj = response.getJSONObject(i);
-                            String date = obj.getString("departureDate");
-                            String year = date.substring(0, 4);
-                            String remainder = date.substring(4, 8);
-                            String time = obj.getString("departureTime");
-                            Boolean tripComplete = obj.getBoolean("tripComplete");
-                            JSONObject driver = obj.getJSONObject("driver");
-                            String driverName = driver.getString("name");
-                            String driverNumber = driver.getString("phoneNumber");
-                            JSONArray ratingArray = driver.getJSONArray("ratings");
-                            double driverRating = 0.0;
-
-                            for(int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
-                                driverRating += ratingArray.getDouble(ratingCount);
-                            }
-                            driverRating/=ratingArray.length();
-
-
-
-                            if (!tripComplete) {
-                                tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                        formatter(time, ":", 2), driverName, driverNumber, Double.toString(driverRating), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
-                            }
-
-                        }
-                        updateVisibility(true, false);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    if (tripsList.isEmpty()) {
+                        updateVisibility(false, true);
                     }
+
+                    mAdapter.notifyDataSetChanged();
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+            }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    updateVisibility(false, true);
-                }
-            });
-        }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Toast.makeText(getActivity(), "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
+            }
+        });
 
 
-        mAdapter.notifyDataSetChanged();
     }
+
 
     /**
      * @param displayTrips if true, display recycler view
@@ -315,6 +294,7 @@ public class FragmentOne extends Fragment {
         }
 
     }
+
 
     /**
      * Used for date and time formatting
@@ -348,8 +328,7 @@ public class FragmentOne extends Fragment {
     private class snackBarInfo implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Fragment mFragment = null;
-            mFragment = new FragmentThree();
+            Fragment mFragment = new FragmentThree();
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .replace(R.id.frame_fragmentholder, mFragment).commit();
