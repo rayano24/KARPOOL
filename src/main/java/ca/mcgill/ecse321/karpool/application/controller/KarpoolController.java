@@ -830,12 +830,13 @@ public class KarpoolController {
 		String date1 = sdf.format(dateInput);        
 		String date2 = sdf.format(date);
 
-
 		try {
+			
 			if ((date1.compareTo(date2)) < 0) {
 				r.setError("Cannot set a date that has already passed");
 				r.setResponse(false);
 				return r;
+				
 			}
 			
 			else {	
@@ -846,10 +847,9 @@ public class KarpoolController {
 
 	} catch (NullPointerException e) {
 		System.out.println(ERROR_NOT_FOUND_MESSAGE);
-				r.setResponse(false);
-				return r;
 	}
-
+		r.setResponse(false);
+				return r;
 		}
 		
 		else {
