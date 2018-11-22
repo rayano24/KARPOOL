@@ -7,19 +7,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.io.NumberOutput;
-
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
 @RestController
-//@CrossOrigin
+@CrossOrigin
 public class KarpoolController {
 
 	public static final String ERROR_NOT_FOUND_MESSAGE = "NOT FOUND";
@@ -1185,7 +1183,6 @@ public class KarpoolController {
 			return r;
 		}
 	}
-	
 
 	/**
 	 * This method marks a trip as completed
@@ -1193,9 +1190,12 @@ public class KarpoolController {
 	 * @throws ParseException 
 	 */
 	@PostMapping("/trips/close/{tripID}")
-	public void closeTrip(@PathVariable("tripID")int tripID) throws ParseException
+	public Response closeTrip(@PathVariable("tripID")int tripID) throws ParseException
 	{
 		repository.closeTrip(tripID);
+		Response r = new Response();
+		r.setResponse(true);
+		return r;
 	}
 	
 	/**
@@ -1206,10 +1206,13 @@ public class KarpoolController {
 	 * @throws ParseException 
 	 */
 	@PostMapping("/trips/delete/{trip}")
-	public void deleteTrip(@PathVariable("trip")int tripID) throws ParseException
+	public Response deleteTrip(@PathVariable("trip")int tripID) throws ParseException
 	{
 		//TODO can only delete trip if the date hasnt passed yet
 		repository.deleteTrip(tripID);
+		Response r = new Response();
+		r.setResponse(true);
+		return r;
 	}
 
 	/*public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
