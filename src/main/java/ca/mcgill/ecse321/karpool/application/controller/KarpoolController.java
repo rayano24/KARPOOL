@@ -647,6 +647,42 @@ public class KarpoolController {
 		}
 		return actPassengers;
 	}
+	
+	@GetMapping("/passengers/top3")
+	public ArrayList<Passenger> getTopPassengers()
+	{
+		Set<Trip> trip = new HashSet<Trip>();
+		List<Passenger> allPassengers = listAllPassengers();
+		ArrayList<Passenger> topThree = new ArrayList<Passenger>();
+		Passenger first = new Passenger();
+		first.setTrips(trip);
+		Passenger second = new Passenger();
+		second.setTrips(trip);
+		Passenger third = new Passenger();
+		third.setTrips(trip);
+		for(Passenger p: allPassengers)
+		{
+			if(p.getTrips().size() >= first.getTrips().size()) //#1
+			{
+				third = second;
+				second = first;
+				first = p;
+			}
+			else if(p.getTrips().size() >= second.getTrips().size()) //#2
+			{
+				third = second;
+				second = p;
+			}
+			else if(p.getTrips().size() >= third.getTrips().size()) //#3
+			{
+				third = p;
+			}
+		}
+		topThree.add(first);
+		topThree.add(second);
+		topThree.add(third);
+		return topThree;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////                                                                   /////////////////
