@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_FRAGMENT_SEARCH = "tag_frag_search";
     private static final String TAG_FRAGMENT_TRIPS = "tag_frag_trips";
-    private static final String TAG_FRAGMENT_SETTINGS = "tag_frag_settings";
+    private static final String TAG_FRAGMENT_ACCOUNT = "tag_frag_account";
 
     private String error = null;
 
@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_trips:
                     switchFragment(1, TAG_FRAGMENT_TRIPS);
                     return true;
-                case R.id.navigation_settings:
-                    switchFragment(2, TAG_FRAGMENT_SETTINGS);
+                case R.id.navigation_account:
+                    switchFragment(2, TAG_FRAGMENT_ACCOUNT);
                     return true;
             }
             return false;
@@ -78,11 +78,11 @@ public class MainActivity extends AppCompatActivity {
     private void buildFragmentsList() {
         FragmentOne searchFragment = buildFragmentOne(getResources().getString(R.string.title_search));
         FragmentTwo tripsFragment = buildFragmentTwo(getResources().getString(R.string.title_trips));
-        FragmentThree settingsFragment = buildFragmentThree(getResources().getString(R.string.title_settings));
+        FragmentThree accountFragment = buildFragmentThree(getResources().getString(R.string.title_account));
 
         fragments.add(searchFragment);
         fragments.add(tripsFragment);
-        fragments.add(settingsFragment);
+        fragments.add(accountFragment);
     }
 
     private FragmentOne buildFragmentOne(String title) {

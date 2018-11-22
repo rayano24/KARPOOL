@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_FRAGMENT_CREATE = "tag_frag_create";
     private static final String TAG_FRAGMENT_TRIPS = "tag_frag_trips";
-    private static final String TAG_FRAGMENT_OTHER = "tag_frag_other";
+    private static final String TAG_FRAGMENT_ACCOUNT = "tag_frag_account";
 
     private List<String> participantNames = new ArrayList<>();
     private ArrayAdapter<String> participantAdapter;
@@ -51,8 +51,8 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_trips:
                     switchFragment(1, TAG_FRAGMENT_TRIPS);
                     return true;
-                case R.id.navigation_other:
-                    switchFragment(2, TAG_FRAGMENT_OTHER);
+                case R.id.navigation_account:
+                    switchFragment(2, TAG_FRAGMENT_ACCOUNT);
                     return true;
             }
             return false;
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         buildFragmentsList();
@@ -91,13 +91,13 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void buildFragmentsList() {
-        FragmentOne homeFragment = buildFragmentOne("Create");
-        FragmentTwo dashboardFragment = buildFragmentTwo("My Trips");
-        FragmentThree notificationsFragment = buildFragmentThree("Other");
+        FragmentOne createFragment = buildFragmentOne("Create");
+        FragmentTwo tripFragment = buildFragmentTwo("My Trips");
+        FragmentThree accountFragment = buildFragmentThree("Account");
 
-        fragments.add(homeFragment);
-        fragments.add(dashboardFragment);
-        fragments.add(notificationsFragment);
+        fragments.add(createFragment);
+        fragments.add(tripFragment);
+        fragments.add(accountFragment);
     }
 
     private FragmentOne buildFragmentOne(String title) {

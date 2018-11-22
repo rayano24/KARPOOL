@@ -50,15 +50,15 @@ public class FragmentOne extends Fragment {
         userID = prefs.getString(KEY_USER, null);
 
 
-        tripTimeButton = (Button) rootView.findViewById(R.id.newTime);
-        tripDateButton = (Button) rootView.findViewById(R.id.newDate);
-        createButton = (Button) rootView.findViewById(R.id.createButton);
-        dateLabel = (TextView) rootView.findViewById(R.id.dateLabel);
-        timeLabel = (TextView) rootView.findViewById(R.id.timeLabel);
-        newPrice = (EditText) rootView.findViewById(R.id.newPrice);
-        newDestination = (EditText) rootView.findViewById(R.id.newDestination);
-        newSeats = (EditText) rootView.findViewById(R.id.newSeats);
-        newOrigin = (EditText) rootView.findViewById(R.id.newOrigin);
+        tripTimeButton = rootView.findViewById(R.id.newTime);
+        tripDateButton = rootView.findViewById(R.id.newDate);
+        createButton = rootView.findViewById(R.id.createButton);
+        dateLabel = rootView.findViewById(R.id.dateLabel);
+        timeLabel = rootView.findViewById(R.id.timeLabel);
+        newPrice = rootView.findViewById(R.id.newPrice);
+        newDestination = rootView.findViewById(R.id.newDestination);
+        newSeats = rootView.findViewById(R.id.newSeats);
+        newOrigin = rootView.findViewById(R.id.newOrigin);
 
 
         createButton.setOnClickListener(new View.OnClickListener() {

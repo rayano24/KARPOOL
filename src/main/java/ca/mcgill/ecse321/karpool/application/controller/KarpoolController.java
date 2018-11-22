@@ -517,6 +517,10 @@ public class KarpoolController {
 			System.out.println("You are already on this trip");
 			return null;
 		}
+		else if (t.isTripComplete() == true) {
+			System.out.println("This trip is already complete");
+			return null;
+		}
 		else {
 			repository.addPassengerToTrip(p, t);
 		}	
@@ -844,7 +848,12 @@ public class KarpoolController {
 	@PostMapping("/trips/{tripID}/date/{date}")
 	public Response modifyTripDate(@PathVariable("tripID")int tripID, @PathVariable("date")String departureDate) throws ParseException
 	{
+		
+		Trip t = repository.getSpecificTrip(tripID);
 		Response r = new Response();
+		
+		if(t.getPassenger().size() == 0) {
+		
 
 		Date date = new Date();
 
@@ -853,17 +862,15 @@ public class KarpoolController {
 		String date1 = sdf.format(dateInput);        
 		String date2 = sdf.format(date);
 
+
 		try {
-			
 			if ((date1.compareTo(date2)) < 0) {
 				r.setError("Cannot set a date that has already passed");
 				r.setResponse(false);
 				return r;
-				
 			}
 			
 			else {	
-			Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyDepartureDate(t, departureDate);
 			r.setResponse(true);
 			return r;
@@ -871,24 +878,46 @@ public class KarpoolController {
 
 	} catch (NullPointerException e) {
 		System.out.println(ERROR_NOT_FOUND_MESSAGE);
-	}
-		r.setResponse(false);
+				r.setResponse(false);
 				return r;
+	}
 
+		}
+		
+		else {
+			r.setError("Cannot Modify a trip once passengers have join");
+			r.setResponse(false);
+			return r;
+		}
 	}
 
 	@PostMapping("/trips/{tripID}/time/{time}")
 	public Response modifyTripTime(@PathVariable("tripID")int tripID, @PathVariable("time")String departureTime) throws ParseException 
 	{
 		Response r = new Response();
+		
+		Trip t = repository.getSpecificTrip(tripID);
+		
 
 		Date time = new Date();
+		Date date = new Date();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		Date dateInput = sdf.parse(t.getDepartureDate());
+		String date1 = sdf.format(dateInput);        
+		String date2 = sdf.format(date);
+
 		
 		SimpleDateFormat sdf2 = new SimpleDateFormat("HHmm");
 		Date timeInput = sdf2.parse(departureTime);
 		String time1 = sdf2.format(timeInput);
 		String time2 = sdf2.format(time);
+		
+		if(t.getPassenger().size() == 0) {
+		
 		try {
+		
+		if((date1.compareTo(date2)) <= 0) {  
 			
 			if ((time1.compareTo(time2)) < 0) {
 
@@ -898,18 +927,25 @@ public class KarpoolController {
 			}
 			
 			else {
-				Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyDepartureTime(t, departureTime);
 			r.setResponse(true);
 			return r;
 			
 			}
+		}
 			
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
 			r.setResponse(false);
 				return r;
+		}
+				
+		else {
+			r.setError("Cannot Modify a trip once passengers have join");
+			r.setResponse(false);
+			return r;
+		}
 
 	}
 
@@ -917,9 +953,10 @@ public class KarpoolController {
 	public Response modifyTripLocation(@PathVariable("tripID")int tripID, @PathVariable("location")String departureLocation) 
 	{
 		Response r = new Response();
+		Trip t = repository.getSpecificTrip(tripID);
 
+		if(t.getPassenger().size() == 0) {
 		try {
-			Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyTripLocation(t, departureLocation);
 			r.setResponse(true);
 			return r;
@@ -929,15 +966,27 @@ public class KarpoolController {
 		}
 			r.setResponse(false);
 				return r;
+		}
+		
+		else {
+			r.setError("Cannot Modify a trip once passengers have join");
+			r.setResponse(false);
+			return r;
+		}
+		
+		
 	}
 
 	@PostMapping("/trips/{tripID}/tripdestination/{destination}")
 	public Response modifyTripDestination(@PathVariable("tripID")int tripID, @PathVariable("destination")String destination) 
 	{
+		Trip t = repository.getSpecificTrip(tripID);
+		
 		Response r = new Response();
-
+		
+		if(t.getPassenger().size() == 0) {
 		try {
-			Trip t = repository.getSpecificTrip(tripID);
+			
 			repository.modifyTripDestination(t, destination);
 			r.setResponse(true);
 			return r;
@@ -947,15 +996,25 @@ public class KarpoolController {
 		}
 			r.setResponse(false);
 				return r;
+		}
+		
+		else {
+			r.setError("Cannot Modify a trip once passengers have join");
+			r.setResponse(false);
+			return r;
+		}
 	}
 
 	@PostMapping("/trips/{tripID}/tripprice/{price}")
 	public Response modifyTripPrice(@PathVariable("tripID")int tripID, @PathVariable("price")int price) 
 	{
 		Response r = new Response();
+		Trip t = repository.getSpecificTrip(tripID);
+		
+		
+		if(t.getPassenger().size() == 0) {
 
 		try {
-			Trip t = repository.getSpecificTrip(tripID);
 			repository.modifyTripPrice(t, price);
 			r.setResponse(true);
 			return r;
@@ -965,15 +1024,24 @@ public class KarpoolController {
 		}
 			r.setResponse(false);
 				return r;
+		}
+		
+		else {
+			r.setError("Cannot Modify a trip once passengers have join");
+			r.setResponse(false);
+			return r;
+		}
+		
 	}
 
 	@PostMapping("/trips/{tripID}/seats/{seats}")
 	public Response modifyTripSeats(@PathVariable("tripID")int tripID, @PathVariable("seats")int seatAvailable) 
 	{
 		Response r = new Response();
+		Trip t = repository.getSpecificTrip(tripID);
 
+		if(t.getPassenger().size() == 0) {
 		try {
-			Trip t = repository.getSpecificTrip(tripID);
 			repository.modifySeatAvailable(t, seatAvailable);
 			r.setResponse(true);
 			return r;
@@ -984,7 +1052,15 @@ public class KarpoolController {
 		}
 			r.setResponse(false);
 				return r;
+		}
+				
+		else {
+			r.setError("Cannot Modify a trip once passengers have join");
+			r.setResponse(false);
+			return r;
+		}
 	}
+	
 
 	/**
 	 * This method marks a trip as completed
