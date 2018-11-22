@@ -831,8 +831,7 @@ public class KarpoolController {
 		String date2 = sdf.format(date);
 
 		try {
-			
-			if ((date1.compareTo(date2)) < 0) {
+			if ((date1.compareTo(date2)) > 0) {
 				r.setError("Cannot set a date that has already passed");
 				r.setResponse(false);
 				return r;
