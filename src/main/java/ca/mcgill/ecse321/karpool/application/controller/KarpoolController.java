@@ -1235,11 +1235,19 @@ public class KarpoolController {
 	@PostMapping("/trips/close/{tripID}")
 	public Response closeTrip(@PathVariable("tripID")int tripID) throws ParseException
 	{
-		repository.closeTrip(tripID);
 		Response r = new Response();
+		try {
+		repository.closeTrip(tripID);
+
 		r.setResponse(true);
 		return r;
+		} catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
+			r.setResponse(false);
+				return r;
 	}
+	
 	
 	/**
 	 * This method deletes a trip from the repository. Used when a driver deletes a trip before
