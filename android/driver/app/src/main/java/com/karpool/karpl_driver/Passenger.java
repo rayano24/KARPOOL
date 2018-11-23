@@ -1,5 +1,8 @@
 package com.karpool.karpl_driver;
 
+/**
+ * Constructor for the passenger class used in the passenger recycler view
+ */
 public class Passenger {
 
     private String name, number;

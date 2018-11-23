@@ -81,7 +81,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private Button signInPrompt, registerPrompt, signInButton, registerButton;
     private AutoCompleteTextView signInName, registerEmail, registerPhone;
     private EditText signInPassword, registerName, registerPassword;
-    private CheckBox record;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -293,12 +292,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
+        if (TextUtils.isEmpty(name)) {
+            registerName.setError(getString(R.string.error_field_required));
+            focusView = registerName;
+            cancel = true;
+        }
 
-        if (TextUtils.isEmpty(password)) {
-            registerPassword.setError(getString(R.string.error_field_required));
+        if (TextUtils.isEmpty(email)) {
+            registerEmail.setError(getString(R.string.error_field_required));
             focusView = registerEmail;
             cancel = true;
         }
+
 
         if (TextUtils.isEmpty(phoneNumber)) {
             registerPhone.setError(getString(R.string.error_field_required));
@@ -306,12 +311,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            registerEmail.setError(getString(R.string.error_field_required));
-            focusView = registerEmail;
+        if (TextUtils.isEmpty(password)) {
+            registerPassword.setError(getString(R.string.error_field_required));
+            focusView = registerPassword;
             cancel = true;
         }
+
+
 
 
         if (cancel) {
@@ -516,7 +522,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         Intent I = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(I);
                         finish();
-
                     } else {
                         showSignInProgress(false);
                         Toast.makeText(LoginActivity.this, response.getString("error"),
@@ -559,12 +564,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    if (!response.getString("name").isEmpty()) {
+                    showRegistrationProgress(false);
+                    if (!response.isNull("name")) {
                         setElementVisibility("register", true);
-
-
                     } else {
-
+                        showRegistrationProgress(false);
+                        Toast.makeText(LoginActivity.this, response.getString("error"), Toast.LENGTH_LONG).show(); // log in error
 
                     }
                 } catch (JSONException e) {

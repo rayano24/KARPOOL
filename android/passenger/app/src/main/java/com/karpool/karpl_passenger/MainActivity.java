@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles switching fragments
+ * This class is responsible for handling the bottom navigation view and switching between fragments based on nav selections.
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG_FRAGMENT_TRIPS = "tag_frag_trips";
     private static final String TAG_FRAGMENT_ACCOUNT = "tag_frag_account";
 
-    private String error = null;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -58,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         switchFragment(0, TAG_FRAGMENT_SEARCH);
-
-
 
     }
 

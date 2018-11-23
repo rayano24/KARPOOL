@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">KARPÖÖL-Driver</string>
+    <string name="app_name">KARPOOL Driver</string>
 
 
     <!-- Strings related to login -->
@@ -16,15 +16,21 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
+        completions."</string>
 
-    </string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_create">Create</string>
     <string name="title_trips">My Trips</string>
     <string name="disclaimer_record">I attest to the fact that I have never been convicted of a crime. </string>
     <string name="title_account">Account</string>
     <string name="title_activity_splash">SplashActivity</string>
+
+    <!-- CREATE PAGE -->
+    <string name="create_trip_button">CREATE TRIP</string>
+    <string name="create_trip_date">Set Date</string>
+    <string name="create_trip_time">Set Time</string>
+
+
 
 
     <!-- Strings for my trips page -->

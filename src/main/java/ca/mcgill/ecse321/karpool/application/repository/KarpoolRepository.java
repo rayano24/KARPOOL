@@ -46,6 +46,7 @@ public class KarpoolRepository
 	@Transactional
 	public void addDriverRating(Driver driver, double rating) 
 	{
+
 		if (rating <= 5 && rating > 0) {
 			driver.addRating(rating);
 			entityManager.merge(driver);
@@ -284,7 +285,7 @@ public class KarpoolRepository
 		List<Integer> trips = q.getResultList();
 		return trips;
 	}
-	
+		
 	@Transactional
 	public List<Integer> getSortedTripsPrice(String start, String finish) 
 	{

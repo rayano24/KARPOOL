@@ -1,8 +1,6 @@
 package com.karpool.karpl_driver;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,10 +9,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -29,6 +23,10 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * This class is responsible for handling the bottom navigation view and switching between fragments based on nav selections.
+ * It also retrieves the driver's account rating as this reduces the appearance of refreshes.
+ */
 public class MainActivity extends AppCompatActivity {
 
 
@@ -58,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
                     switchFragment(1, TAG_FRAGMENT_TRIPS);
                     return true;
                 case R.id.navigation_account:
+                    final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+                    userID = prefs.getString(KEY_USER_ID, null);
+                    getUserRatingTask();
                     switchFragment(2, TAG_FRAGMENT_ACCOUNT);
                     return true;
             }
@@ -128,6 +129,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Gets the user's rating through a method that returns a driver object.
+     * Sets it to a preference in order to retrieve in fragment 3.
+     */
     public void getUserRatingTask() {
 
         HttpUtils.get("drivers/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
@@ -148,11 +153,13 @@ public class MainActivity extends AppCompatActivity {
                         for (int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
                             driverRating += ratingArray.getDouble(ratingCount);
 
-                            driverRating /= ratingArray.length();
-                            DecimalFormat df = new DecimalFormat("###.#");
-                            prefs.edit().putString(KEY_RATING, df.format(driverRating)).commit();
-
                         }
+
+                        driverRating /= ratingArray.length();
+                        DecimalFormat df = new DecimalFormat("###.#");
+                        prefs.edit().putString(KEY_RATING, df.format(driverRating)).commit();
+
+
                     } else {
                         prefs.edit().putString(KEY_RATING, null).commit();
                     }

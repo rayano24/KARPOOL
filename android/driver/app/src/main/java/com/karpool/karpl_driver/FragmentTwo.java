@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -27,10 +28,11 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * Displays the user's trips and allows them to open an individual trip as an instance of TripActivity
+ */
 public class FragmentTwo extends Fragment {
 
-
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private List<Trip> upcomingTripsList = new ArrayList<>();
     private List<Trip> pastTripsList = new ArrayList<>();
@@ -39,9 +41,9 @@ public class FragmentTwo extends Fragment {
 
     private TextView noPastTrips, noUpcomingTrips;
 
-    private String userID;
+    private static String userID;
+
     // the keys correspond to the modify mappings in the controller
-    // todo please fix the mapping names because they are not nice
     private final static String KEY_TRIP_DESTINATION = "tripdestination";
     private final static String KEY_TRIP_TIME = "time";
     private final static String KEY_TRIP_DATE = "date";
@@ -53,7 +55,6 @@ public class FragmentTwo extends Fragment {
     private final static String KEY_TRIP_FRAG_MODE = "tripMode";
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,13 +63,14 @@ public class FragmentTwo extends Fragment {
         userID = prefs.getString(KEY_USER, null);
 
 
+        // setting up recycler views for upcoming/past trips
+
         upcomingRecyclerView = rootView.findViewById(R.id.myTripsRecyclerView);
         pastRecyclerView = rootView.findViewById(R.id.myOldTripsRecyclerView);
 
 
         noPastTrips = rootView.findViewById(R.id.noPastTrips);
         noUpcomingTrips = rootView.findViewById(R.id.noUpcomingTrips);
-
 
 
         upcomingAdapter = new TripAdapter(upcomingTripsList);
@@ -133,31 +135,30 @@ public class FragmentTwo extends Fragment {
             }
         }));
 
-
-
-
-
-        displayTrips(userID);
+        // async task
+        displayTrips();
 
 
         return rootView;
     }
 
+
+    // done in case the user closes a trip in an instance of TripActivity to refresh data
     @Override
     public void onResume() {
         super.onResume();
-        displayTrips(userID);
-
+        displayTrips();
     }
 
 
     /**
-     * Represents an asynchronous task to get the trip info
+     * Represents an asynchronous task that gets the trips for a user.
+     * If the tripComplete flag is set to true, the trip will be added to past trips.
+     * If the tripList is empty, a notice will be raised.
      */
+    public void displayTrips() {
 
-    public void displayTrips(String mUser) {
-
-        HttpUtils.get("trips/drivers/" + mUser, new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.get("trips/drivers/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onFinish() {
@@ -169,6 +170,8 @@ public class FragmentTwo extends Fragment {
                     upcomingTripsList.clear();
                     pastTripsList.clear();
 
+                    // parsing data from each trip in the array to create a new Trip object for the recycler view
+
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject obj = response.getJSONObject(i);
                         String date = obj.getString("departureDate");
@@ -177,43 +180,48 @@ public class FragmentTwo extends Fragment {
                         String time = obj.getString("departureTime");
                         JSONObject driver = obj.getJSONObject("driver");
                         String driverName = driver.getString("name");
-
                         Boolean tripStatus = obj.getBoolean("tripComplete");
+                        // cities such as new york are entered into the database as new_york as the space cannot be parsed into a URL, this removes the underscore for user viewing
+                        String origin = obj.getString("departureLocation").replaceAll("_", " ");
+                        String destination = obj.getString("destination").replaceAll("_", " ");
 
 
-                        if (!tripStatus) {
-                            upcomingTripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                        if (!tripStatus) { // trip has not occurred
+                            upcomingTripsList.add(new Trip(origin, destination, year + "-" + formatter(remainder, "-", 2),
+                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
+                        } else {
+                            pastTripsList.add(new Trip(origin, destination, year + "-" + formatter(remainder, "-", 2),
                                     formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
                         }
-                        else {
-                            pastTripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
-                                    formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
-                        }
 
-                        upcomingAdapter.notifyDataSetChanged();
-                        pastAdapter.notifyDataSetChanged();
                     }
 
-                    if (upcomingTripsList.isEmpty())
-                        noUpcomingTrips.setVisibility(View.VISIBLE);
-
-                    if(pastTripsList.isEmpty())
-                        noPastTrips.setVisibility(View.VISIBLE);
 
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
 
+                upcomingAdapter.notifyDataSetChanged();
+                pastAdapter.notifyDataSetChanged();
+
+                if (upcomingTripsList.isEmpty())
+                    noUpcomingTrips.setVisibility(View.VISIBLE);
+
+
+                if (pastTripsList.isEmpty())
+                    noPastTrips.setVisibility(View.VISIBLE);
+
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
+                Toast.makeText(getActivity(), "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
                 if (upcomingTripsList.isEmpty())
                     noUpcomingTrips.setVisibility(View.VISIBLE);
 
-                if(pastTripsList.isEmpty())
+                if (pastTripsList.isEmpty())
                     noPastTrips.setVisibility(View.VISIBLE);
 
 
@@ -221,9 +229,6 @@ public class FragmentTwo extends Fragment {
         });
 
     }
-
-
-
 
 
     /**

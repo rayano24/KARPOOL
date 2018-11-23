@@ -945,6 +945,24 @@ public class KarpoolController {
 		return fullTrip;
 	}
 	
+	@GetMapping("/trips/date/{date1}/{date2}")
+	public List<Trip> listTripsInTimeframe(@PathVariable("date1") String startDate, @PathVariable("date2") String endDate) {
+		List<Integer> trips = repository.getAllTrips();
+		List<Trip> tripsInTimeframe = new ArrayList<Trip>();
+		
+		for(int t: trips) {
+			Trip tempTrip = repository.getSpecificTrip(t);
+			
+			if((tempTrip.getDepartureDate()).compareTo(startDate) >= 0 && (tempTrip.getDepartureDate()).compareTo(endDate) <= 0) {
+				tripsInTimeframe.add(tempTrip);
+				
+			}
+		}
+		
+		return tripsInTimeframe;
+		
+	}
+	
 	@GetMapping("/trips/{tripID}")
 	public Trip getTripInfo(@PathVariable("tripID")int tripID)
 	{
@@ -1057,6 +1075,14 @@ public class KarpoolController {
 				r.setResponse(false);
 				return r;
 			}
+			
+			else {
+				repository.modifyDepartureTime(t, departureTime);
+				r.setResponse(true);
+				return r;
+				
+				}
+			
 		}
 			
 		else if ((date1.compareTo(date2)) < 0) {
@@ -1064,13 +1090,14 @@ public class KarpoolController {
 				r.setResponse(false);
 				return r;
 			}
-			
+		
 		else {
 			repository.modifyDepartureTime(t, departureTime);
 			r.setResponse(true);
 			return r;
 			
 			}
+			
 		
 			
 		} catch (NullPointerException e) {
@@ -1208,11 +1235,19 @@ public class KarpoolController {
 	@PostMapping("/trips/close/{tripID}")
 	public Response closeTrip(@PathVariable("tripID")int tripID) throws ParseException
 	{
-		repository.closeTrip(tripID);
 		Response r = new Response();
+		try {
+		repository.closeTrip(tripID);
+
 		r.setResponse(true);
 		return r;
+		} catch (NullPointerException e) {
+			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+		}
+			r.setResponse(false);
+				return r;
 	}
+	
 	
 	/**
 	 * This method deletes a trip from the repository. Used when a driver deletes a trip before
