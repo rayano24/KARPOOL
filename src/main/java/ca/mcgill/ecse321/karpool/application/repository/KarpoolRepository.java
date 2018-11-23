@@ -295,6 +295,15 @@ public class KarpoolRepository
 		List<Integer> trips = q.getResultList();
 		return trips;
 	}
+	
+	@Transactional
+	public List<String> getFrequentDestinations() 
+	{
+		Query q = entityManager.createNativeQuery("SELECT destination FROM trip ORDER BY destination");
+		@SuppressWarnings("unchecked")
+		List<String> trips = q.getResultList();
+		return trips;
+	}
 
 	@Transactional
 	public void closeTrip(int tripID)
