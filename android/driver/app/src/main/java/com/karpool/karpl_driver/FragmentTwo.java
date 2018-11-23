@@ -135,7 +135,7 @@ public class FragmentTwo extends Fragment {
             }
         }));
 
-
+        // async task
         displayTrips();
 
 
@@ -148,7 +148,6 @@ public class FragmentTwo extends Fragment {
     public void onResume() {
         super.onResume();
         displayTrips();
-
     }
 
 
@@ -195,20 +194,22 @@ public class FragmentTwo extends Fragment {
                                     formatter(time, ":", 2), driverName, Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
                         }
 
-                        upcomingAdapter.notifyDataSetChanged();
-                        pastAdapter.notifyDataSetChanged();
                     }
 
-                    if (upcomingTripsList.isEmpty())
-                        noUpcomingTrips.setVisibility(View.VISIBLE);
-
-                    if (pastTripsList.isEmpty())
-                        noPastTrips.setVisibility(View.VISIBLE);
 
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
+                upcomingAdapter.notifyDataSetChanged();
+                pastAdapter.notifyDataSetChanged();
+
+                if (upcomingTripsList.isEmpty())
+                    noUpcomingTrips.setVisibility(View.VISIBLE);
+
+                if (pastTripsList.isEmpty())
+                    noPastTrips.setVisibility(View.VISIBLE);
 
             }
 

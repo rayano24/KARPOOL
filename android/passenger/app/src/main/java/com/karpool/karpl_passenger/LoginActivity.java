@@ -302,7 +302,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         if (TextUtils.isEmpty(password)) {
             registerPassword.setError(getString(R.string.error_field_required));
-            focusView = registerEmail;
+            focusView = registerPassword;
             cancel = true;
         }
 

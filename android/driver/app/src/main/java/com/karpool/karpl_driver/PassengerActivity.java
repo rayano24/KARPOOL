@@ -99,7 +99,7 @@ public class PassengerActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                if (passengerList.size() == 0) {
+                if (passengerList.isEmpty()) {
                     noPassengersJoined.setVisibility(View.VISIBLE);
 
                 }
@@ -111,6 +111,9 @@ public class PassengerActivity extends Activity {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                if (passengerList.isEmpty()) {
+                    noPassengersJoined.setVisibility(View.VISIBLE);
+                }
                 Toast.makeText(PassengerActivity.this, "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
 
 

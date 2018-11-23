@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles switching fragments
+ * This class is responsible for handling the bottom navigation view and switching between fragments based on nav selections.
  */
 public class MainActivity extends AppCompatActivity {
 

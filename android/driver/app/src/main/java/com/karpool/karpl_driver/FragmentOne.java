@@ -4,11 +4,12 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,15 +36,14 @@ import cz.msebera.android.httpclient.Header;
  */
 public class FragmentOne extends Fragment {
 
-    private Button tripTimeButton, tripDateButton, createButton;
-    protected static TextView dateLabel, timeLabel;
+    private Button createButton;
     private static String date, time; // FOR DATABASE
     private EditText newDestination, newPrice, newSeats, newOrigin;
+    private static TextView newTime, newDate;
 
 
     private static String userID;
     private final static String KEY_USER = "userID";
-
 
 
     @Override
@@ -54,34 +54,26 @@ public class FragmentOne extends Fragment {
         userID = prefs.getString(KEY_USER, null);
 
 
-        tripTimeButton = rootView.findViewById(R.id.newTime);
-        tripDateButton = rootView.findViewById(R.id.newDate);
         createButton = rootView.findViewById(R.id.createButton);
-        dateLabel = rootView.findViewById(R.id.dateLabel);
-        timeLabel = rootView.findViewById(R.id.timeLabel);
-        newPrice = rootView.findViewById(R.id.newPrice);
-        newDestination = rootView.findViewById(R.id.newDestination);
-        newSeats = rootView.findViewById(R.id.newSeats);
-        newOrigin = rootView.findViewById(R.id.newOrigin);
+        newPrice = rootView.findViewById(R.id.newTripPrice);
+        newDestination = rootView.findViewById(R.id.newTripDestination);
+        newSeats = rootView.findViewById(R.id.newTripSeats);
+        newOrigin = rootView.findViewById(R.id.newTripOrigin);
+        newTime = rootView.findViewById(R.id.newTripTime);
+        newDate = rootView.findViewById(R.id.newTripDate);
+
 
 
         // starts async task
         createButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                try {
-                    createTripTask(userID, newOrigin.getText().toString(), newDestination.getText().toString(), Integer.parseInt(
-                            newSeats.getText().toString()), time, date, Integer.parseInt(newPrice.getText().toString()));
-                }
-                catch(NumberFormatException | NullPointerException e ) {
-                    Toast.makeText(getActivity(), "One or more of your inputs were invalid.", Toast.LENGTH_LONG).show(); // generic error message
-                }
-
-
+                attemptTripCreation(userID, newOrigin.getText().toString(), newDestination.getText().toString(),
+                        newSeats.getText().toString(), time, date, newPrice.getText().toString());
             }
         });
 
         // set date
-        tripDateButton.setOnClickListener(new View.OnClickListener() {
+        newDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 DialogFragment newFragment = new DatePickerFragment();
                 newFragment.show(getFragmentManager(), "datePicker");
@@ -91,7 +83,7 @@ public class FragmentOne extends Fragment {
 
 
         // set time
-        tripTimeButton.setOnClickListener(new View.OnClickListener() {
+        newTime.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getFragmentManager(), "timePicker");
@@ -106,15 +98,44 @@ public class FragmentOne extends Fragment {
 
 
     /**
+     * Makes sure that all user-entered fields are filled
+     *
+     * @param mUser        needed for tripCreationTask
+     * @param mOrigin      checks if the entered origin is empty
+     * @param mDestination checks if the entered destination is empty
+     * @param mSeats       checks if the entered number of seats is empty
+     * @param mTime        checks if a time was selected with time picker
+     * @param mDate        checks if a date was selected with date picker
+     * @param mPrice       checks if the entered price is empty
+     */
+
+    private void attemptTripCreation(String mUser, String mOrigin, String mDestination, String mSeats, String mTime, String mDate, String mPrice) {
+
+        Boolean cancel = false;
+
+
+        if ((TextUtils.isEmpty(mOrigin.trim())) || TextUtils.isEmpty(mDestination.trim()) || TextUtils.isEmpty(mSeats.trim()) || TextUtils.isEmpty(mSeats.trim()) || date == null || time == null) {
+            Toast.makeText(getActivity(), "You cannot leave any fields blank!", Toast.LENGTH_LONG).show();
+            cancel = true;
+        }
+
+        if (!cancel) {
+            createTripTask(mUser, mOrigin, mDestination, Integer.parseInt(mSeats), mTime, mDate, Integer.parseInt(mPrice));
+        }
+
+    }
+
+
+    /**
      * Represents an asynchronous task that allows a user to create a trip
      *
-     * @param mUser userID of the user creating the trip
-     * @param mOrigin trip origin
+     * @param mUser        userID of the user creating the trip
+     * @param mOrigin      trip origin
      * @param mDestination trip destination
-     * @param mSeats number of seats
-     * @param mTime trip time
-     * @param mDate trip date
-     * @param mPrice price per individual
+     * @param mSeats       number of seats
+     * @param mTime        trip time
+     * @param mDate        trip date
+     * @param mPrice       price per individual
      */
     public void createTripTask(String mUser, String mOrigin, String mDestination, int mSeats, String mTime, String mDate, int mPrice) {
 
@@ -128,15 +149,12 @@ public class FragmentOne extends Fragment {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    if (!response.getString("destination").isEmpty()) {
+                    if (!response.isNull("destination")) {
                         clearFields();
 
 
                     } else {
-
-
-
-
+                        Toast.makeText(getActivity(), response.getString("error"), Toast.LENGTH_LONG).show(); //  show error
                     }
 
 
@@ -144,6 +162,7 @@ public class FragmentOne extends Fragment {
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
@@ -177,8 +196,7 @@ public class FragmentOne extends Fragment {
 
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             time = convertDate(hourOfDay) + convertDate(minute);
-            timeLabel.setText(convertDate(hourOfDay) + ":" + convertDate(minute));
-            timeLabel.setVisibility(View.VISIBLE);
+            newTime.setText(convertDate(hourOfDay) + ":" + convertDate(minute));
         }
 
 
@@ -212,8 +230,7 @@ public class FragmentOne extends Fragment {
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
             date = Integer.toString(year) + convertDate(month + 1) + convertDate(day);
-            dateLabel.setText(Integer.toString(year) + "-" + convertDate(month + 1) + "-" + convertDate(day));
-            dateLabel.setVisibility(View.VISIBLE);
+            newDate.setText(Integer.toString(year) + "-" + convertDate(month + 1) + "-" + convertDate(day));
 
         }
     }
@@ -246,8 +263,8 @@ public class FragmentOne extends Fragment {
         newDestination.clearFocus();
         newPrice.clearFocus();
         newSeats.clearFocus();
-        timeLabel.setVisibility(View.INVISIBLE);
-        dateLabel.setVisibility(View.INVISIBLE);
+        newDate.setText(getString(R.string.create_trip_date));
+        newTime.setText(getString(R.string.create_trip_time));
 
 
     }

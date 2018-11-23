@@ -216,6 +216,9 @@ public class TripActivity extends AppCompatActivity {
                         if (response.getBoolean("response")) {
                             updateView(category, newValue); //  updates the UI with the new value
 
+                        } else {
+                            Toast.makeText(TripActivity.this, response.getString("error"), Toast.LENGTH_LONG).show(); // generic network error
+
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -248,6 +251,9 @@ public class TripActivity extends AppCompatActivity {
                     try {
                         if (response.getBoolean("response")) {
                             updateView(category, newValue);
+
+                        } else {
+                            Toast.makeText(TripActivity.this, response.getString("error"), Toast.LENGTH_LONG).show(); // generic network error
 
                         }
                     } catch (JSONException e) {
@@ -283,12 +289,9 @@ public class TripActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                //todo
                 finish();
 
-
             }
-
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
@@ -303,7 +306,7 @@ public class TripActivity extends AppCompatActivity {
 
 
     /**
-     * Opens the dialog for modifying a textEdit
+     * Opens the dialog for modifying a TextView. Launches an async task after the user updates the data.
      *
      * @param text        the text to modify
      * @param title       the title of the alert

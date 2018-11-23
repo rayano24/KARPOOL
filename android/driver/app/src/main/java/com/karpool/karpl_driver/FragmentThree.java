@@ -26,6 +26,9 @@ import java.text.DecimalFormat;
 import cz.msebera.android.httpclient.Header;
 
 
+/**
+ * Displays the user's rating, gives them the option to sign out, or view the help menu.
+ */
 public class FragmentThree extends Fragment {
 
 
@@ -60,7 +63,11 @@ public class FragmentThree extends Fragment {
         });
 
         userID = prefs.getString(KEY_USER_ID, null);
+
+        // the rating retrieval is done in the main activity in order to avoid the look of refreshing
+
         userRating = prefs.getString(KEY_RATING, null);
+
 
 
         if (userRating != null) {
