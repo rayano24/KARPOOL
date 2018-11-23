@@ -1,9 +1,11 @@
 package com.karpool.karpl_driver;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +23,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.InputType;
 import android.text.format.DateFormat;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +74,7 @@ public class TripActivity extends AppCompatActivity {
 
     // UI elements
 
-    private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats, noPassengersJoined;
+    private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats;
     private static TextView modifyDate, modifyTime;
     private Button deleteButton, viewPassengerButton, closeButton;
     private static String date, time; // FOR DATABASE
@@ -122,7 +125,6 @@ public class TripActivity extends AppCompatActivity {
         closeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setTripStatus("close");
-
             }
         });
 
@@ -201,6 +203,8 @@ public class TripActivity extends AppCompatActivity {
     public void modifyTripTask(final String newValue, final String category) {
 
 
+
+        // this has its own section as it needs to be parsed as  an int
         if (category.equals(KEY_TRIP_PRICE) || category.equals(KEY_TRIP_SEATS)) {
 
             HttpUtils.post("trips/" + Integer.parseInt(tripID) + "/" + category + "/" + Integer.parseInt(newValue), new RequestParams(), new JsonHttpResponseHandler() {
@@ -235,10 +239,13 @@ public class TripActivity extends AppCompatActivity {
                 }
 
             });
-        } else {
+
+            //TODO
+            // this has a separate section due to a static call. since date/time picker fragments are static, a new instance of TripActivity is created which means a toast cannot be created.
+        } else if (category.equals(KEY_TRIP_DATE) || category.equals(KEY_TRIP_TIME)) {
 
 
-            HttpUtils.post("trips/" + Integer.parseInt(tripID) + "/" + category + "/" + newValue, new RequestParams(), new JsonHttpResponseHandler() {
+            HttpUtils.post("trips/" + Integer.parseInt(tripID) + "/" + category + "/" + newValue.trim().replaceAll(" ", "_"), new RequestParams(), new JsonHttpResponseHandler() {
 
 
                 @Override
@@ -247,14 +254,45 @@ public class TripActivity extends AppCompatActivity {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                    // TODO
                     try {
                         if (response.getBoolean("response")) {
                             updateView(category, newValue);
 
                         } else {
-                            Toast.makeText(TripActivity.this, response.getString("error"), Toast.LENGTH_LONG).show(); // generic network error
+                        }
 
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+
+                }
+
+            });
+        }
+
+        else {
+            HttpUtils.post("trips/" + Integer.parseInt(tripID) + "/" + category + "/" + newValue.trim().replaceAll(" ", "_"), new RequestParams(), new JsonHttpResponseHandler() {
+
+
+                @Override
+                public void onFinish() {
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    try {
+                        if (response.getBoolean("response")) {
+                            updateView(category, newValue);
+
+                        } else {
+                            Toast.makeText(TripActivity.this, response.getString("error"), Toast.LENGTH_LONG).show();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -271,6 +309,7 @@ public class TripActivity extends AppCompatActivity {
                 }
 
             });
+
         }
     }
 
@@ -282,14 +321,21 @@ public class TripActivity extends AppCompatActivity {
      */
     public void setTripStatus(String status) {
 
-        HttpUtils.post("trips/" + status + "/" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.post("trips/" + status + "/" + Integer.parseInt(tripID), new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onFinish() {
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                finish();
+                try {
+                    if (response.getBoolean("response")) {
+                        finish();
+                    }
+                }
+                catch(JSONException e) {
+
+                }
 
             }
             @Override

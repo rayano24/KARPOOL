@@ -72,9 +72,9 @@ public class FragmentThree extends Fragment {
         userNote.setText("Welcome " + prefs.getString(KEY_USER_ID, null));
 
 
-        if (location != null) {
+        if (location != null && !location.trim().isEmpty()) {
             userLocation.setText(location);
-        } else if (location == null || location.equals(" ")) {
+        } else {
             userLocation.setText("Enter your location here");
         }
 

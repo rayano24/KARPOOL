@@ -81,7 +81,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private Button signInPrompt, registerPrompt, signInButton, registerButton;
     private AutoCompleteTextView signInName, registerEmail, registerPhone;
     private EditText signInPassword, registerName, registerPassword;
-    private CheckBox record;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -299,12 +298,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-
-        if (TextUtils.isEmpty(password)) {
-            registerPassword.setError(getString(R.string.error_field_required));
-            focusView = registerPassword;
+        if (TextUtils.isEmpty(email)) {
+            registerEmail.setError(getString(R.string.error_field_required));
+            focusView = registerEmail;
             cancel = true;
         }
+
 
         if (TextUtils.isEmpty(phoneNumber)) {
             registerPhone.setError(getString(R.string.error_field_required));
@@ -312,12 +311,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            registerEmail.setError(getString(R.string.error_field_required));
-            focusView = registerEmail;
+        if (TextUtils.isEmpty(password)) {
+            registerPassword.setError(getString(R.string.error_field_required));
+            focusView = registerPassword;
             cancel = true;
         }
+
+
 
 
         if (cancel) {
@@ -564,6 +564,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
+                    showRegistrationProgress(false);
                     if (!response.isNull("name")) {
                         setElementVisibility("register", true);
                     } else {

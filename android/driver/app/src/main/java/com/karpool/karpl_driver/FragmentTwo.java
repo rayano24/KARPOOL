@@ -208,6 +208,7 @@ public class FragmentTwo extends Fragment {
                 if (upcomingTripsList.isEmpty())
                     noUpcomingTrips.setVisibility(View.VISIBLE);
 
+
                 if (pastTripsList.isEmpty())
                     noPastTrips.setVisibility(View.VISIBLE);
 

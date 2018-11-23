@@ -209,6 +209,7 @@ public class FragmentTwo extends Fragment {
                         for (int ratingCount = 0; ratingCount < ratingArray.length(); ratingCount++) {
                             driverRating += ratingArray.getDouble(ratingCount);
                         }
+
                         driverRating /= ratingArray.length();
 
 
@@ -220,23 +221,6 @@ public class FragmentTwo extends Fragment {
                                     formatter(time, ":", 2), driverName, driverNumber, Double.toString(driverRating), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
                         }
 
-                        if (upcomingTripsList.isEmpty())
-                            noUpcomingTrips.setVisibility(View.VISIBLE);
-                        else {
-                            noUpcomingTrips.setVisibility(View.GONE);
-                        }
-
-                        if (pastTripsList.isEmpty())
-                            noPastTrips.setVisibility(View.VISIBLE);
-                        else {
-                            noPastTrips.setVisibility(View.GONE);
-
-                        }
-
-
-                        upcomingAdapter.notifyDataSetChanged();
-                        pastAdapter.notifyDataSetChanged();
-
 
                     }
 
@@ -245,11 +229,28 @@ public class FragmentTwo extends Fragment {
                     e.printStackTrace();
                 }
 
+                if (upcomingTripsList.isEmpty())
+                    noUpcomingTrips.setVisibility(View.VISIBLE);
+
+
+                if (pastTripsList.isEmpty())
+                    noPastTrips.setVisibility(View.VISIBLE);
+
+
+                upcomingAdapter.notifyDataSetChanged();
+                pastAdapter.notifyDataSetChanged();
+
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
+                if (upcomingTripsList.isEmpty())
+                    noUpcomingTrips.setVisibility(View.VISIBLE);
+
+                if (pastTripsList.isEmpty())
+                    noPastTrips.setVisibility(View.VISIBLE);
+
                 Toast.makeText(getActivity(), "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
 
             }
