@@ -7,10 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -70,10 +72,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
 
     private final static String KEY_USER = "userID";
-    private final static String KEY_RATING = "rating";
-
-
-
 
     // UI references.
 
@@ -113,6 +111,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         registerPassword = findViewById(R.id.registerPassword);
         registerButton = findViewById(R.id.registerButton);
         record = findViewById(R.id.criminalRecord);
+
+
 
 
         // Handling registration or log in options
@@ -171,12 +171,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         registerButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (record.isChecked()) {
                     attemptRegistration();
-                } else {
-                    record.requestFocus();
-                    record.setError("You must agree to this option.");
-                }
+
             }
         });
 
@@ -243,8 +239,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private void attemptLogin() {
 
         // Reset errors.
-        signInName.setError(null);
         signInPassword.setError(null);
+        signInName.setError(null);
+
+
+
 
         // Store values at the time of the login attempt.
         String username = signInName.getText().toString();
@@ -276,8 +275,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showSignInProgress(true);
-            //  mlogInAuthTask = new UserLoginTask(username, password);
-            //  mlogInAuthTask.execute((Void) null);
             userLogInTask(username, password);
         }
     }
@@ -308,8 +305,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         View focusView = null;
 
 
-        if (TextUtils.isEmpty(password)) {
-            registerPassword.setError(getString(R.string.error_field_required));
+        if (TextUtils.isEmpty(name)) {
+            registerName.setError(getString(R.string.error_field_required));
+            focusView = registerName;
+            cancel = true;
+        }
+
+        if (TextUtils.isEmpty(email)) {
+            registerEmail.setError(getString(R.string.error_field_required));
             focusView = registerEmail;
             cancel = true;
         }
@@ -320,11 +323,19 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             cancel = true;
         }
 
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(email)) {
-            registerEmail.setError(getString(R.string.error_field_required));
-            focusView = registerEmail;
+
+        if (TextUtils.isEmpty(password)) {
+            registerPassword.setError(getString(R.string.error_field_required));
+            focusView = registerPassword;
             cancel = true;
+        }
+
+
+
+        if(!record.isChecked()) {
+            cancel = true;
+            focusView = record;
+            record.setError("You must agree to this option.");
         }
 
 
@@ -340,39 +351,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         }
     }
 
-    /**
-     * Checks if an entered email address is valid
-     *
-     * @param email the user input
-     * @return true if valid
-     */
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        //return email.contains("@");
-        return true;
-    }
-
-    /**
-     * Checks if an entered password is valid
-     *
-     * @param password the user password
-     * @return true if valid
-     */
-    private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
-        return password.length() > 4;
-    }
-
-    /**
-     * Checks if an entered phone number is the valid format
-     *
-     * @param phoneNumber the user phone number
-     * @return true if valid
-     */
-    private boolean isPhoneValid(String phoneNumber) {
-        //TODO: Replace this with your own logic
-        return true;
-    }
 
     /**
      * Shows the progress UI and hides the login form.
@@ -536,10 +514,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
 
-
-
-
-
+    /**
+     * Async task that attempts to log the user in. If successful, launches main activity.
+     * @param mName the user's username
+     * @param mPassword the user's password
+     */
     public void userLogInTask(String mName, String mPassword) {
 
         final String userID = mName;
@@ -548,7 +527,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                     @Override
                     public void onFinish() {
-
+                        showSignInProgress(false);
                     }
 
                     @Override
@@ -564,6 +543,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
                             } else {
                                 showSignInProgress(false);
+                                Toast.makeText(LoginActivity.this, response.getString("error"),
+                                        Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -580,8 +561,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
     /**
-     * Represents an asynchronous registration task used to sign up
-     * the user.
+     * Represents an async task that registers the user.
+     * @param mEmail the user's email
+     * @param mName the user's desired username
+     * @param mPassword the user's password
+     * @param mPhone the user's phone number
      */
     public void userRegisterTask(String mEmail, String mName, String mPassword, String mPhone) {
 
@@ -590,17 +574,18 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 @Override
                 public void onFinish() {
                     showRegistrationProgress(false);
-
                 }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
-                        if (!response.getString("name").isEmpty()) {
+                        if (!response.isNull("name")) {
                             setElementVisbility("register", true);
 
 
                         } else {
+                            Toast.makeText(LoginActivity.this, response.getString("error"),
+                                    Toast.LENGTH_LONG).show();
 
                         }
                     } catch (JSONException e) {

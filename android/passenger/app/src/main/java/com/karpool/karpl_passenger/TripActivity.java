@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,6 +51,8 @@ public class TripActivity extends AppCompatActivity {
     private final static String KEY_TRIP_DRIVER_NUMBER = "number";
     private final static String KEY_TRIP_DRIVER_RATING = "rating";
     private final static String KEY_TRIP_DRIVER = "driver";
+    private final static String KEY_BACK_PRESS = "returnFromSMS"; // if you are going to fragment one after pressing join button, you want to clear the search, if you are going back normally, keep search content
+
 
     private static String userID, tripStatus, tripMode, driverNumber, driverName, driverRating;
     private static Integer tripID;
@@ -99,7 +102,7 @@ public class TripActivity extends AppCompatActivity {
         // formatting rating so that trailing zeroes do not show
 
         DecimalFormat df = new DecimalFormat("###.#");
-        if (driverRating.equals("NaN")) {
+        if (driverRating.equals("-1.0")) {
             tripDriverRating.setText("No Rating ");
         } else {
             tripDriverRating.setText(df.format(Double.parseDouble(driverRating)) + "/5");
@@ -145,6 +148,15 @@ public class TripActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(TripActivity.this);
+        super.onBackPressed();
+        prefs.edit().putBoolean(KEY_BACK_PRESS, true).commit();
+    }
+
+
+
     /**
      * Represents an asynchronous task where there are three possibilities based on the static variable tripStatus.
      * If a user has not yet joined a trip, this will join a trip.
@@ -152,6 +164,8 @@ public class TripActivity extends AppCompatActivity {
      * If a user has already joined a trip and it has already occurred, this will allow the user to rate the trip.
      */
     public void tripAction() {
+
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(TripActivity.this);
 
         // as you have not joined the trip yet, you will want to view the trip. The only possible (network) option is to join a trip.
 
@@ -165,8 +179,12 @@ public class TripActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
-                        if (response.getString("name") != null) {
+                        if (response.getBoolean("response")) {
+                            prefs.edit().putBoolean(KEY_BACK_PRESS, false).commit();
                             finish();
+                        } else {
+                            Toast.makeText(TripActivity.this, response.getString("error"), Toast.LENGTH_LONG).show();
+
                         }
 
                     } catch (JSONException e) {
@@ -196,8 +214,10 @@ public class TripActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         try {
-                            if (response.getString("name") != null) {
+                            if (response.getBoolean("response")) {
                                 finish();
+                            } else {
+                                Toast.makeText(TripActivity.this, response.getString("error"), Toast.LENGTH_LONG).show();
                             }
 
                         } catch (JSONException e) {
@@ -217,18 +237,24 @@ public class TripActivity extends AppCompatActivity {
 
             else {
 
-
                 HttpUtils.post("drivers/rate/" + driverName + "/" + userRating, new RequestParams(), new JsonHttpResponseHandler() {
                     @Override
                     public void onFinish() {
                     }
 
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                         try {
-                            if (response.getJSONArray("ratings").length() != 0) {
-                                finish();
-                                startActivity(getIntent());
+                            if (response.length() != 0) {
+                                Double driverRating = 0.0;
+
+                                for (int ratingCount = 0; ratingCount < response.length(); ratingCount++) {
+                                    driverRating += response.getDouble(ratingCount);
+                                }
+                                DecimalFormat df = new DecimalFormat("###.#");
+
+                                driverRating /= response.length();
+                                tripDriverRating.setText(((df.format(driverRating))) + "/5");
                             }
 
                         } catch (JSONException e) {

@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+/**
+ * Adapter for trip class to be used for recyclerView
+ */
 public class TripAdapter extends RecyclerView.Adapter<TripAdapter.MyViewHolder> {
 
     private List<Trip> tripList;

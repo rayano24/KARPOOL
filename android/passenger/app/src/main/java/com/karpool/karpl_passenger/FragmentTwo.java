@@ -27,6 +27,9 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * Displays the user's trips and allows them to open an individual trip as an instance of TripActivity
+ */
 public class FragmentTwo extends Fragment {
 
 
@@ -195,6 +198,9 @@ public class FragmentTwo extends Fragment {
                         Boolean tripStatus = obj.getBoolean("tripComplete");
                         String driverNumber = driver.getString("phoneNumber");
                         JSONArray ratingArray = driver.getJSONArray("ratings");
+                        // cities such as new york are entered into the database as new_york as the space cannot be parsed into a URL, this removes the underscore for user viewing
+                        String origin = obj.getString("departureLocation").replaceAll("_", " ");
+                        String destination = obj.getString("destination").replaceAll("_", " ");
 
                         // driver ratings are provided as an array so the average must be calculated
 
@@ -207,24 +213,32 @@ public class FragmentTwo extends Fragment {
 
 
                         if (!tripStatus) {
-                            upcomingTripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                            upcomingTripsList.add(new Trip(origin, destination, year + "-" + formatter(remainder, "-", 2),
                                     formatter(time, ":", 2), driverName, driverNumber, Double.toString(driverRating), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
                         } else {
-                            pastTripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                            pastTripsList.add(new Trip(origin, destination, year + "-" + formatter(remainder, "-", 2),
                                     formatter(time, ":", 2), driverName, driverNumber, Double.toString(driverRating), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
+                        }
+
+                        if (upcomingTripsList.isEmpty())
+                            noUpcomingTrips.setVisibility(View.VISIBLE);
+                        else {
+                            noUpcomingTrips.setVisibility(View.GONE);
+                        }
+
+                        if (pastTripsList.isEmpty())
+                            noPastTrips.setVisibility(View.VISIBLE);
+                        else {
+                            noPastTrips.setVisibility(View.GONE);
+
                         }
 
 
                         upcomingAdapter.notifyDataSetChanged();
                         pastAdapter.notifyDataSetChanged();
+
+
                     }
-
-
-                    if (upcomingTripsList.isEmpty())
-                        noUpcomingTrips.setVisibility(View.VISIBLE);
-
-                    if (pastTripsList.isEmpty())
-                        noPastTrips.setVisibility(View.VISIBLE);
 
 
                 } catch (JSONException e) {
@@ -243,8 +257,8 @@ public class FragmentTwo extends Fragment {
 
         });
 
-    }
 
+    }
 
     /**
      * Used for date and time formatting
