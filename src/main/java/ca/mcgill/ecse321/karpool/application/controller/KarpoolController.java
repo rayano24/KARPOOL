@@ -1474,9 +1474,14 @@ public class KarpoolController {
 	public Response deleteTrip(@PathVariable("trip")int tripID) throws ParseException
 	{
 		//TODO accurate response
-		repository.deleteTrip(tripID);
 		Response r = new Response();
-		r.setResponse(true);
+		try {
+			repository.deleteTrip(tripID);
+			r.setResponse(true);
+		} catch(NullPointerException e) {
+			r.setResponse(false);
+			r.setError("No such trip exists");
+		}
 		return r;
 	}
 

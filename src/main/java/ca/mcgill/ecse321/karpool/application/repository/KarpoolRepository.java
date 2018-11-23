@@ -492,7 +492,6 @@ public class KarpoolRepository
 		try {
 			dateInput = sdf.parse(tripDate);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		String date1 = sdf.format(dateInput);        
