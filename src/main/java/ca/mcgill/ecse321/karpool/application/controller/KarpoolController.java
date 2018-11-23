@@ -945,6 +945,24 @@ public class KarpoolController {
 		return fullTrip;
 	}
 	
+	@GetMapping("/trips/date/{date1}/{date2}")
+	public List<Trip> listTripsInTimeframe(@PathVariable("date1") String startDate, @PathVariable("date2") String endDate) {
+		List<Integer> trips = repository.getAllTrips();
+		List<Trip> tripsInTimeframe = new ArrayList<Trip>();
+		
+		for(int t: trips) {
+			Trip tempTrip = repository.getSpecificTrip(t);
+			
+			if((tempTrip.getDepartureDate()).compareTo(startDate) >= 0 && (tempTrip.getDepartureDate()).compareTo(endDate) <= 0) {
+				tripsInTimeframe.add(tempTrip);
+				
+			}
+		}
+		
+		return tripsInTimeframe;
+		
+	}
+	
 	@GetMapping("/trips/{tripID}")
 	public Trip getTripInfo(@PathVariable("tripID")int tripID)
 	{
