@@ -3,25 +3,30 @@
 # Overview
 
 KARPOOL is a software system that was created to help drivers and passengers who are travelling on
-similar/identical intercity routes within the United States find one another.
+similar/identical intercity routes within North America.
 
 **[Click here to visit our app!](https://karpool-spring-14.herokuapp.com/)** 
-
 
 
 # Requirements
 
 ### Mobile Frontend
-* drivers can advertise journeys to passengers
-* journey ads will include
-information about the vehicle, the available seating, the locations that the driver is willing to stop, and the
-cost of travel for passengers going to each stop
-* Passengers can search these ads for drivers who are willing to stop at their destination
-* Passengers can
-sort results by relevant criteria (e.g., car type, price) and select an appropriate journey to join from the list
-of results.
+* Drivers can advertise trips to passengers
+* Both the driver and passenger can contact each-other through an in-app text button
+* Trips will include the destination, departure date and time, price, available seats and the driver rating.
+* Passengers can search for trips and sort them in terms of ascending date or lowest price
+* Passengers can rate their driver once a trip is complete
+
+#### Passenger App
+
+![Banner](media/passengerBanner.png)
+
+
 
 ### Web Frontend
+
+**[Click here to visit the web repository](https://github.com/ECSE321-Fall2018/t14-web)**
+
 * system administrators can gain an overview of the ride sharing network
 * include a means of checking the status of all active drivers and passengers in the
 network and listing top drivers and passengers based on historical data
