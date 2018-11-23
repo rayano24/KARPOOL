@@ -65,7 +65,7 @@ public class KarpoolController {
 	public Driver createDriver(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
 			@PathVariable("phone") String phone, @PathVariable("record") boolean criminalRecord)
 	{
-		Driver d = null;
+		Driver d = new Driver();;
 		try 
 		{
 			if(phone.length() == 10) 
@@ -87,54 +87,54 @@ public class KarpoolController {
 									}
 									else 
 									{
-										System.out.println("Your username must have 3 characters or over");
-										return null;
+										d.setError("Your username must have 3 characters or over");
+										return d;
 									}
 								}
 								catch (NullPointerException e)
 								{
-									System.out.println("Please enter a name ");
-									return null;
+									d.setError("Please enter a name ");
+									return d;
 								}
 							}
 							else 
 							{
-								System.out.println("Your password must have over 8 characters");
-								return null;
+								d.setError("Your password must have over 8 characters");
+								return d;
 							}
 						}
 						catch (NullPointerException e)
 						{
-							System.out.print("Please enter a password");
-							return null;
+							d.setError("Please enter a password");
+							return d;
 						}
 					}
 					else
 					{
-						System.out.println("Oups , this is not a valid email");
+						d.setError("Oups , this is not a valid email");
 					}
 				}
 				catch(NullPointerException e)
 				{
-					System.out.println("Oups, this is not a valid email");
-					return null;
+					d.setError("Oups, this is not a valid email");
+					return d;
 				}
 			}
 			else 
 			{
-				System.out.println("Oups, this is not a valid phone number");
-				return null;
+				d.setError("Oups, this is not a valid phone number");
+				return d;
 			}
 		}
 		catch(NullPointerException e1) 
 		{
-			System.out.println("Exception - Null pointer");
-			return null;
+			d.setError("Exception - Null pointer");
+			return d;
 		}
 		catch(NumberFormatException e2)
 		{
-			System.out.println("Exception - Number format");
-			return null;
+			d.setError("Exception - Number format");
+			return d;
 		}
 		return d;
 	}
@@ -268,12 +268,16 @@ public class KarpoolController {
 			{
 				rSum+=rate;
 			}
+			if(rNum == 0)
+			{
+				throw new ArithmeticException();
+			}
 			r = rSum/rNum;
 			resp.setRating(r);
 		} catch(NullPointerException e1) {
 			resp.setError("Attempted to get rating of nonexistent driver");
 			resp.setRating(-1.0);
-		} catch(NumberFormatException e2) {
+		} catch(ArithmeticException e2) {
 			resp.setError("Divided by zero rating");
 			resp.setRating(-1.0);
 		}
@@ -560,45 +564,48 @@ public class KarpoolController {
 	 * @return
 	 */
 	@PostMapping("/trips/{trip}/add/{name}")
-	public Passenger addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
+	public Response addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
 	{
 		Trip t = repository.getSpecificTrip(tripID);
 		Passenger p = repository.getPassenger(name);
+		Response error = new Response();
 		if (t.getSeatAvailable() <= 0) {
-			System.out.println("No seats available");
-			return null;
+			error.setError("No seats available");
+			return error;
 		}
 		else if (repository.checkPassengerInTrip(t, p)) 
 		{
-			System.out.println("You are already on this trip");
-			return null;
+			error.setError("You are already on this trip");
+			return error;
 		}
 		else if (t.isTripComplete() == true) {
-			System.out.println("This trip is already complete");
-			return null;
+			error.setError("This trip is already complete");
+			return error;
 		}
 		else {
 			repository.addPassengerToTrip(p, t);
+			error.setResponse(true);
 		}	
-		return p;
+		return error;
 	}
 	
 	@PostMapping("/trips/{trip}/remove/{name}")
-	public Passenger removePassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name)
+	public Response removePassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name)
 	{
 		Trip t = repository.getSpecificTrip(tripID);
 		Passenger p = repository.getPassenger(name);
+		Response error = new Response();
 		if(repository.checkPassengerInTrip(t, p))
 		{
 			repository.removePassengerFromTrip(p, t);
+			error.setResponse(true);
 		}
 		else
 		{
-			System.out.println("You cannot leave a trip that you are not a part of");
-			return null;
+			error.setError("You cannot leave a trip that you are not a part of");
 		}
 		
-		return p;
+		return error;
 	}
 	
 	@GetMapping("/trips/{trip}/passengers")
@@ -714,19 +721,21 @@ public class KarpoolController {
 		Date timeInput = sdf2.parse(departureTime);
 		String time1 = sdf2.format(timeInput);
 		String time2 = sdf2.format(time);
+		
+		Trip t = new Trip();
 
 		try 
 		{
 			if(seatAvailable == 0) {
 
-				System.out.println("Must have one or more seats available");
-				return null;
+				t.setError("Must have one or more seats available");
+				return t;
 			} 
 
 			//compares system date to departureDate
 			else if ((date1.compareTo(date2)) < 0) {
-				System.out.println("Cannot set a date that has already passed");
-				return null;
+				t.setError("Cannot set a date that has already passed");
+				return t;
 			}
 
 			//compares system time to departureTime
@@ -735,15 +744,15 @@ public class KarpoolController {
 				if ((time1.compareTo(time2)) < 0) {
 					System.out.println(time1);
 					System.out.println(time2);
-					System.out.println("Cannot set a time that has already passed");
-					return null;
+					t.setError("Cannot set a time that has already passed");
+					return t;
 				}
 			}
 		} 
 		catch(NullPointerException |  NumberFormatException e) 
 		{
-			System.out.println("Exception - Invalid seat number");
-			return null;
+			t.setError("Exception - Invalid seat number");
+			return t;
 		}
 
 		Driver d = repository.getDriver(name);
