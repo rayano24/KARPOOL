@@ -239,7 +239,7 @@ public class KarpoolController {
 	{
 		//need to check if rating is a valid rating
 		try {
-			
+
 			Driver d = repository.getDriver(name);
 			repository.addDriverRating(d, rating);
 			return d.getRatings();
@@ -249,7 +249,7 @@ public class KarpoolController {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 
 	 * @param name
@@ -283,7 +283,7 @@ public class KarpoolController {
 		}
 		return resp;
 	}
-	
+
 	private double getAvgRating(Driver d)
 	{ 
 		double r = 0.0;
@@ -302,7 +302,7 @@ public class KarpoolController {
 		}
 		return r;
 	}
-	
+
 	@GetMapping("/drivers/active/all")
 	public List<Driver> getActiveDrivers()
 	{
@@ -334,7 +334,7 @@ public class KarpoolController {
 		}
 		return actDrivers;
 	}
-	
+
 	@GetMapping("/drivers/top3")
 	public ArrayList<Driver> getTopDrivers()
 	{
@@ -588,7 +588,7 @@ public class KarpoolController {
 		}	
 		return error;
 	}
-	
+
 	@PostMapping("/trips/{trip}/remove/{name}")
 	public Response removePassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name)
 	{
@@ -604,10 +604,10 @@ public class KarpoolController {
 		{
 			error.setError("You cannot leave a trip that you are not a part of");
 		}
-		
+
 		return error;
 	}
-	
+
 	@GetMapping("/trips/{trip}/passengers")
 	public Set<Passenger> getPassengersInTrip(@PathVariable("trip") int tripID)
 	{
@@ -617,10 +617,10 @@ public class KarpoolController {
 		{
 			System.out.println("There are no passengers on this trip");
 		}	
-		
+
 		return p;
 	}
-	
+
 	@GetMapping("/passengers/active/all")
 	public List<Passenger> getActivePassengers()
 	{
@@ -652,7 +652,7 @@ public class KarpoolController {
 		}
 		return actPassengers;
 	}
-	
+
 	@GetMapping("/passengers/top3")
 	public ArrayList<Passenger> getTopPassengers()
 	{
@@ -721,7 +721,7 @@ public class KarpoolController {
 		Date timeInput = sdf2.parse(departureTime);
 		String time1 = sdf2.format(timeInput);
 		String time2 = sdf2.format(time);
-		
+
 		Trip t = new Trip();
 
 		try 
@@ -817,7 +817,7 @@ public class KarpoolController {
 		}
 		return fullTrip;
 	}
-	
+
 	@GetMapping("/trips/{location}/{destination}/price")
 	public List<Trip> listTripsAscendingPrice(@PathVariable("location") String departureLocation, 
 			@PathVariable("destination") String destination)
@@ -839,7 +839,7 @@ public class KarpoolController {
 		}
 		return fullTrip;
 	}
-	
+
 	/**
 	 * finds a trip that matches departure location and destination, with matching number of seats
 	 * 
@@ -870,7 +870,7 @@ public class KarpoolController {
 		}
 		return fullTrip;
 	}
-	
+
 	/**
 	 * lists all trips matching the query in ascending order of times
 	 * 
@@ -898,7 +898,7 @@ public class KarpoolController {
 		}
 		return fullTrip;
 	}
-	
+
 	@GetMapping("/trips/{location}/{destination}/{passenger}/price")
 	public List<Trip> listTripsAscendingPrice(@PathVariable("location") String departureLocation, 
 			@PathVariable("destination") String destination, @PathVariable("passenger") String name)
@@ -944,32 +944,94 @@ public class KarpoolController {
 		}		
 		return fullTrip;
 	}
-	
+
 	@GetMapping("/trips/date/{date1}/{date2}")
 	public List<Trip> listTripsInTimeframe(@PathVariable("date1") String startDate, @PathVariable("date2") String endDate) {
 		List<Integer> trips = repository.getAllTrips();
 		List<Trip> tripsInTimeframe = new ArrayList<Trip>();
-		
+
 		for(int t: trips) {
 			Trip tempTrip = repository.getSpecificTrip(t);
-			
+
 			if((tempTrip.getDepartureDate()).compareTo(startDate) >= 0 && (tempTrip.getDepartureDate()).compareTo(endDate) <= 0) {
 				tripsInTimeframe.add(tempTrip);
-				
+
 			}
 		}
-		
+
 		return tripsInTimeframe;
-		
+
 	}
-	
+
+	@GetMapping("/trips/destination/top3")
+	public ArrayList<String> getPopularDestination() 
+	{
+		List<String> popularDestination = repository.getFrequentDestinations();
+		ArrayList<String> topThree = new ArrayList<String>();
+		String first = null;
+		int firstCount = 0;
+
+		String second = null;
+		int secondCount = 0;
+
+		String third = null;
+		int thirdCount = 0;
+
+		int cityFrequency;
+
+		List<String> cityNames = repository.getFrequentDestinations();
+		Set<String> hs = new HashSet<>();
+
+		hs.addAll(cityNames);
+		cityNames.clear();
+		cityNames.addAll(hs);
+
+		for (String s: cityNames) 
+		{
+			cityFrequency = Collections.frequency(popularDestination, s);
+
+			if( cityFrequency  >= firstCount) //#1
+			{
+				thirdCount = secondCount;
+				secondCount = firstCount;
+				firstCount = cityFrequency;
+				third = second;
+				second = first;
+				first = s;	
+			}
+			else if(cityFrequency >= secondCount) //#2
+			{
+				thirdCount = secondCount;
+				secondCount = cityFrequency;
+
+				third = second;
+				second = s;
+
+
+			}
+			else if(cityFrequency >= thirdCount) //#3
+			{
+				thirdCount = cityFrequency;
+
+				third = s;
+			}
+			
+		}
+		topThree.add(first);
+		topThree.add(second);
+		topThree.add(third);
+		return topThree;
+
+	}
+
+
 	@GetMapping("/trips/{tripID}")
 	public Trip getTripInfo(@PathVariable("tripID")int tripID)
 	{
 		Trip t = repository.getSpecificTrip(tripID);
 		return t;
 	}
-	
+
 	/**
 	 * lists all trips in the database
 	 * 
@@ -999,41 +1061,41 @@ public class KarpoolController {
 	@PostMapping("/trips/{tripID}/date/{date}")
 	public Response modifyTripDate(@PathVariable("tripID")int tripID, @PathVariable("date")String departureDate) throws ParseException
 	{
-		
+
 		Trip t = repository.getSpecificTrip(tripID);
 		Response r = new Response();
-		
+
 		if(t.getPassenger().size() == 0) {
-		
 
-		Date date = new Date();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		Date dateInput = sdf.parse(departureDate);
-		String date1 = sdf.format(dateInput);        
-		String date2 = sdf.format(date);
+			Date date = new Date();
 
-		try {
-			if ((date1.compareTo(date2)) < 0) {
-				r.setError("Cannot set a date that has already passed");
-				r.setResponse(false);
-				return r;
-				
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			Date dateInput = sdf.parse(departureDate);
+			String date1 = sdf.format(dateInput);        
+			String date2 = sdf.format(date);
+
+			try {
+				if ((date1.compareTo(date2)) < 0) {
+					r.setError("Cannot set a date that has already passed");
+					r.setResponse(false);
+					return r;
+
+				}
+
+				else {	
+					repository.modifyDepartureDate(t, departureDate);
+					r.setResponse(true);
+					return r;
+				}
+
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
 			}
-			
-			else {	
-			repository.modifyDepartureDate(t, departureDate);
-			r.setResponse(true);
+			r.setResponse(false);
 			return r;
 		}
 
-	} catch (NullPointerException e) {
-		System.out.println(ERROR_NOT_FOUND_MESSAGE);
-	}
-		r.setResponse(false);
-				return r;
-		}
-		
 		else {
 			r.setError("Cannot Modify a trip once passengers have join");
 			r.setResponse(false);
@@ -1045,68 +1107,68 @@ public class KarpoolController {
 	public Response modifyTripTime(@PathVariable("tripID")int tripID, @PathVariable("time")String departureTime) throws ParseException 
 	{
 		Response r = new Response();
-		
+
 		Trip t = repository.getSpecificTrip(tripID);
-		
+
 
 		Date time = new Date();
 		Date date = new Date();
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 		Date dateInput = sdf.parse(t.getDepartureDate());
 		String date1 = sdf.format(dateInput);        
 		String date2 = sdf.format(date);
 
-		
+
 		SimpleDateFormat sdf2 = new SimpleDateFormat("HHmm");
 		Date timeInput = sdf2.parse(departureTime);
 		String time1 = sdf2.format(timeInput);
 		String time2 = sdf2.format(time);
-		
-		if(t.getPassenger().size() == 0) {
-		
-		try {
-		
-		if((date1.compareTo(date2)) == 0) {  
-			
-			if ((time1.compareTo(time2)) < 0) {
 
-				r.setError("Cannot set a time that has already passed");
-				r.setResponse(false);
-				return r;
-			}
-			
-			else {
-				repository.modifyDepartureTime(t, departureTime);
-				r.setResponse(true);
-				return r;
-				
+		if(t.getPassenger().size() == 0) {
+
+			try {
+
+				if((date1.compareTo(date2)) == 0) {  
+
+					if ((time1.compareTo(time2)) < 0) {
+
+						r.setError("Cannot set a time that has already passed");
+						r.setResponse(false);
+						return r;
+					}
+
+					else {
+						repository.modifyDepartureTime(t, departureTime);
+						r.setResponse(true);
+						return r;
+
+					}
+
 				}
-			
-		}
-			
-		else if ((date1.compareTo(date2)) < 0) {
-				r.setError("Cannot set time for a trip that has already passed");
-				r.setResponse(false);
-				return r;
+
+				else if ((date1.compareTo(date2)) < 0) {
+					r.setError("Cannot set time for a trip that has already passed");
+					r.setResponse(false);
+					return r;
+				}
+
+				else {
+					repository.modifyDepartureTime(t, departureTime);
+					r.setResponse(true);
+					return r;
+
+				}
+
+
+
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
 			}
-		
-		else {
-			repository.modifyDepartureTime(t, departureTime);
-			r.setResponse(true);
-			return r;
-			
-			}
-			
-		
-			
-		} catch (NullPointerException e) {
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}
 			r.setResponse(false);
-				return r;
+			return r;
 		}
-				
+
 		else {
 			r.setError("Cannot Modify a trip once passengers have join");
 			r.setResponse(false);
@@ -1122,48 +1184,48 @@ public class KarpoolController {
 		Trip t = repository.getSpecificTrip(tripID);
 
 		if(t.getPassenger().size() == 0) {
-		try {
-			repository.modifyTripLocation(t, departureLocation);
-			r.setResponse(true);
-			return r;
-
-		} catch (NullPointerException e) {
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}
-			r.setResponse(false);
+			try {
+				repository.modifyTripLocation(t, departureLocation);
+				r.setResponse(true);
 				return r;
+
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			}
+			r.setResponse(false);
+			return r;
 		}
-		
+
 		else {
 			r.setError("Cannot Modify a trip once passengers have join");
 			r.setResponse(false);
 			return r;
 		}
-		
-		
+
+
 	}
 
 	@PostMapping("/trips/{tripID}/tripdestination/{destination}")
 	public Response modifyTripDestination(@PathVariable("tripID")int tripID, @PathVariable("destination")String destination) 
 	{
 		Trip t = repository.getSpecificTrip(tripID);
-		
-		Response r = new Response();
-		
-		if(t.getPassenger().size() == 0) {
-		try {
-			
-			repository.modifyTripDestination(t, destination);
-			r.setResponse(true);
-			return r;
 
-		} catch (NullPointerException e) {
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}
-			r.setResponse(false);
+		Response r = new Response();
+
+		if(t.getPassenger().size() == 0) {
+			try {
+
+				repository.modifyTripDestination(t, destination);
+				r.setResponse(true);
 				return r;
+
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			}
+			r.setResponse(false);
+			return r;
 		}
-		
+
 		else {
 			r.setError("Cannot Modify a trip once passengers have join");
 			r.setResponse(false);
@@ -1176,28 +1238,28 @@ public class KarpoolController {
 	{
 		Response r = new Response();
 		Trip t = repository.getSpecificTrip(tripID);
-		
-		
+
+
 		if(t.getPassenger().size() == 0) {
 
-		try {
-			repository.modifyTripPrice(t, price);
-			r.setResponse(true);
-			return r;
-
-		} catch (NullPointerException e) {
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}
-			r.setResponse(false);
+			try {
+				repository.modifyTripPrice(t, price);
+				r.setResponse(true);
 				return r;
+
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			}
+			r.setResponse(false);
+			return r;
 		}
-		
+
 		else {
 			r.setError("Cannot Modify a trip once passengers have join");
 			r.setResponse(false);
 			return r;
 		}
-		
+
 	}
 
 	@PostMapping("/trips/{tripID}/seats/{seats}")
@@ -1207,19 +1269,19 @@ public class KarpoolController {
 		Trip t = repository.getSpecificTrip(tripID);
 
 		if(t.getPassenger().size() == 0) {
-		try {
-			repository.modifySeatAvailable(t, seatAvailable);
-			r.setResponse(true);
-			return r;
-
-
-		} catch (NullPointerException e) {
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
-		}
-			r.setResponse(false);
+			try {
+				repository.modifySeatAvailable(t, seatAvailable);
+				r.setResponse(true);
 				return r;
+
+
+			} catch (NullPointerException e) {
+				System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			}
+			r.setResponse(false);
+			return r;
 		}
-				
+
 		else {
 			r.setError("Cannot Modify a trip once passengers have join");
 			r.setResponse(false);
@@ -1237,18 +1299,19 @@ public class KarpoolController {
 	{
 		Response r = new Response();
 		try {
-		repository.closeTrip(tripID);
+			repository.closeTrip(tripID);
 
-		r.setResponse(true);
-		return r;
+			r.setResponse(true);
+			return r;
 		} catch (NullPointerException e) {
 			System.out.println(ERROR_NOT_FOUND_MESSAGE);
 		}
-			r.setResponse(false);
-				return r;
+		r.setResponse(false);
+		return r;
 	}
-	
-	
+
+
+
 	/**
 	 * This method deletes a trip from the repository. Used when a driver deletes a trip before
 	 * there are any passengers on it
