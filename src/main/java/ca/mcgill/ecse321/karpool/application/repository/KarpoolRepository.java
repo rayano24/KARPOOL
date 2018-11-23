@@ -17,6 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ca.mcgill.ecse321.karpool.application.model.*;
 
+/**
+ * Repository class. Organized into three sections: Driver repository, Passenger repository and Trips repository.
+ * 
+ */
 @Repository
 public class KarpoolRepository 
 {
@@ -29,6 +33,16 @@ public class KarpoolRepository
 	/////////////////                                                                   /////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Creates a driver and sets parameter. Persists with entityManager
+	 * 
+	 * @param name
+	 * @param email
+	 * @param password
+	 * @param phoneNumber
+	 * @param criminalRecord
+	 * @return driver
+	 */
 	@Transactional
 	public Driver createDriver(String name, String email, String password, String phoneNumber, boolean criminalRecord){
 		Driver driver = new Driver();
@@ -43,22 +57,35 @@ public class KarpoolRepository
 		return driver;
 	}
 	
+	/**
+	 * adds rating to driver's list of ratings
+	 * @param driver
+	 * @param rating
+	 */
 	@Transactional
 	public void addDriverRating(Driver driver, double rating) 
 	{
-
 		if (rating <= 5 && rating > 0) {
 			driver.addRating(rating);
 			entityManager.merge(driver);
 		}
 	}
 	
+	/**
+	 * Gets driver with id name 
+	 * @param name
+	 * @return Driver
+	 */
 	@Transactional
 	public Driver getDriver(String name) {
 		Driver driver = entityManager.find(Driver.class, name);
 		return driver;
 	}
 	
+	/**
+	 * gets all drivers in database using native SQL query statements
+	 * @return list of driver IDs
+	 */
 	@Transactional
 	public List<String> getAllDrivers() 
 	{
@@ -68,6 +95,11 @@ public class KarpoolRepository
 		return drivers;
 	}
 	
+	/**
+	 * Gets all trips with driver matching name parameter using native SQL query statements
+	 * @param name String name of driver
+	 * @return List of trip IDs
+	 */
 	@Transactional
 	public List<Integer> getTripForDriver(String name)
 	{
@@ -79,6 +111,11 @@ public class KarpoolRepository
 		return trips;
 	}
 	
+	/**
+	 * Gets all trips for driver using native SQL query statements
+	 * @param d Driver
+	 * @return Set of Trips
+	 */
 	@Transactional
 	public Set<Trip> getTripForDriver(Driver d)
 	{
@@ -100,6 +137,15 @@ public class KarpoolRepository
 	/////////////////                                                                   /////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Creates passenger and sets parameters. Persists with entityManager
+	 * @param name
+	 * @param email
+	 * @param password
+	 * @param phoneNumber
+	 * @param criminalRecord
+	 * @return Passenger
+	 */
 	@Transactional
 	public Passenger createPassenger(String name, String email, String password, String phoneNumber, boolean criminalRecord){
 		Passenger pass = new Passenger();
@@ -113,12 +159,21 @@ public class KarpoolRepository
 		return pass;
 	}
 	
+	/**
+	 * Gets passenger with name
+	 * @param name
+	 * @return Passenger
+	 */
 	@Transactional
 	public Passenger getPassenger(String name) {
 		Passenger passenger = entityManager.find(Passenger.class, name);
 		return passenger;
 	}
 	
+	/**
+	 * Gets all passengers in database using native SQL query statements
+	 * @return List of passenger IDs
+	 */
 	@Transactional
 	public List<String> getAllPassengers() 
 	{
@@ -128,6 +183,11 @@ public class KarpoolRepository
 		return passengers;
 	}
 	
+	/**
+	 * Gets all trips for specific passenger by name
+	 * @param name String passenger ID
+	 * @return set of trips for passenger
+	 */
 	@Transactional
 	public Set<Trip> getTripsForPassenger(String name)
 	{
@@ -136,6 +196,11 @@ public class KarpoolRepository
 		return t;
 	}
 	
+	/**
+	 * Gets all trips for specific passenger
+	 * @param p Passenger
+	 * @return Set of trips for passenger
+	 */
 	@Transactional
 	public Set<Trip> getTripsForPassenger(Passenger p)
 	{
@@ -143,6 +208,12 @@ public class KarpoolRepository
 		return t;
 	}
 	
+	/**
+	 * Adds passenger to trip
+	 * @param p passenger
+	 * @param t trip
+	 * @return trip with added passenger
+	 */
 	@Transactional
 	public Trip addPassengerToTrip(Passenger p, Trip t)
 	{
@@ -154,6 +225,11 @@ public class KarpoolRepository
 		return t;
 	}
 	
+	/**
+	 * Removes passenger from trip
+	 * @param p passenger
+	 * @param t trip
+	 */
 	@Transactional
 	public void removePassengerFromTrip(Passenger p, Trip t)
 	{
@@ -164,6 +240,12 @@ public class KarpoolRepository
 		entityManager.merge(t);
 	}
 
+	/**
+	 * checks if specific passenger is in specific trip
+	 * @param t trip
+	 * @param p passenger
+	 * @return true if passenger is in trip
+	 */
 	@Transactional
 	public boolean checkPassengerInTrip(Trip t, Passenger p) 
 	{
@@ -177,6 +259,12 @@ public class KarpoolRepository
 		}
 	}
 	
+	/**
+	 * Gets passengers that have joined a specific trip
+	 * 
+	 * @param t trip
+	 * @return set of passengers
+	 */
 	@Transactional
 	public Set<Passenger> getPassengersInTrip(Trip t)
 	{
@@ -190,6 +278,18 @@ public class KarpoolRepository
 	/////////////////                                                                   /////////////////
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * Creates a trip and sets appropriate parameters. Persists with entityManager
+	 * 
+	 * @param driver
+	 * @param destination
+	 * @param departureTime
+	 * @param departureDate
+	 * @param departureLocation
+	 * @param seatAvailable
+	 * @param price
+	 * @return
+	 */
 	@Transactional
 	public Trip createTrip(Driver driver, String destination, String departureTime, String departureDate, String departureLocation, int seatAvailable, int price) {
 		Trip trip = new Trip();
@@ -206,6 +306,11 @@ public class KarpoolRepository
 		return trip;
 	}
 	
+	/**
+	 * Changes departure location and merges in entityManager
+	 * @param trip
+	 * @param location
+	 */
 	@Transactional
 	public void modifyTripLocation(Trip trip, String location) {
 		
@@ -213,6 +318,11 @@ public class KarpoolRepository
 		entityManager.merge(trip);
 	}
 	
+	/**
+	 * Changes destination and merges in entityManager
+	 * @param trip
+	 * @param destination
+	 */
 	@Transactional
 	public void modifyTripDestination(Trip trip, String destination) {
 		
@@ -220,6 +330,12 @@ public class KarpoolRepository
 		entityManager.merge(trip);
 	}
 	
+	/**
+	 * Changes price and merges in entityManager
+	 * 
+	 * @param trip
+	 * @param price
+	 */
 	@Transactional
 	public void modifyTripPrice(Trip trip, int price) {
 		
@@ -227,6 +343,12 @@ public class KarpoolRepository
 		entityManager.merge(trip);
 	}
 	
+	/**
+	 * Changes departure time and merges in entityManager
+	 * 
+	 * @param trip
+	 * @param departureTime
+	 */
 	@Transactional
 	public void modifyDepartureTime(Trip trip, String departureTime) {
 		
@@ -234,6 +356,12 @@ public class KarpoolRepository
 		entityManager.merge(trip);
 	}
 	
+	/**
+	 * Changes departure date and merges in entityManager
+	 * 
+	 * @param trip
+	 * @param departureDate
+	 */
 	@Transactional
 	public void modifyDepartureDate(Trip trip, String departureDate) {
 		
@@ -241,6 +369,11 @@ public class KarpoolRepository
 		entityManager.merge(trip);
 	}
 	
+	/**
+	 * Changes available seats and merges in entityManager
+	 * @param trip
+	 * @param seatAvailable
+	 */
 	@Transactional
 	public void modifySeatAvailable(Trip trip, int seatAvailable) {
 		
@@ -248,6 +381,13 @@ public class KarpoolRepository
 		entityManager.merge(trip);
 	}
 
+	/**
+	 * gets trips matching the departure location and destination using native SQL query statements
+	 * 
+	 * @param depart
+	 * @param dest
+	 * @return list of trips
+	 */
 	@Transactional
 	public List<Integer> getTrips(String depart, String dest)
 	{
@@ -259,6 +399,11 @@ public class KarpoolRepository
 		return trips;
 	}
 	
+	/**
+	 * gets all trips in database using native SQL query statements
+	 * 
+	 * @return list of all trips
+	 */
 	@Transactional
 	public List<Integer> getAllTrips() 
 	{
@@ -268,6 +413,12 @@ public class KarpoolRepository
 		return trips;
 	}
 	
+	/**
+	 * Gets specific trip from database
+	 * 
+	 * @param trip_id
+	 * @return trip
+	 */
 	@Transactional
 	public Trip getSpecificTrip(int trip_id)
 	{
@@ -275,6 +426,12 @@ public class KarpoolRepository
 		return t;
 	}
 	
+	/**
+	 * gets trips matching the departure location and destination sorted by date using native SQL query statements
+	 * @param start
+	 * @param finish
+	 * @return list of trip IDs
+	 */
 	@Transactional
 	public List<Integer> getSortedTripsTime(String start, String finish) 
 	{
@@ -286,6 +443,12 @@ public class KarpoolRepository
 		return trips;
 	}
 		
+	/**
+	 * gets trips matching the departure location and destination sorted by price using native SQL query statements
+	 * @param start
+	 * @param finish
+	 * @return
+	 */
 	@Transactional
 	public List<Integer> getSortedTripsPrice(String start, String finish) 
 	{
@@ -297,6 +460,12 @@ public class KarpoolRepository
 		return trips;
 	}
 	
+	/**
+	 * gets list of all destination names sorted in alphabetical order using native SQL query statements,
+	 * preserving duplicates
+	 * 
+	 * @return list of destination names
+	 */
 	@Transactional
 	public List<String> getFrequentDestinations() 
 	{
@@ -306,6 +475,10 @@ public class KarpoolRepository
 		return trips;
 	}
 
+	/**
+	 * closes a trip only if the date of the trip has already passed. Merges in entityManager
+	 * @param tripID
+	 */
 	@Transactional
 	public void closeTrip(int tripID)
 	{
@@ -337,6 +510,12 @@ public class KarpoolRepository
 		}
 	}
 
+	/**
+	 * Deletes a trip only if date has not passed yet. Removes from enityManager
+	 * 
+	 * @param tripID
+	 * @throws ParseException
+	 */
 	@Transactional
 	public void deleteTrip(int tripID) throws ParseException 
 	{

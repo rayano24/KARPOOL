@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ca.mcgill.ecse321.karpool.application.repository.*;
 
+/**
+ * Controller class. Organized into three sections: Driver controller, Passenger controller and Trips controller.
+ * 
+ */
 @RestController
 @CrossOrigin
 public class KarpoolController {
@@ -25,14 +29,21 @@ public class KarpoolController {
 	@Autowired
 	KarpoolRepository repository;
 
-	//TODO: Password can't just be read as a regular String. NEEDS some form of encryption.
-
+	/**
+	 * Greeting on home page of the website
+	 * @return hello world
+	 */
 	@RequestMapping("/")
 	public String greeting()
 	{
 		return "Hello world!";
 	}
 
+	/**
+	 * Name specific greeting
+	 * @param name
+	 * @return hello + name
+	 */
 	@PostMapping("/{name}")
 	public String greeting(@PathVariable("name")String name)
 	{
@@ -58,8 +69,9 @@ public class KarpoolController {
 	 * @param name
 	 * @param email
 	 * @param password
-	 * @param phone
-	 * @return the driver that is created, null if there was an error
+	 * @param phone 10 digits
+	 * @param criminalRecord true or false
+	 * @return driver if successfully created, null driver with error message string if error
 	 */
 	@PostMapping("/drivers/{name}/{email}/{password}/{phone}/{record}")
 	public Driver createDriver(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
@@ -140,7 +152,7 @@ public class KarpoolController {
 	}
 
 	/**
-	 * This method authenticates the driver user on login page
+	 * This method authenticates the driver on login page
 	 *
 	 * @param username
 	 * @param password
@@ -210,6 +222,11 @@ public class KarpoolController {
 		return fullDriver;
 	}
 
+	/**
+	 * Gets trips that are assigned to a specific driver
+	 * @param name
+	 * @return list of trips
+	 */
 	@GetMapping("/trips/drivers/{name}")
 	public List<Trip> tripsForDriver(@PathVariable("name") String name)
 	{
@@ -251,8 +268,10 @@ public class KarpoolController {
 	}
 
 	/**
+	 * Gets the average rating of a driver using the list of all ratings
 	 * 
-	 * @param name
+	 * @param name name of driver
+	 * @return Response with set rating
 	 */
 	@GetMapping("/drivers/rate/{name}")
 	public Response getAvgRating(@PathVariable("name") String name)
@@ -284,6 +303,12 @@ public class KarpoolController {
 		return resp;
 	}
 
+	/**
+	 * Private method to calculate average rating with input of driver instead of name 
+	 * 
+	 * @param d driver
+	 * @return double
+	 */
 	private double getAvgRating(Driver d)
 	{ 
 		double r = 0.0;
@@ -303,6 +328,11 @@ public class KarpoolController {
 		return r;
 	}
 
+	/**
+	 * Gets the list of all active drivers. Active drivers are defined as having open trips/ads
+	 * 
+	 * @return list of all active drivers
+	 */
 	@GetMapping("/drivers/active/all")
 	public List<Driver> getActiveDrivers()
 	{
@@ -335,6 +365,11 @@ public class KarpoolController {
 		return actDrivers;
 	}
 
+	/**
+	 * Gets the top 3 drivers, as in the top 3 with highest ratings 
+	 * 
+	 * @return ordered list of top 3
+	 */
 	@GetMapping("/drivers/top3")
 	public ArrayList<Driver> getTopDrivers()
 	{
@@ -386,7 +421,7 @@ public class KarpoolController {
 	 * @param password
 	 * @param phone
 	 * @param criminalRecord
-	 * @return the created passenger, or null if there was an error
+	 * @return created passenger if successful, null passenger with set error message if error
 	 */
 	@PostMapping("/passengers/{name}/{email}/{password}/{phone}/{record}")
 	public Passenger createPassenger(@PathVariable("name") String name, @PathVariable("email") String email, @PathVariable("password") String password, 
@@ -559,9 +594,10 @@ public class KarpoolController {
 	 * This method allows for new passengers to be added to a specific 
 	 * trip taking place. It checks to see if the passenger is already 
 	 * signed up for this trip, if not it adds to passenger to the trip.
+	 * 
 	 * @param passenger
 	 * @param trip
-	 * @return
+	 * @return Response
 	 */
 	@PostMapping("/trips/{trip}/add/{name}")
 	public Response addPassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name) 
@@ -589,25 +625,40 @@ public class KarpoolController {
 		return error;
 	}
 
+	/**
+	 * Removes passenger from a trip if said passenger and trip exist and if that passenger is actually a part of that trip
+	 * 
+	 * @param tripID
+	 * @param name
+	 * @return Response
+	 */
 	@PostMapping("/trips/{trip}/remove/{name}")
 	public Response removePassenger(@PathVariable("trip") int tripID, @PathVariable("name") String name)
 	{
 		Trip t = repository.getSpecificTrip(tripID);
 		Passenger p = repository.getPassenger(name);
 		Response error = new Response();
-		if(repository.checkPassengerInTrip(t, p))
-		{
-			repository.removePassengerFromTrip(p, t);
-			error.setResponse(true);
+		try {
+			if(repository.checkPassengerInTrip(t, p))
+			{
+				repository.removePassengerFromTrip(p, t);
+				error.setResponse(true);
+			}
+			else
+			{
+				error.setError("You cannot leave a trip that you are not a part of");
+			}
+		} catch(NullPointerException e){
+			error.setError("There is no such trip or passenger");
 		}
-		else
-		{
-			error.setError("You cannot leave a trip that you are not a part of");
-		}
-
 		return error;
 	}
 
+	/**
+	 * Gets the list of passengers that have joined a specific trip
+	 * @param tripID
+	 * @return Set of trips
+	 */
 	@GetMapping("/trips/{trip}/passengers")
 	public Set<Passenger> getPassengersInTrip(@PathVariable("trip") int tripID)
 	{
@@ -621,6 +672,12 @@ public class KarpoolController {
 		return p;
 	}
 
+	/**
+	 * Gets list of active passengers. Active passengers are defined as passengers 
+	 * having joined a trip that is still active.
+	 * 
+	 * @return List of passengers
+	 */
 	@GetMapping("/passengers/active/all")
 	public List<Passenger> getActivePassengers()
 	{
@@ -653,6 +710,11 @@ public class KarpoolController {
 		return actPassengers;
 	}
 
+	/**
+	 * Gets list of top 3 passengers. Top 3 defined by passengers having gone on the most trips
+	 * 
+	 * @return Ordered list of passengers
+	 */
 	@GetMapping("/passengers/top3")
 	public ArrayList<Passenger> getTopPassengers()
 	{
@@ -697,13 +759,15 @@ public class KarpoolController {
 
 	/**
 	 * creates trip with given parameters
-	 * 
+	 * @param name String name of driver
 	 * @param departureLocation
 	 * @param destination
-	 * @param seatAvailable
-	 * @param departureTime
-	 * @return the created trip
-	 * @throws ParseException 
+	 * @param seatAvailable int 
+	 * @param departureTime format is HHmm
+	 * @param departureDate format is yyyyMMdd
+	 * @param price int
+	 * @return created trip if successful, blank trip with set error message if error
+	 * @throws ParseException to make sure phone number is actually a number
 	 */
 	@PostMapping("/trips/{driver}/{location}/{destination}/{seats}/{time}/{date}/{price}")
 	public Trip createTrip(@PathVariable("driver") String name, @PathVariable("location") String departureLocation, @PathVariable("destination") String destination, 
@@ -767,7 +831,7 @@ public class KarpoolController {
 	 * @param departureLocation
 	 * @param destination
 	 * @param seatAvailable
-	 * @return queried trip
+	 * @return list of queried trip
 	 */
 	@GetMapping("/trips/{location}/{destination}")
 	public List<Trip> queryTrip(@PathVariable("location") String departureLocation, 
@@ -794,6 +858,8 @@ public class KarpoolController {
 	/**
 	 * lists all trips matching the query in ascending order of times
 	 * 
+	 * @param departureLocation
+	 * @param destination
 	 * @return sorted list of trips
 	 */
 	@GetMapping("/trips/{location}/{destination}/date")
@@ -818,6 +884,13 @@ public class KarpoolController {
 		return fullTrip;
 	}
 
+	/**
+	 * lists all trips matching the query in ascending order of price
+	 * 
+	 * @param departureLocation
+	 * @param destination
+	 * @return sorted list of trips
+	 */
 	@GetMapping("/trips/{location}/{destination}/price")
 	public List<Trip> listTripsAscendingPrice(@PathVariable("location") String departureLocation, 
 			@PathVariable("destination") String destination)
@@ -841,12 +914,14 @@ public class KarpoolController {
 	}
 
 	/**
-	 * finds a trip that matches departure location and destination, with matching number of seats
+	 * finds a trip that matches departure location and destination, with matching number of seats. This 
+	 * query takes as input the name of the passenger that is logged into the app. It excludes trips that 
+	 * the passenger has already joined in the search results. 
 	 * 
 	 * @param departureLocation
 	 * @param destination
 	 * @param seatAvailable
-	 * @return queried trip
+	 * @return queried trip excluding passenger
 	 */
 	@GetMapping("/trips/{location}/{destination}/{passenger}")
 	public List<Trip> queryTrip(@PathVariable("location") String departureLocation, 
@@ -872,9 +947,14 @@ public class KarpoolController {
 	}
 
 	/**
-	 * lists all trips matching the query in ascending order of times
+	 * lists all trips matching the query in ascending order of date. This 
+	 * query takes as input the name of the passenger that is logged into the app. 
+	 * It excludes trips that the passenger has already joined in the search results. 
 	 * 
-	 * @return sorted list of trips
+	 * @param departureLocation
+	 * @param destination
+	 * @param name
+	 * @return sorted list of trips excluding passenger
 	 */
 	@GetMapping("/trips/{location}/{destination}/{passenger}/date")
 	public List<Trip> listTripsAscendingDate(@PathVariable("location") String departureLocation, 
@@ -899,6 +979,16 @@ public class KarpoolController {
 		return fullTrip;
 	}
 
+	/**
+	 * lists all trips matching the query in ascending order of price. This 
+	 * query takes as input the name of the passenger that is logged into the app. 
+	 * It excludes trips that the passenger has already joined in the search results. 
+	 * 
+	 * @param departureLocation
+	 * @param destination
+	 * @param name
+	 * @return sorted list of trips excluding passenger
+	 */
 	@GetMapping("/trips/{location}/{destination}/{passenger}/price")
 	public List<Trip> listTripsAscendingPrice(@PathVariable("location") String departureLocation, 
 			@PathVariable("destination") String destination, @PathVariable("passenger") String name)
@@ -945,6 +1035,13 @@ public class KarpoolController {
 		return fullTrip;
 	}
 
+	/**
+	 * lists all trips that are set between two dates
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @return list of trips
+	 */
 	@GetMapping("/trips/date/{date1}/{date2}")
 	public List<Trip> listTripsInTimeframe(@PathVariable("date1") String startDate, @PathVariable("date2") String endDate) {
 		List<Integer> trips = repository.getAllTrips();
@@ -963,6 +1060,11 @@ public class KarpoolController {
 
 	}
 
+	/**
+	 * Gets the top 3 most popular destinations
+	 * 
+	 * @return sorted list top 3
+	 */
 	@GetMapping("/trips/destination/top3")
 	public ArrayList<String> getPopularDestination() 
 	{
@@ -1015,7 +1117,7 @@ public class KarpoolController {
 
 				third = s;
 			}
-			
+
 		}
 		topThree.add(first);
 		topThree.add(second);
@@ -1024,7 +1126,12 @@ public class KarpoolController {
 
 	}
 
-
+	/**
+	 * Displays info for specific trip
+	 * 
+	 * @param tripID
+	 * @return trip
+	 */
 	@GetMapping("/trips/{tripID}")
 	public Trip getTripInfo(@PathVariable("tripID")int tripID)
 	{
@@ -1033,9 +1140,10 @@ public class KarpoolController {
 	}
 
 	/**
-	 * lists all trips in the database
+	 * lists all open trips in the database. Open trips are trips which
+	 * have not yet been completed.
 	 * 
-	 * @return list of trips
+	 * @return list of open trips
 	 */
 	@GetMapping("/trips/open/all")
 	public List<Trip> listAllOpenTrips()
@@ -1058,6 +1166,15 @@ public class KarpoolController {
 		return fullTrip;
 	}
 
+	/**
+	 * Modifies the departure date of a trip. You can't set the date of a trip to
+	 * a date that has already passed.
+	 * 
+	 * @param tripID
+	 * @param departureDate
+	 * @return Response
+	 * @throws ParseException
+	 */
 	@PostMapping("/trips/{tripID}/date/{date}")
 	public Response modifyTripDate(@PathVariable("tripID")int tripID, @PathVariable("date")String departureDate) throws ParseException
 	{
@@ -1103,6 +1220,14 @@ public class KarpoolController {
 		}
 	}
 
+	/**
+	 * Modifies departure time of a trip. Cannot set departure time to a time that has already passed. 
+	 * 
+	 * @param tripID
+	 * @param departureTime
+	 * @return Response
+	 * @throws ParseException
+	 */
 	@PostMapping("/trips/{tripID}/time/{time}")
 	public Response modifyTripTime(@PathVariable("tripID")int tripID, @PathVariable("time")String departureTime) throws ParseException 
 	{
@@ -1177,6 +1302,13 @@ public class KarpoolController {
 
 	}
 
+	/**
+	 * Modifies departure location of a trip. Cannot modify departure location once passengers have joined
+	 * 
+	 * @param tripID
+	 * @param departureLocation
+	 * @return Response
+	 */
 	@PostMapping("/trips/{tripID}/triplocation/{location}")
 	public Response modifyTripLocation(@PathVariable("tripID")int tripID, @PathVariable("location")String departureLocation) 
 	{
@@ -1197,7 +1329,7 @@ public class KarpoolController {
 		}
 
 		else {
-			r.setError("Cannot Modify a trip once passengers have join");
+			r.setError("Cannot modify a trip once passengers have joined");
 			r.setResponse(false);
 			return r;
 		}
@@ -1205,6 +1337,13 @@ public class KarpoolController {
 
 	}
 
+	/**
+	 * Modifies destination of a trip. Cannot modify destination once passengers have joined.
+	 * 
+	 * @param tripID
+	 * @param destination
+	 * @return Response
+	 */
 	@PostMapping("/trips/{tripID}/tripdestination/{destination}")
 	public Response modifyTripDestination(@PathVariable("tripID")int tripID, @PathVariable("destination")String destination) 
 	{
@@ -1227,12 +1366,18 @@ public class KarpoolController {
 		}
 
 		else {
-			r.setError("Cannot Modify a trip once passengers have join");
+			r.setError("Cannot modify a trip once passengers have joined");
 			r.setResponse(false);
 			return r;
 		}
 	}
 
+	/**
+	 * Modifies the price of a trip. Cannot modify the price once passengers have joined
+	 * @param tripID
+	 * @param price
+	 * @return Response
+	 */
 	@PostMapping("/trips/{tripID}/tripprice/{price}")
 	public Response modifyTripPrice(@PathVariable("tripID")int tripID, @PathVariable("price")int price) 
 	{
@@ -1255,13 +1400,20 @@ public class KarpoolController {
 		}
 
 		else {
-			r.setError("Cannot Modify a trip once passengers have join");
+			r.setError("Cannot modify a trip once passengers have joined");
 			r.setResponse(false);
 			return r;
 		}
 
 	}
 
+	/**
+	 * Modifies available seats in a trip. Cannot modify available seats once passengers have joined
+	 * 
+	 * @param tripID
+	 * @param seatAvailable
+	 * @return Response
+	 */
 	@PostMapping("/trips/{tripID}/seats/{seats}")
 	public Response modifyTripSeats(@PathVariable("tripID")int tripID, @PathVariable("seats")int seatAvailable) 
 	{
@@ -1291,11 +1443,12 @@ public class KarpoolController {
 
 	/**
 	 * This method marks a trip as completed
-	 * @param trip
-	 * @throws ParseException 
+	 * 
+	 * @param tripID
+	 * @return Response
 	 */
 	@PostMapping("/trips/close/{tripID}")
-	public Response closeTrip(@PathVariable("tripID")int tripID) throws ParseException
+	public Response closeTrip(@PathVariable("tripID")int tripID)
 	{
 		Response r = new Response();
 		try {
@@ -1310,8 +1463,6 @@ public class KarpoolController {
 		return r;
 	}
 
-
-
 	/**
 	 * This method deletes a trip from the repository. Used when a driver deletes a trip before
 	 * there are any passengers on it
@@ -1322,46 +1473,12 @@ public class KarpoolController {
 	@PostMapping("/trips/delete/{trip}")
 	public Response deleteTrip(@PathVariable("trip")int tripID) throws ParseException
 	{
-		//TODO can only delete trip if the date hasnt passed yet
+		//TODO accurate response
 		repository.deleteTrip(tripID);
 		Response r = new Response();
 		r.setResponse(true);
 		return r;
 	}
 
-	/*public float Distance (int zipcode1, int zipcode2) throws MalformedURLException, IOException
-	{
-
-        BufferedReader br = null;
-
-        try {
-
-            URL url = new URL("https://www.zipcodeapi.com/rest/GOhazMBKVJ2VDSEOrrkf0sswW4D5c4NYOjZi2mGTjf2wuvgvTkUj5L1KpR2GkRRI/distance.json/" + zipcode1 + "/" +zipcode2 +"/km");
-            br = new BufferedReader(new InputStreamReader(url.openStream()));
-
-            String line;
-
-            StringBuilder sb = new StringBuilder();
-
-            while ((line = br.readLine()) != null) {
-                sb.append(line);
-                sb.append(System.lineSeparator());
-            }
-
-            String RoughDistance = sb.toString();
-            if (RoughDistance.charAt(2) == 'e') {
-            	return 0;
-            }
-            String intValue = RoughDistance.replaceAll("[^0-9, .]", "");
-            float distance = Float.parseFloat(intValue);
-            return distance;
-
-        } finally {
-
-            if (br != null) {
-                br.close();
-            }
-        }
-    }*/
 }
 
