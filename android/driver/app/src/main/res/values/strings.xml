@@ -49,6 +49,8 @@
     <string name="trip_seats">Seats Available</string>
     <string name="trips_passengers">View Passengers</string>
     <string name="trip_delete">DELETE TRIP</string>
+    <string name="trip_close">CLOSE TRIP</string>
+
 
     <!-- Passenger activity -->
     <string name="passengers_label">Passengers</string>

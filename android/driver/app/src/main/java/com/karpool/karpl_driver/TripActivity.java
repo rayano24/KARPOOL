@@ -44,8 +44,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -66,17 +69,18 @@ public class TripActivity extends AppCompatActivity {
     private final static String KEY_TRIP_ORIGIN = "triplocation";
     private final static String KEY_TRIP_SEATS = "seats";
     private final static String KEY_TRIP_ID = "tripID";
-    private final static String KEY_USER_ID = "userID";
     private final static String KEY_TRIP_PRICE = "tripprice";
-    private static String userID, tripID, tripMode;
-    private final static String KEY_TRIP_FRAG_MODE = "tripMode";
+    private static String tripID, tripMode, tripStatus;
+    private final static String KEY_TRIP_FRAG_MODE = "tripMode"; //past or upcoming
+    private final static String KEY_TRIP_ACTION = "deleteClose"; // to decide whether to show the delete or close trip button and which async task to complete
+
 
 
     // UI elements
 
     private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats;
     private static TextView modifyDate, modifyTime;
-    private Button deleteButton, viewPassengerButton, closeButton;
+    private Button deleteButton, viewPassengerButton;
     private static String date, time; // FOR DATABASE
 
 
@@ -95,11 +99,9 @@ public class TripActivity extends AppCompatActivity {
         modifySeats = findViewById(R.id.modifyTripSeats);
         deleteButton = findViewById(R.id.deleteButton);
         viewPassengerButton = findViewById(R.id.messageButton);
-        closeButton = findViewById(R.id.closeButton);
 
 
         tripID = prefs.getString(KEY_TRIP_ID, null);
-        userID = prefs.getString(KEY_USER_ID, null);
         tripMode = prefs.getString(KEY_TRIP_FRAG_MODE, null);
 
 
@@ -113,21 +115,26 @@ public class TripActivity extends AppCompatActivity {
         modifyPrice.setText("$" + prefs.getString(KEY_TRIP_PRICE, null));
 
 
+        if(compareDates(modifyDate.getText().toString())) {
+            deleteButton.setText(getString(R.string.trip_close));
+            prefs.edit().putString(KEY_TRIP_ACTION, "close").commit();
+        }
+        else {
+            deleteButton.setText(getString(R.string.trip_delete));
+            prefs.edit().putString(KEY_TRIP_ACTION, "delete").commit();
+        }
+
+
+        tripStatus = prefs.getString(KEY_TRIP_ACTION, "close");
+
+
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                setTripStatus("delete");
+                setTripStatus(tripStatus);
 
             }
         });
-
-
-        // to close a trip after it is completed
-        closeButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                setTripStatus("close");
-            }
-        });
-
 
         // view the list of passengers
         viewPassengerButton.setOnClickListener(new View.OnClickListener() {
@@ -278,6 +285,7 @@ public class TripActivity extends AppCompatActivity {
         }
 
         else {
+            // the remainder of cases (destination,origin)
             HttpUtils.post("trips/" + Integer.parseInt(tripID) + "/" + category + "/" + newValue.trim().replaceAll(" ", "_"), new RequestParams(), new JsonHttpResponseHandler() {
 
 
@@ -474,7 +482,6 @@ public class TripActivity extends AppCompatActivity {
             modifyDate.setClickable(false);
             deleteButton.setVisibility(View.INVISIBLE);
             viewPassengerButton.setVisibility(View.INVISIBLE);
-            closeButton.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -536,6 +543,33 @@ public class TripActivity extends AppCompatActivity {
         }
 
     }
+
+
+    /**
+     * Compares the entered date with the current one in order to find out if it has already apssed
+     * @param date the trip date
+     * @return a boolean true if the date has passed
+     */
+    private boolean compareDates(String date) {
+
+        boolean datePassed = false;
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date strDate = sdf.parse(date);
+
+            if (System.currentTimeMillis() > strDate.getTime()) {
+                datePassed = true;
+            } else  {
+                datePassed = false;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return datePassed;
+    }
+
 
 
 }
