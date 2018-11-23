@@ -1066,10 +1066,10 @@ public class KarpoolController {
 	 * @return sorted list top 3
 	 */
 	@GetMapping("/trips/destination/top3")
-	public ArrayList<String> getPopularDestination() 
+	public Map<String,String> getPopularDestination() 
 	{
 		List<String> popularDestination = repository.getFrequentDestinations();
-		ArrayList<String> topThree = new ArrayList<String>();
+		Map<String,String> top3 = new HashMap<String,String>();
 		String first = null;
 		int firstCount = 0;
 
@@ -1119,10 +1119,10 @@ public class KarpoolController {
 			}
 
 		}
-		topThree.add(first);
-		topThree.add(second);
-		topThree.add(third);
-		return topThree;
+		top3.put("first", first);
+		top3.put("second", second);
+		top3.put("third", third);
+		return top3;
 
 	}
 
