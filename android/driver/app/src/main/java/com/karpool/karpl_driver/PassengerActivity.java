@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -23,6 +24,9 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * Displays the list of passengers for a specific trip. Is dynamically loaded through the use of a recycler view.
+ */
 public class PassengerActivity extends Activity {
 
     private static String tripID;
@@ -35,7 +39,6 @@ public class PassengerActivity extends Activity {
     TextView noPassengersJoined;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +47,10 @@ public class PassengerActivity extends Activity {
 
         tripID = prefs.getString(KEY_TRIP_ID, null);
 
+        // setting up the recycler view
+
         passengerRecyclerView = findViewById(R.id.passengersRecyclerView);
         noPassengersJoined = findViewById(R.id.noPassengersJoined);
-
 
 
         passengerAdapter = new PassengerAdapter(passengerList);
@@ -60,12 +64,10 @@ public class PassengerActivity extends Activity {
         displayPassengersTask();
 
 
-
     }
 
     /**
-     * Represents an async task to display the trip
-     *
+     * An asynchronous process that displays the passengers by adding them to the recycler view.
      */
     public void displayPassengersTask() {
 
@@ -79,11 +81,10 @@ public class PassengerActivity extends Activity {
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
-                // TODO
                 passengerList.clear();
 
                 try {
-                    for(int i = 0; i < response.length(); i++) {
+                    for (int i = 0; i < response.length(); i++) {
                         JSONObject passenger = response.getJSONObject(i);
                         String passengerNumber = passenger.getString("phoneNumber");
                         String areaCode = passengerNumber.substring(0, 3);
@@ -98,7 +99,7 @@ public class PassengerActivity extends Activity {
                     e.printStackTrace();
                 }
 
-                if(passengerList.size() == 0) {
+                if (passengerList.size() == 0) {
                     noPassengersJoined.setVisibility(View.VISIBLE);
 
                 }
@@ -108,10 +109,15 @@ public class PassengerActivity extends Activity {
 
             }
 
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
+                Toast.makeText(PassengerActivity.this, "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
+
+
+            }
+
         });
     }
-
-
 
 
 }

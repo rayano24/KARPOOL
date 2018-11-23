@@ -18,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -29,6 +30,9 @@ import java.util.Calendar;
 
 import cz.msebera.android.httpclient.Header;
 
+/**
+ * Allows the user to create a trip.
+ */
 public class FragmentOne extends Fragment {
 
     private Button tripTimeButton, tripDateButton, createButton;
@@ -61,15 +65,22 @@ public class FragmentOne extends Fragment {
         newOrigin = rootView.findViewById(R.id.newOrigin);
 
 
+        // starts async task
         createButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                createTripTask(userID, newOrigin.getText().toString(), newDestination.getText().toString(), Integer.parseInt(
-                        newSeats.getText().toString()), time, date, Integer.parseInt(newPrice.getText().toString()));
+                try {
+                    createTripTask(userID, newOrigin.getText().toString(), newDestination.getText().toString(), Integer.parseInt(
+                            newSeats.getText().toString()), time, date, Integer.parseInt(newPrice.getText().toString()));
+                }
+                catch(NumberFormatException | NullPointerException e ) {
+                    Toast.makeText(getActivity(), "One or more of your inputs were invalid.", Toast.LENGTH_LONG).show(); // generic error message
+                }
 
 
             }
         });
 
+        // set date
         tripDateButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 DialogFragment newFragment = new DatePickerFragment();
@@ -79,6 +90,7 @@ public class FragmentOne extends Fragment {
         });
 
 
+        // set time
         tripTimeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 DialogFragment newFragment = new TimePickerFragment();
@@ -92,14 +104,22 @@ public class FragmentOne extends Fragment {
         return rootView;
     }
 
-    /**
-     * Represents an asynchronous create trip task
-     */
 
+    /**
+     * Represents an asynchronous task that allows a user to create a trip
+     *
+     * @param mUser userID of the user creating the trip
+     * @param mOrigin trip origin
+     * @param mDestination trip destination
+     * @param mSeats number of seats
+     * @param mTime trip time
+     * @param mDate trip date
+     * @param mPrice price per individual
+     */
     public void createTripTask(String mUser, String mOrigin, String mDestination, int mSeats, String mTime, String mDate, int mPrice) {
 
 
-        HttpUtils.post("trips/" + mUser + "/" + mOrigin + "/" + mDestination + "/" + mSeats + "/" + mTime + "/" + mDate + "/" + mPrice, new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.post("trips/" + mUser + "/" + mOrigin.replaceAll(" ", "_") + "/" + mDestination.replaceAll(" ", "_") + "/" + mSeats + "/" + mTime + "/" + mDate + "/" + mPrice, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onFinish() {
@@ -115,12 +135,20 @@ public class FragmentOne extends Fragment {
                     } else {
 
 
+
+
                     }
 
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Toast.makeText(getActivity(), "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
+
             }
 
         });
@@ -129,6 +157,10 @@ public class FragmentOne extends Fragment {
     }
 
 
+    /**
+     * Opens a dialog in order to enter a time.
+     * When time is entered, starts an asynchronous task to update the time
+     */
     public static class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
 
@@ -152,6 +184,11 @@ public class FragmentOne extends Fragment {
 
     }
 
+
+    /**
+     * Opens a dialog in order to enter a date.
+     * When a date is entered, starts an asynchronous task to update the date.
+     */
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
 
@@ -181,7 +218,14 @@ public class FragmentOne extends Fragment {
         }
     }
 
-    protected static String convertDate(int input) {
+
+    /**
+     * Converts a date/time value to be two digits
+     *
+     * @param input the value you want to convert
+     * @return a 2 digit output such as 03 if 3 were inputted
+     */
+    private static String convertDate(int input) {
         if (input >= 10) {
             return String.valueOf(input);
         } else {
@@ -189,7 +233,11 @@ public class FragmentOne extends Fragment {
         }
     }
 
-    protected void clearFields() {
+
+    /**
+     * Clears all fields after creating a trip
+     */
+    private void clearFields() {
         newOrigin.setText("");
         newDestination.setText("");
         newPrice.setText("");

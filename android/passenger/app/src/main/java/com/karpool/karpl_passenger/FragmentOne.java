@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,14 +20,11 @@ import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +60,9 @@ public class FragmentOne extends Fragment {
     private final static String KEY_TRIP_DRIVER_NUMBER = "number";
     private final static String KEY_TRIP_DRIVER_RATING = "rating";
     private final static String KEY_TRIP_PRICE = "tripprice";
+    private final static String KEY_BACK_PRESS = "returnFromSMS";
+
+    BottomNavigationView navigation; // to update the item selected when manually switching a fragment
 
 
     private static String userLocation, userID;
@@ -83,6 +83,8 @@ public class FragmentOne extends Fragment {
         citySearch = rootView.findViewById(R.id.citySearch);
         invalidCity = rootView.findViewById(R.id.invalidCity);
         searchSpinner = rootView.findViewById(R.id.searchSpinner);
+        navigation = getActivity().findViewById(R.id.navigation);
+
 
         // setting up the recycler view to display the trips
 
@@ -143,7 +145,7 @@ public class FragmentOne extends Fragment {
                 if (userLocation == null) {
                     // shows a snackbar in order to tell the user to set their location
                     Snackbar setLocation = Snackbar.make(getActivity().findViewById(android.R.id.content), "You must set your location in the accounts menu!", Snackbar.LENGTH_LONG * 2);
-                    setLocation.setAction("Update", new snackBarInfo());
+                    setLocation.setAction("Update", new snackBarLocation());
                     setLocation.show();
 
                 } else {
@@ -190,15 +192,21 @@ public class FragmentOne extends Fragment {
     }
 
 
-
     // If the user moves to the TripActivity and joins the trip, this will clear the front page when they go back
     @Override
     public void onResume() {
         super.onResume();
-        citySearch.setQuery("", false);
-        citySearch.clearFocus();
-        tripsList.clear();
-        mAdapter.notifyDataSetChanged();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        if (!prefs.getBoolean(KEY_BACK_PRESS, true)) {
+            prefs.edit().putBoolean(KEY_BACK_PRESS, true).commit();
+            citySearch.setQuery("", false);
+            citySearch.clearFocus();
+            tripsList.clear();
+            mAdapter.notifyDataSetChanged();
+            Snackbar viewTrips = Snackbar.make(getActivity().findViewById(android.R.id.content), "You successfully joined the trip!", Snackbar.LENGTH_LONG * 2);
+            viewTrips.setAction("View Trips", new snackBarView());
+            viewTrips.show();
+        }
     }
 
 
@@ -211,9 +219,11 @@ public class FragmentOne extends Fragment {
      */
     private void prepareTripData(String destination, String searchType) {
 
+
         tripsList.clear();
 
-        HttpUtils.get("trips/" + userLocation + "/" + destination + "/" + userID + "/" + searchType, new RequestParams(), new JsonHttpResponseHandler() {
+        // replace all is to input an underscore into the city name as this is how spaces are displayed in the database (i.e., New York --> New_York)
+        HttpUtils.get("trips/" + userLocation + "/" + destination.replaceAll(" ", "_") + "/" + userID + "/" + searchType, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onFinish() {
                 updateVisibility(false, true);
@@ -235,6 +245,10 @@ public class FragmentOne extends Fragment {
                         String driverName = driver.getString("name");
                         String driverNumber = driver.getString("phoneNumber");
                         Boolean tripComplete = obj.getBoolean("tripComplete");
+                        // cities such as new york are entered into the database as new_york as the space cannot be parsed into a URL, this removes the underscore for user viewing
+                        String origin = obj.getString("departureLocation").replaceAll("_", " ");
+                        String destination = obj.getString("destination").replaceAll("_", " ");
+
 
                         JSONArray ratingArray = driver.getJSONArray("ratings");
                         double driverRating = 0.0;
@@ -246,7 +260,7 @@ public class FragmentOne extends Fragment {
 
 
                         if (!tripComplete) {
-                            tripsList.add(new Trip(obj.getString("departureLocation"), obj.getString("destination"), year + "-" + formatter(remainder, "-", 2),
+                            tripsList.add(new Trip(origin, destination, year + "-" + formatter(remainder, "-", 2),
                                     formatter(time, ":", 2), driverName, driverNumber, Double.toString(driverRating), Integer.toString(obj.getInt("seatAvailable")), Integer.toString(obj.getInt("price")), Integer.toString(obj.getInt("tripId"))));
                         }
 
@@ -272,8 +286,6 @@ public class FragmentOne extends Fragment {
                 Toast.makeText(getActivity(), "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
             }
         });
-
-
     }
 
 
@@ -323,15 +335,36 @@ public class FragmentOne extends Fragment {
     }
 
     /**
-     * To switch fragments when the snackbar button is clicked
+     * This is for the snackbar that pops up if a user has not set their location.. Takes them to the third fragment.
      */
-    private class snackBarInfo implements View.OnClickListener {
+    private class snackBarLocation implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            Fragment mFragment = new FragmentThree();
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.frame_fragmentholder, mFragment).commit();
+            FragmentThree fragment = new FragmentThree();
+            Bundle bundle = new Bundle();
+            fragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_fragmentholder, fragment, "tag_frag_account")
+                    .commit();
+            navigation.setSelectedItemId(R.id.navigation_account);
+        }
+    }
+
+    /**
+     * This is for the snackbar that pops up if a user has joined a trip. Takes them to the trips page.
+     */
+    private class snackBarView implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            FragmentTwo fragment = new FragmentTwo();
+            Bundle bundle = new Bundle();
+            fragment.setArguments(bundle);
+            getActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.frame_fragmentholder, fragment, "tag_frag_trips")
+                    .commit();
+            navigation.setSelectedItemId(R.id.navigation_trips);
         }
     }
 

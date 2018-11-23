@@ -47,7 +47,15 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
+
+/**
+ * Displays details of a specific trip and gives the user the ability to modify it if a user has not joined.
+ * Can also delete or close a trip, and click to open a PassengerActivity
+ */
 public class TripActivity extends AppCompatActivity {
+
+
+    // Pref keys
 
     private final static String KEY_TRIP_DESTINATION = "tripdestination";
     private final static String KEY_TRIP_TIME = "time";
@@ -61,11 +69,12 @@ public class TripActivity extends AppCompatActivity {
     private final static String KEY_TRIP_FRAG_MODE = "tripMode";
 
 
+    // UI elements
+
     private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats, noPassengersJoined;
     private static TextView modifyDate, modifyTime;
     private Button deleteButton, viewPassengerButton, closeButton;
     private static String date, time; // FOR DATABASE
-
 
 
     @Override
@@ -86,17 +95,12 @@ public class TripActivity extends AppCompatActivity {
         closeButton = findViewById(R.id.closeButton);
 
 
-
         tripID = prefs.getString(KEY_TRIP_ID, null);
         userID = prefs.getString(KEY_USER_ID, null);
         tripMode = prefs.getString(KEY_TRIP_FRAG_MODE, null);
 
 
-        String date = (prefs.getString(KEY_TRIP_DATE, null));
-
-        String year = date.substring(0, 4);
-        String remainder = date.substring(4, 8);
-        String time = prefs.getString(KEY_TRIP_TIME, null);
+        // setting values based on recycler view on fragment 2
 
         modifyTime.setText(prefs.getString(KEY_TRIP_TIME, null));
         modifyDate.setText(prefs.getString(KEY_TRIP_DATE, null));
@@ -104,7 +108,6 @@ public class TripActivity extends AppCompatActivity {
         modifyOrigin.setText(prefs.getString(KEY_TRIP_ORIGIN, null));
         modifySeats.setText(prefs.getString(KEY_TRIP_SEATS, null));
         modifyPrice.setText("$" + prefs.getString(KEY_TRIP_PRICE, null));
-
 
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +118,7 @@ public class TripActivity extends AppCompatActivity {
         });
 
 
+        // to close a trip after it is completed
         closeButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 setTripStatus("close");
@@ -123,6 +127,7 @@ public class TripActivity extends AppCompatActivity {
         });
 
 
+        // view the list of passengers
         viewPassengerButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent I = new Intent(TripActivity.this, PassengerActivity.class);
@@ -131,13 +136,16 @@ public class TripActivity extends AppCompatActivity {
         });
 
 
+        // modify the starting location
         modifyOrigin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                openDialog(modifyOrigin, "Origin", "Update your trip's starting position");
+                openDialog(modifyOrigin, "Origin", "Update your trip's starting position"); // opens a popup dialog to enter the new origin, confirming input opens an async task to modify
 
             }
         });
 
+
+        // modify the destination
         modifyDestination.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 openDialog(modifyDestination, "Destination", "Update your trip's destination");
@@ -145,6 +153,7 @@ public class TripActivity extends AppCompatActivity {
         });
 
 
+        // modify the price
         modifyPrice.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 openDialog(modifyPrice, "Price", "Update your trip's price");
@@ -153,6 +162,7 @@ public class TripActivity extends AppCompatActivity {
             }
         });
 
+        // modify the number of seats
         modifySeats.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 openDialog(modifySeats, "Seats", "Update your vehicle's capacity");
@@ -161,6 +171,7 @@ public class TripActivity extends AppCompatActivity {
         });
 
 
+        // modify the date - opens a date picker fragment where an async task is called after a date is selected
         modifyDate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 DialogFragment newFragment = new DatePickerFragment();
@@ -169,6 +180,7 @@ public class TripActivity extends AppCompatActivity {
         });
 
 
+        // modify the time - opens a time picker fragment wehre an async task is called after a time is selected
         modifyTime.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 DialogFragment newFragment = new TimePickerFragment();
@@ -176,15 +188,12 @@ public class TripActivity extends AppCompatActivity {
             }
         });
 
-        convertView(tripMode);
+        convertView(tripMode); //  if a trip already occurred, disable ability to modify, close, delete or view passengers
     }
 
 
-
-
-
     /**
-     * Represents an async task to modify the trip
+     * Represents an async task to modify any aspect of the trip. The category indicates what you want to modify.
      *
      * @param newValue the new value
      * @param category a string to indicate what you are modifying
@@ -205,13 +214,20 @@ public class TripActivity extends AppCompatActivity {
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     try {
                         if (response.getBoolean("response")) {
-                            updateView(category, newValue);
+                            updateView(category, newValue); //  updates the UI with the new value
 
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
+
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                    Toast.makeText(TripActivity.this, "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
 
                 }
 
@@ -241,34 +257,46 @@ public class TripActivity extends AppCompatActivity {
 
                 }
 
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                    Toast.makeText(TripActivity.this, "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
+
+                }
+
             });
         }
     }
 
 
-
-
-
     /**
-     * Represents an async task to delete the selected trip
+     * Represents an asynchronous task to either set a trip to closed or delete it.
+     *
+     * @param status a string that can either be close, or delete based on the desired outcome
      */
     public void setTripStatus(String status) {
 
-            HttpUtils.post("trips/" + status + "/" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
-                @Override
-                public void onFinish() {
-                }
+        HttpUtils.post("trips/" + status + "/" + tripID, new RequestParams(), new JsonHttpResponseHandler() {
+            @Override
+            public void onFinish() {
+            }
 
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                   finish();
-
-
-                }
-
-            });
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                //todo
+                finish();
 
 
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Toast.makeText(TripActivity.this, "There was a network error, try again later.", Toast.LENGTH_LONG).show(); // generic network error
+
+            }
+
+        });
 
 
     }
@@ -304,6 +332,7 @@ public class TripActivity extends AppCompatActivity {
 
         alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
+                // calls the necessary async tasks
                 switch (category) {
                     case ("Origin"):
                         modifyTripTask(input.getText().toString(), KEY_TRIP_ORIGIN);
@@ -334,31 +363,12 @@ public class TripActivity extends AppCompatActivity {
 
     }
 
-    // This is added to return the main page when you are in the process of signing up/registering
-    @Override
-    public void onBackPressed() {
-        finish();
-    }
-
 
     /**
-     * Converts a date/time value to be two digits
+     * Updates the UI element with the new value inputted by the user
      *
-     * @param input the value you want to convert
-     * @return a 2 digit output such as 03 if 3 were inputted
-     */
-
-    protected static String convertDate(int input) {
-        if (input >= 10) {
-            return String.valueOf(input);
-        } else {
-            return "0" + String.valueOf(input);
-        }
-    }
-
-    /**
-     * @param category
-     * @param newValue
+     * @param category what you are modifying
+     * @param newValue the new value you want to set
      */
     public void updateView(String category, String newValue) {
         switch (category) {
@@ -387,7 +397,22 @@ public class TripActivity extends AppCompatActivity {
     }
 
     /**
+     * Converts a date/time value to be two digits
+     *
+     * @param input the value you want to convert
+     * @return a 2 digit output such as 03 if 3 were inputted
+     */
+    protected static String convertDate(int input) {
+        if (input >= 10) {
+            return String.valueOf(input);
+        } else {
+            return "0" + String.valueOf(input);
+        }
+    }
+
+    /**
      * Removes the ability to modify values if a trip has already occurred
+     *
      * @param type the trip type (past or upcoming)
      */
     public void convertView(String type) {
@@ -406,31 +431,9 @@ public class TripActivity extends AppCompatActivity {
 
 
     /**
-     * Used for date and time formatting
-     *
-     * @param text   the string you want to format
-     * @param insert the character to insert
-     * @param n      insert every n characters
-     * @return
+     * Opens a dialog in order to enter a time.
+     * When time is entered, starts an asynchronous task to update the time
      */
-    public static String formatter(
-            String text, String insert, int n) {
-        StringBuilder builder = new StringBuilder(
-                text.length() + insert.length() * (text.length() / n) + 1);
-
-        int index = 0;
-        String prefix = "";
-        while (index < text.length()) {
-
-            builder.append(prefix);
-            prefix = insert;
-            builder.append(text.substring(index,
-                    Math.min(index + n, text.length())));
-            index += n;
-        }
-        return builder.toString();
-    }
-
     public static class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
 
@@ -448,14 +451,15 @@ public class TripActivity extends AppCompatActivity {
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             time = convertDate(hourOfDay) + convertDate(minute);
             new TripActivity().modifyTripTask(time, KEY_TRIP_TIME);
-            //modifyTime.setText(convertDate(hourOfDay) + ":" + convertDate(minute));
-
         }
-
 
     }
 
 
+    /**
+     * Opens a dialog in order to enter a date.
+     * When a date is entered, starts an asynchronous task to update the date.
+     */
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
 

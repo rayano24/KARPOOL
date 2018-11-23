@@ -293,6 +293,12 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
+        if (TextUtils.isEmpty(name)) {
+            registerName.setError(getString(R.string.error_field_required));
+            focusView = registerName;
+            cancel = true;
+        }
+
 
         if (TextUtils.isEmpty(password)) {
             registerPassword.setError(getString(R.string.error_field_required));
@@ -516,7 +522,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         Intent I = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(I);
                         finish();
-
                     } else {
                         showSignInProgress(false);
                         Toast.makeText(LoginActivity.this, response.getString("error"),
@@ -559,12 +564,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 try {
-                    if (!response.getString("name").isEmpty()) {
+                    if (!response.isNull("name")) {
                         setElementVisibility("register", true);
-
-
                     } else {
-
+                        showRegistrationProgress(false);
+                        Toast.makeText(LoginActivity.this, response.getString("error"), Toast.LENGTH_LONG).show(); // log in error
 
                     }
                 } catch (JSONException e) {

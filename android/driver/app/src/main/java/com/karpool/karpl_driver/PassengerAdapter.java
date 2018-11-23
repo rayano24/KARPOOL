@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+/**
+ * Adapter for the passenger class to be used for the recycler view
+ */
 public class PassengerAdapter extends RecyclerView.Adapter<PassengerAdapter.MyViewHolder> {
 
     private List<Passenger> passengerList;
