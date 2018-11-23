@@ -1048,6 +1048,14 @@ public class KarpoolController {
 				r.setResponse(false);
 				return r;
 			}
+			
+			else {
+				repository.modifyDepartureTime(t, departureTime);
+				r.setResponse(true);
+				return r;
+				
+				}
+			
 		}
 			
 		else if ((date1.compareTo(date2)) < 0) {
@@ -1055,13 +1063,14 @@ public class KarpoolController {
 				r.setResponse(false);
 				return r;
 			}
-			
+		
 		else {
 			repository.modifyDepartureTime(t, departureTime);
 			r.setResponse(true);
 			return r;
 			
 			}
+			
 		
 			
 		} catch (NullPointerException e) {
