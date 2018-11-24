@@ -158,18 +158,25 @@ public class FragmentTwo extends Fragment {
      */
     public void displayTrips() {
 
+        upcomingTripsList.clear();
+        pastTripsList.clear();
+
+        upcomingAdapter.notifyDataSetChanged();
+        pastAdapter.notifyDataSetChanged();
+
+
 
         HttpUtils.get("trips/drivers/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
             public void onFinish() {
+                upcomingTripsList.clear();
+                pastTripsList.clear();
             }
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 try {
-                    upcomingTripsList.clear();
-                    pastTripsList.clear();
 
                     // parsing data from each trip in the array to create a new Trip object for the recycler view
 
@@ -208,10 +215,18 @@ public class FragmentTwo extends Fragment {
 
                 if (upcomingTripsList.isEmpty())
                     noUpcomingTrips.setVisibility(View.VISIBLE);
+                else {
+                    noUpcomingTrips.setVisibility(View.GONE);
+
+                }
 
 
                 if (pastTripsList.isEmpty())
                     noPastTrips.setVisibility(View.VISIBLE);
+                else {
+                    noPastTrips.setVisibility(View.GONE);
+
+                }
 
             }
 
@@ -228,6 +243,7 @@ public class FragmentTwo extends Fragment {
 
             }
         });
+
 
     }
 

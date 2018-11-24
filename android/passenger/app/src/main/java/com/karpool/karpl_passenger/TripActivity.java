@@ -102,7 +102,7 @@ public class TripActivity extends AppCompatActivity {
         // formatting rating so that trailing zeroes do not show
 
         DecimalFormat df = new DecimalFormat("###.#");
-        if (driverRating.equals("-1.0")) {
+        if (driverRating.equals("NaN")) {
             tripDriverRating.setText("No Rating ");
         } else {
             tripDriverRating.setText(df.format(Double.parseDouble(driverRating)) + "/5");

@@ -223,16 +223,18 @@ public class FragmentOne extends Fragment {
         tripsList.clear();
 
         // replace all is to input an underscore into the city name as this is how spaces are displayed in the database (i.e., New York --> New_York)
-        HttpUtils.get("trips/" + userLocation + "/" + destination.replaceAll(" ", "_") + "/" + userID + "/" + searchType, new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.get("trips/" + userLocation.trim().replaceAll(" ", "_") + "/" + destination.replaceAll(" ", "_") + "/" + userID + "/" + searchType, new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onFinish() {
                 updateVisibility(false, true);
+                tripsList.clear();
+
             }
+
 
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONArray response) {
                 try {
-                    tripsList.clear();
 
                     // parse all the data needed and put each trip one by one into the recycler view, if it is empty, display the error message
                     for (int i = 0; i < response.length(); i++) {

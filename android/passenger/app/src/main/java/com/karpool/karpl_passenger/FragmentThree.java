@@ -83,7 +83,7 @@ public class FragmentThree extends Fragment {
 
 
         if (location != null && !location.trim().isEmpty()) {
-            userLocation.setText(location);
+            userLocation.setText(location.replaceAll("_", " "));
         } else {
             userLocation.setText("Enter your location here");
         }
@@ -112,7 +112,7 @@ public class FragmentThree extends Fragment {
 
         alert.setPositiveButton("Update", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                userLocation.setText(input.getText().toString());
+                userLocation.setText(input.getText().toString().replaceAll("_", " "));
                 prefs.edit().putString(KEY_USER_LOCATION, input.getText().toString()).commit();
 
 

@@ -75,7 +75,6 @@ public class TripActivity extends AppCompatActivity {
     private final static String KEY_TRIP_ACTION = "deleteClose"; // to decide whether to show the delete or close trip button and which async task to complete
 
 
-
     // UI elements
 
     private TextView modifyOrigin, modifyDestination, modifyPrice, modifySeats;
@@ -115,18 +114,16 @@ public class TripActivity extends AppCompatActivity {
         modifyPrice.setText("$" + prefs.getString(KEY_TRIP_PRICE, null));
 
 
-        if(compareDates(modifyDate.getText().toString())) {
+        if (compareDates(modifyDate.getText().toString())) {
             deleteButton.setText(getString(R.string.trip_close));
             prefs.edit().putString(KEY_TRIP_ACTION, "close").commit();
-        }
-        else {
+        } else {
             deleteButton.setText(getString(R.string.trip_delete));
             prefs.edit().putString(KEY_TRIP_ACTION, "delete").commit();
         }
 
 
         tripStatus = prefs.getString(KEY_TRIP_ACTION, "close");
-
 
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -210,7 +207,6 @@ public class TripActivity extends AppCompatActivity {
     public void modifyTripTask(final String newValue, final String category) {
 
 
-
         // this has its own section as it needs to be parsed as  an int
         if (category.equals(KEY_TRIP_PRICE) || category.equals(KEY_TRIP_SEATS)) {
 
@@ -282,9 +278,7 @@ public class TripActivity extends AppCompatActivity {
                 }
 
             });
-        }
-
-        else {
+        } else {
             // the remainder of cases (destination,origin)
             HttpUtils.post("trips/" + Integer.parseInt(tripID) + "/" + category + "/" + newValue.trim().replaceAll(" ", "_"), new RequestParams(), new JsonHttpResponseHandler() {
 
@@ -324,11 +318,12 @@ public class TripActivity extends AppCompatActivity {
 
     /**
      * Represents an asynchronous task to either set a trip to closed or delete it.
-     *
      */
     public void setTripStatus() {
 
-        HttpUtils.post("trips/" + tripStatus  + "/" + Integer.parseInt(tripID), new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.post("trips/" + tripStatus + "/" + Integer.parseInt(tripID), new RequestParams(), new JsonHttpResponseHandler() {
+
+
             @Override
             public void onFinish() {
             }
@@ -338,18 +333,17 @@ public class TripActivity extends AppCompatActivity {
                 try {
                     if (response.getBoolean("response")) {
                         finish();
+
+                    } else {
+                        Toast.makeText(TripActivity.this, response.getString("error"), Toast.LENGTH_LONG).show();
                     }
-                    else {
-                        Toast.makeText(TripActivity.this, response.getString("error"), Toast.LENGTH_LONG).show(); // generic network error
-
-
-                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                catch(JSONException e) {
 
-                }
 
             }
+
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
@@ -551,6 +545,7 @@ public class TripActivity extends AppCompatActivity {
 
     /**
      * Compares the entered date with the current one in order to find out if it has already apssed
+     *
      * @param date the trip date
      * @return a boolean true if the date has passed
      */
@@ -564,7 +559,7 @@ public class TripActivity extends AppCompatActivity {
 
             if (System.currentTimeMillis() > strDate.getTime()) {
                 datePassed = true;
-            } else  {
+            } else {
                 datePassed = false;
             }
         } catch (ParseException e) {
@@ -573,7 +568,6 @@ public class TripActivity extends AppCompatActivity {
 
         return datePassed;
     }
-
 
 
 }

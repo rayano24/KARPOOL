@@ -231,11 +231,18 @@ public class FragmentTwo extends Fragment {
 
                 if (upcomingTripsList.isEmpty())
                     noUpcomingTrips.setVisibility(View.VISIBLE);
+                else {
+                    noUpcomingTrips.setVisibility(View.GONE);
+
+                }
 
 
                 if (pastTripsList.isEmpty())
                     noPastTrips.setVisibility(View.VISIBLE);
+                else {
+                    noPastTrips.setVisibility(View.GONE);
 
+                }
 
                 upcomingAdapter.notifyDataSetChanged();
                 pastAdapter.notifyDataSetChanged();

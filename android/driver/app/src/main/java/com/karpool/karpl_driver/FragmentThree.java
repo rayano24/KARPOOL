@@ -81,7 +81,7 @@ public class FragmentThree extends Fragment {
 
         if (userRating != null) {
 
-            userNote.setText("Welcome " + userID + " " + userRating + "/5");
+            userNote.setText("Welcome " + userID + " " + "(" + userRating + "/5)");
         } else {
             userNote.setText("Welcome " + userID);
 
