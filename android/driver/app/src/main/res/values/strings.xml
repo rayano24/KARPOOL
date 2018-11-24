@@ -31,8 +31,6 @@
     <string name="create_trip_time">Set Time</string>
 
 
-
-
     <!-- Strings for my trips page -->
     <string name="trips_upcoming">Upcoming</string>
     <string name="trips_past">Past</string>
@@ -62,6 +60,27 @@
     <string name="action_help">Help</string>
     <string name="action_sign_out">Sign out</string>
     <string name="title_activity_passenger">PassengerActivity</string>
+    <string name="title_activity_help">HelpActivity</string>
+
+
+    <!-- HELP ACTIVITY -->
+
+    <string name="help_create_title">How do I create a trip?</string>
+    <string name="help_create">To create a trip, simply fill in the required information in the create tab. To select a time or date, simply tap on the text. If you made a mistake, you can delete your trip assuming no passengers have joined.</string>
+
+
+    <string name="help_view_passenger">How do I know if someone has joined my trip?</string>
+    <string name="help_view">There are two ways to know if somebody has joined your trip. First, navigate to the specific trip. Once you are there, you can either look at the seats available or click view passengers for a more in-depth list of your passengers as well as how to contact them.</string>
+
+
+    <string name="help_modify_title">Can I modify a trips details?</string>
+    <string name="help_modify">Yes! To do this, you just need to open the specific trip and tap on the item you want to modify. Please note however that once a passenger joins, you cannot modify trip details. If there is an error, you should contact your passengers or delete the trip.</string>
+
+    <string name="help_rating_title">Can I see my rating?</string>
+    <string name="help_rating">You cannot see a rating a passenger has given you for a specific trip, however, your overall rating is listed on the account tab.</string>
+
+    <string name="help_close_delete_title">What is the difference between closing and deleting a trip?</string>
+    <string name="help_close_delete">When a trip has not yet occurred (at most one day before the trip), a specific trip will display a delete trip button which allows you to permanently delete a trip. Close trip arrives on the day of the trip and onwards and is used to indicate that a trip is complete. Please note that once you have reached the day of the trip, you cannot cancel it.</string>
 
 
 </resources>
