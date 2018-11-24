@@ -131,7 +131,7 @@ public class TripActivity extends AppCompatActivity {
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                setTripStatus(tripStatus);
+                setTripStatus();
 
             }
         });
@@ -325,11 +325,10 @@ public class TripActivity extends AppCompatActivity {
     /**
      * Represents an asynchronous task to either set a trip to closed or delete it.
      *
-     * @param status a string that can either be close, or delete based on the desired outcome
      */
-    public void setTripStatus(String status) {
+    public void setTripStatus() {
 
-        HttpUtils.post("trips/" + status + "/" + Integer.parseInt(tripID), new RequestParams(), new JsonHttpResponseHandler() {
+        HttpUtils.post("trips/" + tripStatus  + "/" + Integer.parseInt(tripID), new RequestParams(), new JsonHttpResponseHandler() {
             @Override
             public void onFinish() {
             }
@@ -339,6 +338,11 @@ public class TripActivity extends AppCompatActivity {
                 try {
                     if (response.getBoolean("response")) {
                         finish();
+                    }
+                    else {
+                        Toast.makeText(TripActivity.this, response.getString("error"), Toast.LENGTH_LONG).show(); // generic network error
+
+
                     }
                 }
                 catch(JSONException e) {
