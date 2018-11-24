@@ -104,7 +104,7 @@ public class KarpoolRepository
 	public List<Integer> getTripForDriver(String name)
 	{
 		Driver d = entityManager.find(Driver.class, name);
-		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE driver= :driver");
+		Query q = entityManager.createNativeQuery("SELECT trip_id FROM trip WHERE driver= :driver ORDER BY departure_date, departure_time");
 		q.setParameter("driver", d);
 		@SuppressWarnings("unchecked")
 		List<Integer> trips = q.getResultList();

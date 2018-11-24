@@ -586,7 +586,12 @@ public class KarpoolController {
 		{
 			System.out.println("There are no trips for this passenger");
 			return null;
-		}		
+		}	
+		else
+		{
+			List<Trip> orderedTrips = new ArrayList<Trip>();
+			orderedTrips.addAll(t);	
+		}
 		return t;
 	}
 
@@ -1455,11 +1460,10 @@ public class KarpoolController {
 			repository.closeTrip(tripID);
 
 			r.setResponse(true);
-			return r;
 		} catch (NullPointerException e) {
-			System.out.println(ERROR_NOT_FOUND_MESSAGE);
+			r.setResponse(false);
+			r.setError("No such trip exists");
 		}
-		r.setResponse(false);
 		return r;
 	}
 
@@ -1473,7 +1477,6 @@ public class KarpoolController {
 	@PostMapping("/trips/delete/{trip}")
 	public Response deleteTrip(@PathVariable("trip")int tripID) throws ParseException
 	{
-		//TODO accurate response
 		Response r = new Response();
 		try {
 			repository.deleteTrip(tripID);
