@@ -31,13 +31,12 @@
         </activity>
         <activity android:name=".TripActivity" />
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCtxPYabBAtyc-UeIypzWzueluES8KOQGY" />
-
         <activity
             android:name=".PassengerActivity"
-            android:label="@string/title_activity_passenger"></activity>
+            android:label="@string/title_activity_passenger" />
+        <activity
+            android:name=".HelpActivity"
+            android:label="@string/title_activity_help"></activity>
     </application>
 
 </manifest>

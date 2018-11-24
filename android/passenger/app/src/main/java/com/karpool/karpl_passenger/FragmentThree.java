@@ -57,6 +57,16 @@ public class FragmentThree extends Fragment {
             }
         });
 
+
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent I = new Intent(getActivity(), HelpActivity.class);
+                startActivity(I);
+
+            }
+        });
+
         userLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

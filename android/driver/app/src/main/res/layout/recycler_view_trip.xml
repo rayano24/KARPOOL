@@ -9,7 +9,6 @@
     android:foreground="?attr/selectableItemBackground"
     tools:layout_editor_absoluteY="25dp">
 
-    <!-- TODO Check -->
 
     <TextView
         android:id="@+id/origin"

@@ -63,6 +63,25 @@
     <string name="action_help">Help</string>
 
 
+    <!-- HELP ACTIVITY -->
+
+    <string name="title_activity_help">HelpActivity</string>
+
+
+    <string name="help_join_title">How do I join a trip?</string>
+    <string name="help_join">First, make sure your current location is set in the accounts tab. If you do not set it, you will get a warning when searching for a trip. Once done, you can search for a trip in the search tab. You can sort your search either in terms of lowest price or ascending date. After selecting a specific trip, you can simply click the join button. You can also message the driver by tapping the message button. </string>
+
+
+    <string name="help_leave_title">Can I leave a trip?</string>
+    <string name="help_leave">Yes! All you need to do is go to the trips tab, open the desired trip, and click leave trip.</string>
+
+
+    <string name="help_drop_title">Is it possible for a driver to drop me somewhere else near the destination?</string>
+    <string name="help_drop">This is up to the driver. You should send them a message through the message button. The messaging option is available both before joining a trip or after.</string>
+
+    <string name="help_rating_title">Can I rate a trip?</string>
+    <string name="help_rating">Yes! Once a trip is complete, you can rate the driver. You can do this by selecting a specific past trip in the trip page.</string>
+
 
 
 

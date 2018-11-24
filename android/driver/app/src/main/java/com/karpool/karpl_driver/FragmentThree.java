@@ -62,6 +62,15 @@ public class FragmentThree extends Fragment {
             }
         });
 
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent I = new Intent(getActivity(), HelpActivity.class);
+                startActivity(I);
+
+            }
+        });
+
         userID = prefs.getString(KEY_USER_ID, null);
 
         // the rating retrieval is done in the main activity in order to avoid the look of refreshing
@@ -77,6 +86,8 @@ public class FragmentThree extends Fragment {
             userNote.setText("Welcome " + userID);
 
         }
+
+
 
 
         return rootView;
