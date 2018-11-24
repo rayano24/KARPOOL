@@ -158,6 +158,7 @@ public class FragmentTwo extends Fragment {
      */
     public void displayTrips() {
 
+
         HttpUtils.get("trips/drivers/" + userID, new RequestParams(), new JsonHttpResponseHandler() {
 
             @Override
