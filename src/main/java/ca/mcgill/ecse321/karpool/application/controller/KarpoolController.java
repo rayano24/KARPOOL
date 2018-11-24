@@ -406,6 +406,66 @@ public class KarpoolController {
 		topThree.add(third);
 		return topThree;
 	}
+	
+	private ArrayList<Driver> getTopDrivers(List<Driver> activeDrivers) throws NullPointerException
+	{
+		List<Double> rate = new ArrayList<Double>();
+		rate.add(0.0);
+		ArrayList<Driver> topThree = new ArrayList<Driver>();
+		Driver first = new Driver();
+		first.setRatings(rate);
+		Driver second = new Driver();
+		second.setRatings(rate);
+		Driver third = new Driver();
+		third.setRatings(rate);
+		for(Driver d: activeDrivers)
+		{
+			if(getAvgRating(d) >= getAvgRating(first)) //#1
+			{
+				third = second;
+				second = first;
+				first = d;
+			}
+			else if(getAvgRating(d) >= getAvgRating(second)) //#2
+			{
+				third = second;
+				second = d;
+			}
+			else if(getAvgRating(d) >= getAvgRating(third)) //#3
+			{
+				third = d;
+			}
+		}
+		topThree.add(first);
+		topThree.add(second);
+		topThree.add(third);
+		return topThree;
+	}
+	
+	/**
+	 * gets popular drivers within timeframe
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	@GetMapping("/trips/web/drivers/{date1}/{date2}")
+	public List<Driver> getPopularDriversWeb(@PathVariable("date1") String startDate, @PathVariable("date2") String endDate)
+	{
+		List<Trip> t = listTripsInTimeframe(startDate, endDate);
+		List<Driver> activeD = new ArrayList<>();
+		List<Driver> top3 = new ArrayList<>();
+		try {
+			for(Trip trip:t)
+			{
+				activeD.add(trip.getDriver());
+			}
+			top3 = getTopDrivers(activeD);
+		} catch (NullPointerException e) {
+			System.out.println("Something is null");
+		}
+		return top3;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////                                                                   /////////////////
@@ -755,6 +815,69 @@ public class KarpoolController {
 		topThree.add(third);
 		return topThree;
 	}
+	
+	/**
+	 * Gets list of top 3 passengers. Top 3 defined by passengers having gone on the most trips
+	 * 
+	 * @return Ordered list of passengers
+	 */
+	private ArrayList<Passenger> getTopPassengers(List<Passenger> activeP)
+	{
+		Set<Trip> trip = new HashSet<Trip>();
+		List<Passenger> allPassengers = activeP;
+		ArrayList<Passenger> topThree = new ArrayList<Passenger>();
+		Passenger first = new Passenger();
+		first.setTrips(trip);
+		Passenger second = new Passenger();
+		second.setTrips(trip);
+		Passenger third = new Passenger();
+		third.setTrips(trip);
+		for(Passenger p: allPassengers)
+		{
+			if(p.getTrips().size() >= first.getTrips().size()) //#1
+			{
+				third = second;
+				second = first;
+				first = p;
+			}
+			else if(p.getTrips().size() >= second.getTrips().size()) //#2
+			{
+				third = second;
+				second = p;
+			}
+			else if(p.getTrips().size() >= third.getTrips().size()) //#3
+			{
+				third = p;
+			}
+		}
+		topThree.add(first);
+		topThree.add(second);
+		topThree.add(third);
+		return topThree;
+	}
+	
+	/**
+	 * gets popular passengers within timeframe
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	@GetMapping("/trips/web/passengers/{date1}/{date2}")
+	public List<Passenger> getPopularPassengersWeb(@PathVariable("date1") String startDate, @PathVariable("date2") String endDate)
+	{
+		List<Trip> t = listTripsInTimeframe(startDate, endDate);
+		List<Passenger> activeP = new ArrayList<>();
+		for(Trip trip:t)
+		{
+			for(Passenger p:trip.getPassenger())
+			{
+				activeP.add(p);
+			}
+		}
+		List<Passenger> top3 = getTopPassengers(activeP);
+		return top3;
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////                                                                   /////////////////
@@ -1062,7 +1185,6 @@ public class KarpoolController {
 		}
 
 		return tripsInTimeframe;
-
 	}
 
 	/**
@@ -1129,6 +1251,90 @@ public class KarpoolController {
 		top3.put("third", third);
 		return top3;
 
+	}
+	
+	private Map<String,String> getPopularDestination(List<String> popularDestination) 
+	{
+		Map<String,String> top3 = new HashMap<String,String>();
+		String first = null;
+		int firstCount = 0;
+
+		String second = null;
+		int secondCount = 0;
+
+		String third = null;
+		int thirdCount = 0;
+
+		int cityFrequency;
+
+		List<String> cityNames = repository.getFrequentDestinations();
+		Set<String> hs = new HashSet<>();
+
+		hs.addAll(cityNames);
+		cityNames.clear();
+		cityNames.addAll(hs);
+
+		for (String s: cityNames) 
+		{
+			cityFrequency = Collections.frequency(popularDestination, s);
+
+			if( cityFrequency  >= firstCount) //#1
+			{
+				thirdCount = secondCount;
+				secondCount = firstCount;
+				firstCount = cityFrequency;
+				third = second;
+				second = first;
+				first = s;	
+			}
+			else if(cityFrequency >= secondCount) //#2
+			{
+				thirdCount = secondCount;
+				secondCount = cityFrequency;
+
+				third = second;
+				second = s;
+
+
+			}
+			else if(cityFrequency >= thirdCount) //#3
+			{
+				thirdCount = cityFrequency;
+
+				third = s;
+			}
+
+		}
+		top3.put("first", first);
+		top3.put("second", second);
+		top3.put("third", third);
+		return top3;
+
+	}
+	
+	/**
+	 * gets popular destinations within timeframe
+	 * 
+	 * @param startDate
+	 * @param endDate
+	 * @return
+	 */
+	@GetMapping("/trips/web/destinations/{date1}/{date2}")
+	public Map<String,String> getPopularDestinationsWeb(@PathVariable("date1") String startDate, @PathVariable("date2") String endDate)
+	{
+		List<Trip> t = listTripsInTimeframe(startDate, endDate);
+		List<String> destinations = new ArrayList<>();
+		Map<String,String> top3 = new HashMap<String,String>();
+		try {
+			for(Trip trip:t)
+			{
+				destinations.add(trip.getDestination());
+			}
+			top3 = getPopularDestination(destinations);
+		} catch(NullPointerException e) {
+			top3.put("error", "No trips within timeframe");
+		}
+		return top3;
 	}
 
 	/**
